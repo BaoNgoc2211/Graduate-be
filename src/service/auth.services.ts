@@ -3,7 +3,6 @@ import { EmailService } from "./email.services";
 import { IUser } from "../interface/user.interface";
 
 export class AuthServices {
-  // Gửi OTP
   static async sendOTP(email: string) {
     try {
       let user = await User.findOne({ email }) as IUser;

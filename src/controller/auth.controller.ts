@@ -1,37 +1,26 @@
+import { AuthServices } from "./../service/auth.services";
 import { Request, Response } from "express";
-import authServices from "../service/auth.services";
-import { AuthServices } from "../service/auth.services";
+import asyncError from "../middleware/error.middleware";
+import { returnRes } from "../../util/response";
+import jwtServices from "../service/jwt.services";
 
-export class AuthController {
-  // Gửi OTP
-  static async sendOTP(req: Request, res: Response) {
-    try {
-      const { email } = req.body;
-      const result = await AuthServices.sendOTP(email);
+class AuthController {
+  sendOTP = asyncError(async (req: Request, res: Response) => {
+    const { email } = req.body;
+    await AuthServices.sendOTP(email);
+    returnRes(res, 200, "Resend OTP successful");
+  });
 
-      res.json(result);
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        message: error instanceof Error ? error.message : "An error occurred",
-      });
-    }
-  }
+  verifyEmail = asyncError(async (req: Request, res: Response) => {
+    const { email, otp } = req.body;
+    await AuthServices.verifyOTP(email, otp);
+    returnRes(res, 200, "Verify email successfull");
+  });
 
-  static async verifyOTP(req: Request, res: Response) {
-    try {
-      const { email, otp } = req.body;
-      const result = await AuthServices.verifyOTP(email, otp);
-
-      res.json({
-        success: true,
-        data: result,
-      });
-    } catch (error) {
-      res.status(400).json({
-        success: false,
-        message: error instanceof Error ? error.message : "An error occurred",
-      });
-    }
-  }
+  logout = asyncError(async (req: Request, res: Response) => {
+    jwtServices.clearJwt(res);
+    returnRes(res, 200, "Log out successful");
+  });
 }
+
+export default new AuthController();

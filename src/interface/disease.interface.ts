@@ -14,3 +14,8 @@ export interface IDisease {
   treatmentPlan: string;
   diseaseCategory: mongoose.Types.ObjectId;
 }
+export interface IDiseaseRepo {
+  page: number;
+  size: number;
+  name: string;
+}

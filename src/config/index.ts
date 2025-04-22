@@ -1,8 +1,10 @@
 // config/index.ts
+import { SignOptions } from 'jsonwebtoken';
+
 interface IConfig {
   jwt: {
     secret: string;
-    expiresIn: string;
+    expiresIn: SignOptions['expiresIn'];
   };
   email: {
     user: string;
