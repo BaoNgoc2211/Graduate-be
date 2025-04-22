@@ -4,9 +4,6 @@ import { genderType } from "../enum/user.enum";
 export interface IUser extends Document {
   email: string;
   name: string;
-  phone?: string;
-  address?: string;
-  avatar?: string;
   isEmailVerified: boolean;
   role: 'user' | 'admin';
   otp?: {
@@ -15,14 +12,20 @@ export interface IUser extends Document {
   };
   otpAttempts: number;
   otpLockedUntil?: Date;
-  password?: string;
-  gender?: string;
-  birth?: Date;
-  point: number;
   generateAuthToken(): string;
   generateOTP(): string;
   isOTPLocked(): boolean;
   incrementOTPAttempts(): void;
+}
+export interface IUpdateProfileDto{
+  email: string;
+  name: string;
+  phone?: string;
+  address?: string;
+  avatar?: string;
+  gender?: string;
+  birth?: Date;
+  point: number;
 }
 
 export type UserModel = mongoose.Model<IUser>;

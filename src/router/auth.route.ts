@@ -1,5 +1,6 @@
+import controller from "./../controller/auth.controller";
 import express from "express";
-import { AuthController } from "../controller/auth.controller";
+
 // import authController from "../controller/auth.controller";
 
 const router = express.Router();
@@ -7,10 +8,9 @@ const router = express.Router();
 // router.post("/sign-up", authController.signUp);
 // Đăng nhập khách hàng
 // router.post("/sign-in", authController.signUp);
-// Gửi OTP đến email khách hàng
-router.post("/send-otp", AuthController.sendOTP);
-// Xác thực OTP khách hàng
-router.post("/verify-otp", AuthController.verifyOTP);
+router.post("/send-otp", controller.sendOTP);
+router.post("/verify-otp", controller.verifyEmail);
+router.post("/logout", controller.logout);
 // Cập nhật thông tin khách hàng
 // router.put("/update/:userId", authController.signUp);
 // Lấy thông tin khách hàng theo ID
