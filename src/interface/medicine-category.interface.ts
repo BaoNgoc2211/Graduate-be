@@ -3,7 +3,7 @@ import { IMedicine } from "./medicine.interface";
 
 export interface IMedicineCategory {
   code: string;
-  name: TherapeuticGroupEnum[];
+  name: TherapeuticGroupEnum;
   type: typeEnum[];
   medicine: IMedicine[];
 }
