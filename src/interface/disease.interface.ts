@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+// import file csv 
 export interface IDisease {
   name: string;
   symptom: string;

@@ -1,4 +1,4 @@
-import { TherapeuticGroupEnum, typeEnum } from "../enum/medicine-cateogry.enum";
+import { TherapeuticGroupEnum, typeEnum } from "../enum/medicine-category.enum";
 import { IMedicine } from "./medicine.interface";
 
 export interface IMedicineCategory {

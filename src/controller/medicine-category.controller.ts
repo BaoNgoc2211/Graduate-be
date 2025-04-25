@@ -1,7 +1,7 @@
-import { catchAsync } from "../util/catchAsync";
+import asyncError from "../middleware/error.middleware";
 
 class MedicineCategoryController {
-  addCategory = catchAsync(async (req: Request, res: Response) => {
+  addCategory = asyncError(async (req: Request, res: Response) => {
     const { name } = req.body;
     const cate = await cate;
   });
