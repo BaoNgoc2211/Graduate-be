@@ -1,6 +1,4 @@
-import {
-  IUpdateProfileDto,
-} from "./../interface/user.interface";
+import { IUpdateProfileDto } from "../interface/user.interface";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import config from "../config";
@@ -20,17 +18,11 @@ const userSchema = new mongoose.Schema<IUser>(
       type: String,
       trim: true,
       lowercase: true,
-      required: true,
     },
 
     isEmailVerified: {
       type: Boolean,
       default: false,
-    },
-    role: {
-      type: String,
-      enum: ["user", "admin"],
-      default: "user",
     },
     otp: {
       code: String,
@@ -105,7 +97,6 @@ userSchema.methods.generateOTP = function () {
 
   const expiresAt = new Date();
   expiresAt.setMinutes(expiresAt.getMinutes() + 10);
-
 
   this.otp = {
     code: otp,

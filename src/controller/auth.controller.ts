@@ -1,20 +1,22 @@
-import { AuthServices } from "./../service/auth.services";
 import { Request, Response } from "express";
 import asyncError from "../middleware/error.middleware";
 import { returnRes } from "../../util/response";
 import jwtServices from "../service/jwt.services";
+import authServices from "../service/auth.services";
 
 class AuthController {
-  sendOTP = asyncError(async (req: Request, res: Response) => {
+  //signin
+  signin = asyncError(async (req: Request, res: Response) => {
     const { email } = req.body;
-    await AuthServices.sendOTP(email);
-    returnRes(res, 200, "Resend OTP successful");
+    await authServices.signIn(email);
+    const accessToken = jwtServices.generateJwt;
+    returnRes(res, 200, "Send OTP successful");
   });
 
   verifyEmail = asyncError(async (req: Request, res: Response) => {
     const { email, otp } = req.body;
-    await AuthServices.verifyOTP(email, otp);
-    returnRes(res, 200, "Verify email successfull");
+    await authServices.verifyEmail(email, otp);
+    returnRes(res, 200, "Verify email successful");
   });
 
   logout = asyncError(async (req: Request, res: Response) => {
