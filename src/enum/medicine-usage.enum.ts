@@ -1,0 +1,26 @@
+export const nameEnum = {
+    ANTIBIOTIC: "Thuốc kháng sinh",
+    ONCOLOGY: "Thuốc ung thư",
+    UROLOGY: "Thuốc tiết niệu",
+    MALE_HEALTH: "Thuốc cho nam giới",
+    ENT_EYE: "Thuốc Mắt/Tai/Mũi",
+    VITAMIN: "Vitamin & Khoáng chất",
+    DERMATOLOGY: "Thuốc da liễu",
+    FEMALE_HEALTH: "Thuốc dành cho nữ",
+    COLD_COUGH: "Thuốc cảm lạnh, ho",
+    CONTRACEPTIVE: "Thuốc ngừa thai",
+    CARDIO: "Thuốc tim mạch, huyết áp",
+    DIGESTIVE: "Thuốc tiêu hóa",
+    DIABETES: "Thuốc tiểu đường",
+    ANTI_ALLERGY: "Kháng dị ứng",
+    TOPICAL_PAIN_RELIEF: "Dầu xoa bóp, dầu gió",
+    ANTI_INFLAMMATORY: "Thuốc kháng viêm",
+    OTHER: "Thuốc khác",
+    NEUROLOGY: "Thuốc thần kinh",
+    ANALGESIC: "Thuốc giảm đau, hạ sốt",
+    RESPIRATORY: "Hệ hô hấp",
+    MUSCULOSKELETAL: "Thuốc cơ xương khớp",
+  } as const;
+  export type DrugUsageGroupEnum  = keyof typeof nameEnum;
+  
+  

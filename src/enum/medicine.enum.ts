@@ -37,9 +37,9 @@ const topicalDosageFormEnum = {
   POWDER: "Bột rắc",
 } as const;
 const inhalationDosageFormEnum = {
-  MDI : "Thuốc xịt định liều",
-  DPI : "Bột hít",
-  NEBULIZER_SOLUTION : "Dung dịch khí dung",
+  MDI: "Thuốc xịt định liều",
+  DPI: "Bột hít",
+  NEBULIZER_SOLUTION: "Dung dịch khí dung",
 } as const;
 const suppositoryDosageFormEnum = {
   RECTAL: "Thuốc đặt hậu môn",
@@ -62,11 +62,11 @@ const otherDosageFormEnum = {
   WASH_SOLUTION: "Dung dịch rửa",
 } as const;
 
-export type mainDosageFormEnum = keyof typeof mainDosageFormEnum;
-export type oralDosageFormEnum = keyof typeof oralDosageFormEnum;
-export type parenteralDosageFormEnum = keyof typeof parenteralDosageFormEnum;
-export type topicalDosageFormEnum = keyof typeof topicalDosageFormEnum;
-export type inhalationDosageFormEnum = keyof typeof inhalationDosageFormEnum;
-export type suppositoryDosageFormEnum = keyof typeof suppositoryDosageFormEnum;
-export type eyeNoseEarDosageFormEnum = keyof typeof eyeNoseEarDosageFormEnum;
-export type otherDosageFormEnum = keyof typeof otherDosageFormEnum;
+export type MainDosageFormEnum = keyof typeof mainDosageFormEnum;
+export type OralDosageFormEnum = keyof typeof oralDosageFormEnum;
+export type ParenteralDosageFormEnum = keyof typeof parenteralDosageFormEnum;
+export type TopicalDosageFormEnum = keyof typeof topicalDosageFormEnum;
+export type InhalationDosageFormEnum = keyof typeof inhalationDosageFormEnum;
+export type SuppositoryDosageFormEnum = keyof typeof suppositoryDosageFormEnum;
+export type EyeNoseEarDosageFormEnum = keyof typeof eyeNoseEarDosageFormEnum;
+export type OtherDosageFormEnum = keyof typeof otherDosageFormEnum;

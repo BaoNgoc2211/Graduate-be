@@ -1,51 +1,19 @@
-export const typeEnum = {
-  PRESCRIPTION: {
-    vi: "Thuốc kê đơn",
-    en: "Prescription Medicine",
-  },
-  NON_PRESCRIPTION: {
-    vi: "Thuốc không kê đơn",
-    en: "Over-the-Counter Medicine",
-  },
-  VITAMIN: {
-    vi: "Vitamin",
-    en: "Vitamin",
-  },
-  SUPPLEMENT: {
-    vi: "Thực phẩm chức năng",
-    en: "Dietary Supplement",
-  },
-  PERSONAL_CARE: {
-    vi: "Chăm sóc cá nhân",
-    en: "Personal Care",
-  },
-  OTHER: {
-    vi: "Thuốc khác",
-    en: "Other Medicine",
-  },
+export const nameEnum = {
+  PRESCRIPTION: "Thuốc kê đơn",
+  NON_PRESCRIPTION: "Thuốc không kê đơn",
+  SUPPLEMENT: "Thực phẩm chức năng",
+  MEDICAL: "Vắc-xin – Sinh phẩm",
+  VACCINES: "Thuốc Đông y – Dược liệu",
+  TRADITIONAL: "Thiết bị y tế",
 } as const;
-export const TherapeuticGroupEnum = {
-  ANTIBIOTIC: "Thuốc kháng sinh",
-  ONCOLOGY: "Thuốc ung thư",
-  UROLOGY: "Thuốc tiết niệu",
-  MALE_HEALTH: "Thuốc cho nam giới",
-  ENT_EYE: "Thuốc Mắt/Tai/Mũi",
-  VITAMIN: "Vitamin & Khoáng chất",
-  DERMATOLOGY: "Thuốc da liễu",
-  FEMALE_HEALTH: "Thuốc dành cho nữ",
-  COLD_COUGH: "Thuốc cảm lạnh, ho",
-  CONTRACEPTIVE: "Thuốc ngừa thai",
-  CARDIO: "Thuốc tim mạch, huyết áp",
-  DIGESTIVE: "Thuốc tiêu hóa",
-  DIABETES: "Thuốc tiểu đường",
-  ANTI_ALLERGY: "Kháng dị ứng",
-  TOPICAL_PAIN_RELIEF: "Dầu xoa bóp, dầu gió",
-  ANTI_INFLAMMATORY: "Thuốc kháng viêm",
-  OTHER: "Thuốc khác",
-  NEUROLOGY: "Thuốc thần kinh",
-  ANALGESIC: "Thuốc giảm đau, hạ sốt",
-  RESPIRATORY: "Hệ hô hấp",
-  MUSCULOSKELETAL: "Thuốc cơ xương khớp",
+
+export const nameEnumEn = {
+  PRESCRIPTION: "Prescription Medicine",
+  NON_PRESCRIPTION: "Over-the-Counter Medicine",
+  SUPPLEMENT: "Dietary Supplement",
+  MEDICAL: "Biological Product",
+  VACCINES: "Traditional Medicine",
+  TRADITIONAL: "Medical Device",
 } as const;
-export type typeEnum = keyof typeof typeEnum;
-export type TherapeuticGroupEnum = keyof typeof TherapeuticGroupEnum;
+
+export type MedicineCategoryEnum  = keyof typeof nameEnum;
