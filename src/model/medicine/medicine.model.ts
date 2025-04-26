@@ -1,17 +1,14 @@
 import mongoose, { Schema } from "mongoose";
-import { IMedicine, IReview } from "../interface/medicine.interface";
 import {
-  OralDosageForm,
-  ParenteralDosageForm,
-  TopicalDosageForm,
-  InhalationDosageForm,
-  SuppositoryDosageForm,
-  EyeNoseEarDosageForm,
-  OtherDosageForm,
-  MainDosageForm,
-} from "../enum/medicine.enum";
+  DetailedDosageEnum,
+  MainDosageEnum,
+} from "../../enum/medicine/medicine.enum";
+import {
+  IMedicine,
+  IReview,
+} from "../../interface/medicine/medicine.interface";
 
-const reviewSchema = new Schema<IReview>(
+const ReviewSchema = new Schema<IReview>(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
@@ -28,10 +25,9 @@ const reviewSchema = new Schema<IReview>(
       type: String,
     },
   },
-  { timestamps: true }
+  { collection: "Review", timestamps: true }
 );
 
-// Định nghĩa schema cho medicine
 const medicineSchema = new Schema<IMedicine>(
   {
     image: {
@@ -64,21 +60,13 @@ const medicineSchema = new Schema<IMedicine>(
     },
     mainDosageForm: {
       type: String,
-      enum: Object.values(MainDosageForm), // Chỉ chấp nhận các giá trị từ enum
+      enum: Object.values(MainDosageEnum), // Chỉ chấp nhận các giá trị từ enum
       required: true,
     },
     detailedDosageForm: {
       type: String,
       required: true,
-      enum: [
-        ...Object.values(OralDosageForm),
-        ...Object.values(ParenteralDosageForm),
-        ...Object.values(TopicalDosageForm),
-        ...Object.values(InhalationDosageForm),
-        ...Object.values(SuppositoryDosageForm),
-        ...Object.values(EyeNoseEarDosageForm),
-        ...Object.values(OtherDosageForm),
-      ],
+      enum: Object.values(DetailedDosageEnum),
     },
     expiryDate: {
       type: Date,
@@ -96,24 +84,31 @@ const medicineSchema = new Schema<IMedicine>(
       type: String,
       required: true,
     },
-    benefits: {
-      type: String,
-      required: true,
-    },
     usageInstruction: {
       type: String,
       required: true,
     },
-    review: {
-      type: reviewSchema,
-      default: null,
-    },
-    categoryId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Category",
-      required: true,
-    },
-    manuafacturerId: {
+    review: [
+      {
+        type: Schema.Types.ObjectId,
+        default: null,
+      },
+    ],
+    drugUsageGroup: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Medicine Usage Group",
+        required: true,
+      },
+    ],
+    categoryId: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Medicine Category",
+        required: true,
+      },
+    ],
+    manufacturerId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Manufacturer",
       required: true,
@@ -122,7 +117,6 @@ const medicineSchema = new Schema<IMedicine>(
   {
     collection: "Medicine",
     timestamps: true,
-    versionKey: false,
   }
 );
 

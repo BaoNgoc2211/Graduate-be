@@ -1,14 +1,8 @@
 import mongoose from "mongoose";
 import {
-  EyeNoseEarDosageFormEnum,
-  InhalationDosageFormEnum,
+  DetailedDosageFormEnum,
   MainDosageFormEnum,
-  OralDosageFormEnum,
-  OtherDosageFormEnum,
-  ParenteralDosageFormEnum,
-  SuppositoryDosageFormEnum,
-  TopicalDosageFormEnum,
-} from "../../enum/medicine.enum";
+} from "../../enum/medicine/medicine.enum";
 
 export interface IMedicine {
   image: string;
@@ -18,14 +12,7 @@ export interface IMedicine {
   stockQuantity: number;
   packaging: string;
   mainDosageForm: MainDosageFormEnum;
-  detailedDosageForm:
-    | OralDosageFormEnum
-    | ParenteralDosageFormEnum
-    | TopicalDosageFormEnum
-    | InhalationDosageFormEnum
-    | SuppositoryDosageFormEnum
-    | EyeNoseEarDosageFormEnum
-    | OtherDosageFormEnum;
+  detailedDosageForm: DetailedDosageFormEnum;
   expiryDate: Date;
   description: string;
   indications: string;
