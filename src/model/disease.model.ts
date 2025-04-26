@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { IDisease } from "../interface/disease.interface";
+import { IDisease } from "../interface/disease/disease.interface";
 
 const DiseaseSchema = new mongoose.Schema<IDisease>({
   name: {
