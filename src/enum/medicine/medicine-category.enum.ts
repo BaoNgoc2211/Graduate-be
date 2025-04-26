@@ -1,4 +1,4 @@
-export const nameEnum = {
+export const NameEnum = {
   PRESCRIPTION: "Thuốc kê đơn",
   NON_PRESCRIPTION: "Thuốc không kê đơn",
   SUPPLEMENT: "Thực phẩm chức năng",
@@ -7,7 +7,7 @@ export const nameEnum = {
   TRADITIONAL: "Thiết bị y tế",
 } as const;
 
-export const nameEnumEn = {
+export const NameEnumEn = {
   PRESCRIPTION: "Prescription Medicine",
   NON_PRESCRIPTION: "Over-the-Counter Medicine",
   SUPPLEMENT: "Dietary Supplement",
@@ -16,4 +16,4 @@ export const nameEnumEn = {
   TRADITIONAL: "Medical Device",
 } as const;
 
-export type MedicineCategoryEnum  = keyof typeof nameEnum;
+export type MedicineCategoryEnum = keyof typeof NameEnum;

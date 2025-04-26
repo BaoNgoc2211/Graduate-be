@@ -1,17 +1,8 @@
-// import {
-//   Internal,
-//   Lab,
-//   OPG,
-//   Others,
-//   Preventive,
-//   Surgery,
-//   typeEnum,
-// } from "../../enum/disease-category.enum";
-// import { IDisease } from "../disease.interface";
+import { DiseaseCategoryEnum } from './../../enum/disease/disease-category.enum';
+import mongoose from "mongoose";
 
-// export interface IDiseaseCategory {
-//   code: string;
-//   type: typeEnum;
-//   name: Internal | Surgery | OPG | Others | Lab | Preventive;
-//   disease: IDisease[];
-// }
+export interface IDiseaseCategory {
+  name: DiseaseCategoryEnum;
+  icon: string;
+  disease: mongoose.Types.ObjectId[];
+}

@@ -1,5 +1,8 @@
-import { DrugUsageGroupEnum  } from "../../enum/medicine-usage.enum";
+import mongoose from "mongoose";
+import { MedicineUsageGroup } from "../../enum/medicine/medicine-usage.enum";
 
 export interface IMedicineUsageGroup {
-  name: DrugUsageGroupEnum ;
+  name: MedicineUsageGroup;
+  icon: string;
+  medicineCategory: mongoose.Types.ObjectId[];
 }
