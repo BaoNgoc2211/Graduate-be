@@ -4,7 +4,6 @@ import {
   MainDosageEnum,
 } from "../../enum/medicine/medicine.enum";
 import { IMedicine, IReview } from "../../interface/medicine/medicine.interface";
-
 const ReviewSchema = new Schema<IReview>(
   {
     user: {
@@ -57,7 +56,7 @@ const medicineSchema = new Schema<IMedicine>(
     },
     mainDosageForm: {
       type: String,
-      enum: Object.values(MainDosageEnum), // Chỉ chấp nhận các giá trị từ enum
+      enum: Object.values(MainDosageEnum), 
       required: true,
     },
     detailedDosageForm: {

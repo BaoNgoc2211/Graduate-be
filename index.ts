@@ -2,15 +2,17 @@ import express from "express";
 import appConfig from "./src/config/app.config";
 import connectDB from "./database/connect-database";
 import authRoutes from "./src/router/auth.route";
+import adminRoutes from "./src/router/admin.route";
 import notFoundRoute from "./src/middleware/not-found-routes.middleware";
 import errorHandler from "./src/middleware/error-handler.middleware";
 
 const app = express();
 
 app.use(express.json());
-
+app.use(express.urlencoded({ extended: true }));
 app.use("/api/auth", authRoutes);
 app.use("/api/disease", authRoutes);
+app.use("/api/admin",adminRoutes);
 app.use(notFoundRoute);
 app.use(errorHandler);
 
