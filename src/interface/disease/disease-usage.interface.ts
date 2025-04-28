@@ -5,7 +5,6 @@ export interface IDiseaseUsageGroup {
   name: DiseaseUsageGroupEnum;
   icon: string;
   diseaseCategory: mongoose.Types.ObjectId[];
-  disease: mongoose.Types.ObjectId[];
 }
 // import mongoose from "mongoose";
 // import {

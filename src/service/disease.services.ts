@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import { IDisease } from "../../interface/disease/disease.interface";
-import diseaseRepository from "../../repository/disease.repository";
-import throwError from "../../util/create-error";
+import { IDisease } from "../interface/disease/disease.interface";
+import diseaseRepository from "../repository/disease.repository";
+import throwError from "../util/create-error";
 
 class DiseaseServices {
   private async checkExistName(name: string) {
