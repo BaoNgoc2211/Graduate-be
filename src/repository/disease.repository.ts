@@ -1,6 +1,6 @@
 import { IDisease } from "../interface/disease/disease.interface";
 import Disease from "../model/disease/disease.model";
-import diseaseCategoryRepository from "./disease-category.reposite";
+import diseaseCategoryRepository from "./disease-category.repository";
 import mongoose from "mongoose";
 
 class DiseaseRepository {
