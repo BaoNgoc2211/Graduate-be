@@ -1,4 +1,3 @@
-
 import { NameEnum } from "../../enum/disease/disease-usage.enum";
 import { IDiseaseUsageGroup } from "../../interface/disease/disease-usage.interface";
 import mongoose, { Schema } from "mongoose";
@@ -16,13 +15,20 @@ const DiseaseUsageGroupSchema = new Schema<IDiseaseUsageGroup>(
     diseaseCategory: [
       {
         type: Schema.Types.ObjectId,
+        ref: "Disease Category",
+      },
+    ],
+    disease: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Disease",
       },
     ],
   },
   { collection: "Disease Usage Group", timestamps: true }
 );
-const DiseaseUsageGroup = mongoose.model(
+const DisUsageGroup = mongoose.model(
   "Disease Usage Group",
   DiseaseUsageGroupSchema
 );
-export default DiseaseUsageGroup;
+export default DisUsageGroup;
