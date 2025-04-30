@@ -6,4 +6,5 @@ export interface IMedicineCategory {
   name: MedicineCategoryEnum;
   icon: string;
   medicine: mongoose.Types.ObjectId[];
+  usageGroups: mongoose.Types.ObjectId[];
 }
