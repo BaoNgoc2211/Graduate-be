@@ -1,6 +1,6 @@
-import asyncError from "../../middleware/error.middleware";
-import diseaseServices from "../../service/disease/disease.services";
-import { returnRes } from "../../util/response";
+import asyncError from "../middleware/error.middleware";
+import diseaseServices from "../service/disease.services";
+import { returnRes } from "../util/response";
 import { Request, Response } from "express";
 class DiseaseController {
   addDisease = asyncError(async (req: Request, res: Response) => {

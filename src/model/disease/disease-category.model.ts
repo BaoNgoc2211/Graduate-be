@@ -2,7 +2,7 @@ import { NameEnum } from "./../../enum/disease/disease-category.enum";
 import { IDiseaseCategory } from "../../interface/disease/disease-category.interface";
 import mongoose, { Schema } from "mongoose";
 
-const DisCategorySchema = new Schema<IDiseaseCategory>(
+const DiseaseCategorySchema = new Schema<IDiseaseCategory>(
   {
     name: {
       type: String,
@@ -13,12 +13,6 @@ const DisCategorySchema = new Schema<IDiseaseCategory>(
       type: String,
       required: true,
     },
-    disUsage: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Disease Usage Group",
-      },
-    ],
     disease: [
       {
         type: Schema.Types.ObjectId,
@@ -29,8 +23,8 @@ const DisCategorySchema = new Schema<IDiseaseCategory>(
   { collection: "Disease Category" }
 );
 
-const DisCategory = mongoose.model(
+const DiseaseCategory = mongoose.model(
   "DiseaseCategory",
-  DisCategorySchema
+  DiseaseCategorySchema
 );
-export default DisCategory;
+export default DiseaseCategory;

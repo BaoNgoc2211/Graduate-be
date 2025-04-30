@@ -1,13 +1,11 @@
 import express from "express";
 import appConfig from "./src/config/app.config";
 import connectDB from "./database/connect-database";
-import notFoundRoute from "./src/middleware/not-found-routes.middleware";
-import errorHandler from "./src/middleware/error-handler.middleware";
 import authRoutes from "./src/router/auth.route";
 import adminRoutes from "./src/router/admin.route";
-import disease from "./src/router/disease.route";
-import disUsage from "./src/router/disease-usage.route";
-import disCategory from "./src/router/disease-category.route";
+import notFoundRoute from "./src/middleware/not-found-routes.middleware";
+import errorHandler from "./src/middleware/error-handler.middleware";
+
 const app = express();
 
 app.use(express.json());
@@ -18,6 +16,7 @@ app.use("/api/disease", disease);
 app.use("/api/disUsage", disUsage);
 app.use("/api/disCategory", disCategory);
 app.use("/api/voucher", disCategory);
+
 app.use(notFoundRoute);
 app.use(errorHandler);
 
