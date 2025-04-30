@@ -17,6 +17,13 @@ const MedicineCategorySchema = new Schema<IMedicineCategory>(
     medicine: [
       {
         type: Schema.Types.ObjectId,
+        ref: "Medicine",
+      },
+    ],
+    usageGroups: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Medicine Usage Group",
       },
     ],
   },
