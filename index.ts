@@ -17,6 +17,7 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/disease", disease);
 app.use("/api/disUsage", disUsage);
 app.use("/api/disCategory", disCategory);
+app.use("/api/voucher", disCategory);
 app.use(notFoundRoute);
 app.use(errorHandler);
 

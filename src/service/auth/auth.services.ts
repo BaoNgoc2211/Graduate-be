@@ -1,7 +1,7 @@
-import User from "../model/user.model";
-import { EmailService } from "./email.services";
-import throwError from "../util/create-error";
-import authRepository from "../repository/auth.repository";
+import User from "../../model/user.model";
+import { EmailService } from "../auth/email.services";
+import throwError from "../../util/create-error";
+import authRepository from "../../repository/auth.repository";
 // export class AuthServices {
 //   static async signIn(email: string) {
 //     try {
@@ -107,7 +107,7 @@ class AuthServices {
     }
     return user;
   }
-  
+
   signIn = async (email: string) => {
     let user = await User.findOne({ email });
     if (!user) {
@@ -116,11 +116,13 @@ class AuthServices {
 
     if (user.isOTPLocked()) {
       const lockTime = user.otpLockedUntil!;
-      const minutesLeft = Math.ceil((lockTime.getTime() - Date.now()) / (1000 * 60));
-      throw new Error(`Tài khoản bị khóa. Vui lòng thử lại sau ${minutesLeft} phút.`);
-    }
-    else{
-      
+      const minutesLeft = Math.ceil(
+        (lockTime.getTime() - Date.now()) / (1000 * 60)
+      );
+      throw new Error(
+        `Tài khoản bị khóa. Vui lòng thử lại sau ${minutesLeft} phút.`
+      );
+    } else {
     }
 
     const otp = user.generateOTP();
@@ -138,8 +140,12 @@ class AuthServices {
 
     if (user.isOTPLocked()) {
       const lockTime = user.otpLockedUntil!;
-      const minutesLeft = Math.ceil((lockTime.getTime() - Date.now()) / (1000 * 60));
-      throw new Error(`Tài khoản bị khóa. Vui lòng thử lại sau ${minutesLeft} phút.`);
+      const minutesLeft = Math.ceil(
+        (lockTime.getTime() - Date.now()) / (1000 * 60)
+      );
+      throw new Error(
+        `Tài khoản bị khóa. Vui lòng thử lại sau ${minutesLeft} phút.`
+      );
     }
 
     if (!user.otp || user.otp.code !== otp) {
@@ -166,44 +172,52 @@ class AuthServices {
   };
   resendOTP = async (email: string) => {
     const user = await this.getUserByEmail(email);
-  
+
     if (user.isEmailVerified) {
       throwError(400, "Email đã được xác minh");
     }
-  
+
     if (user.isOTPLocked()) {
-      const minutesLeft = Math.ceil((user.otpLockedUntil!.getTime() - Date.now()) / 60000);
-      throwError(403, `Tài khoản bị khóa. Vui lòng thử lại sau ${minutesLeft} phút.`);
+      const minutesLeft = Math.ceil(
+        (user.otpLockedUntil!.getTime() - Date.now()) / 60000
+      );
+      throwError(
+        403,
+        `Tài khoản bị khóa. Vui lòng thử lại sau ${minutesLeft} phút.`
+      );
     }
-  
+
     if (user.otp && user.otp.expiresAt > new Date()) {
-      throwError(400, "OTP hiện tại vẫn còn hiệu lực. Vui lòng kiểm tra email.");
+      throwError(
+        400,
+        "OTP hiện tại vẫn còn hiệu lực. Vui lòng kiểm tra email."
+      );
     }
-  
+
     const otp = user.generateOTP();
     await user.save();
     EmailService.sendOTP(email, otp);
-  
+
     return {
       success: true,
       message: "OTP đã được gửi lại thành công.",
     };
   };
 }
-  const authServices = new AuthServices();
-  export default authServices
-  // signIn = async (email: string) => {
-  //   const user = await this.getUserByEmail(email);
-  //   return user.id;
-  // };
-  // verifyEmail = async (email: string, otp: string) => {
-  //   this.otpInvoker.setCommand(new VerifyOTP(email, otp));
-  //   return this.otpInvoker.executeCommand();
-  // };
-  // resendOTP = async (email: string) => {
-  //   if (await this.checkVerifyEmail(email)) {
-  //     throwError(400, "Email has already been verify");
-  //   }
-  //   this.otpInvoker.setCommand(new ResendOTP(email));
-  //   return this.otpInvoker.executeCommand();
-  // };
+const authServices = new AuthServices();
+export default authServices;
+// signIn = async (email: string) => {
+//   const user = await this.getUserByEmail(email);
+//   return user.id;
+// };
+// verifyEmail = async (email: string, otp: string) => {
+//   this.otpInvoker.setCommand(new VerifyOTP(email, otp));
+//   return this.otpInvoker.executeCommand();
+// };
+// resendOTP = async (email: string) => {
+//   if (await this.checkVerifyEmail(email)) {
+//     throwError(400, "Email has already been verify");
+//   }
+//   this.otpInvoker.setCommand(new ResendOTP(email));
+//   return this.otpInvoker.executeCommand();
+// };

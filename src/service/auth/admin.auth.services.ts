@@ -1,7 +1,7 @@
-import Admin from "../model/admin.model";
-import { EmailService } from "./email.services";
-import throwError from "../util/create-error";
-import authRepository from "../repository/auth.repository";
+import Admin from "../../model/admin.model";
+import { EmailService } from "../auth/email.services";
+import throwError from "../../util/create-error";
+import authRepository from "../../repository/auth.repository";
 
 class AdminAuthServices {
   private async checkEmail(email: string) {
@@ -23,7 +23,7 @@ class AdminAuthServices {
     }
     return admin;
   }
-  
+
   signIn = async (email: string) => {
     let admin = await Admin.findOne({ email });
     if (!admin) {
@@ -32,11 +32,13 @@ class AdminAuthServices {
 
     if (admin.isOTPLocked()) {
       const lockTime = admin.otpLockedUntil!;
-      const minutesLeft = Math.ceil((lockTime.getTime() - Date.now()) / (1000 * 60));
-      throw new Error(`Tài khoản bị khóa. Vui lòng thử lại sau ${minutesLeft} phút.`);
-    }
-    else{
-      
+      const minutesLeft = Math.ceil(
+        (lockTime.getTime() - Date.now()) / (1000 * 60)
+      );
+      throw new Error(
+        `Tài khoản bị khóa. Vui lòng thử lại sau ${minutesLeft} phút.`
+      );
+    } else {
     }
 
     const otp = admin.generateOTP();
@@ -54,8 +56,12 @@ class AdminAuthServices {
 
     if (admin.isOTPLocked()) {
       const lockTime = admin.otpLockedUntil!;
-      const minutesLeft = Math.ceil((lockTime.getTime() - Date.now()) / (1000 * 60));
-      throw new Error(`Tài khoản bị khóa. Vui lòng thử lại sau ${minutesLeft} phút.`);
+      const minutesLeft = Math.ceil(
+        (lockTime.getTime() - Date.now()) / (1000 * 60)
+      );
+      throw new Error(
+        `Tài khoản bị khóa. Vui lòng thử lại sau ${minutesLeft} phút.`
+      );
     }
 
     if (!admin.otp || admin.otp.code !== otp) {
@@ -82,30 +88,37 @@ class AdminAuthServices {
   };
   resendOTP = async (email: string) => {
     const admin = await this.getUserByEmail(email);
-  
+
     if (admin.isEmailVerified) {
       throwError(400, "Email đã được xác minh");
     }
-  
+
     if (admin.isOTPLocked()) {
-      const minutesLeft = Math.ceil((admin.otpLockedUntil!.getTime() - Date.now()) / 60000);
-      throwError(403, `Tài khoản bị khóa. Vui lòng thử lại sau ${minutesLeft} phút.`);
+      const minutesLeft = Math.ceil(
+        (admin.otpLockedUntil!.getTime() - Date.now()) / 60000
+      );
+      throwError(
+        403,
+        `Tài khoản bị khóa. Vui lòng thử lại sau ${minutesLeft} phút.`
+      );
     }
-  
+
     if (admin.otp && admin.otp.expiresAt > new Date()) {
-      throwError(400, "OTP hiện tại vẫn còn hiệu lực. Vui lòng kiểm tra email.");
+      throwError(
+        400,
+        "OTP hiện tại vẫn còn hiệu lực. Vui lòng kiểm tra email."
+      );
     }
-  
+
     const otp = admin.generateOTP();
     await admin.save();
     EmailService.sendOTP(email, otp);
-  
+
     return {
       success: true,
       message: "OTP đã được gửi lại thành công.",
     };
   };
 }
-  const adminAuthServices = new AdminAuthServices();
-  export default adminAuthServices
-  
+const adminAuthServices = new AdminAuthServices();
+export default adminAuthServices;
