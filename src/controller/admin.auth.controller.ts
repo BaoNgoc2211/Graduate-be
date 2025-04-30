@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import asyncError from "../middleware/error.middleware";
 import { returnRes } from "../../util/response";
-import jwtServices from "../service/jwt.services";
-import adminAuthServices from "../service/admin.auth.services";
+import jwtServices from "../service/auth/jwt.services";
+import adminAuthServices from "../service/auth/admin.auth.services";
 
 class AdminAuthController {
   //signin

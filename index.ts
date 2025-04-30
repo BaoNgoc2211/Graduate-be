@@ -11,8 +11,12 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/api/auth", authRoutes);
-app.use("/api/disease", authRoutes);
-app.use("/api/admin",adminRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/disease", disease);
+app.use("/api/disUsage", disUsage);
+app.use("/api/disCategory", disCategory);
+app.use("/api/voucher", disCategory);
+
 app.use(notFoundRoute);
 app.use(errorHandler);
 
