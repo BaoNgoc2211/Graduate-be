@@ -6,6 +6,9 @@ import adminRoutes from "./src/router/admin.route";
 import medicineRoutes from "./src/router/medicine.route";
 import notFoundRoute from "./src/middleware/not-found-routes.middleware";
 import errorHandler from "./src/middleware/error-handler.middleware";
+import session from 'express-session';
+import passport from 'passport';
+import './config/passport';
 
 const app = express();
 
@@ -13,9 +16,24 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/auth", authRoutes);
-app.use("/api/disease", authRoutes);
 app.use("/api/admin",adminRoutes);
+// app.use("/api/disease", disease);
+// app.use("/api/disUsage", disUsage);
+// app.use("/api/disCategory", disCategory);
+// app.use("/api/voucher", disCategory);
 app.use("/api/medicine-categories", medicineRoutes);
+
+//đăng nhập googlen
+app.use(session({
+  secret: 'your_secret',
+  resave: false,
+  saveUninitialized: true
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use('/auth', authRoutes);
+
+
 app.use(notFoundRoute);
 app.use(errorHandler);
 

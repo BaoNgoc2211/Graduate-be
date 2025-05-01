@@ -14,5 +14,13 @@ class AuthRepository {
       isEmailVerified: true,
     });
   }
+  async findByGoogleId(googleId: string): Promise<IUser | null> {
+    return User.findOne({ googleId });
+  }
+
+  async createGoogleUser(user: Partial<IUser>): Promise<IUser> {
+    const newUser = new User(user);
+    return newUser.save();
+  }
 }
 export default new AuthRepository();

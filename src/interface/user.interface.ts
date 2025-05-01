@@ -2,6 +2,7 @@ import mongoose, { Document } from "mongoose";
 import { genderType } from "../enum/user.enum";
 
 export interface IUser extends Document {
+  googleId?: string;
   email: string;
   name?: string;
   isEmailVerified: boolean;

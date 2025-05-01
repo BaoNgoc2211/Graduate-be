@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import asyncError from "../middleware/error.middleware";
 import { returnRes } from "../../util/response";
-import jwtServices from "../service/jwt.services";
-import authServices from "../service/auth.services";
+import jwtServices from "../service/auth/jwt.services";
+import authServices from "../service/auth/auth.services";
 
 class AuthController {
   //signin
@@ -23,6 +23,17 @@ class AuthController {
     jwtServices.clearJwt(res);
     returnRes(res, 200, "Log out successful");
   });
+
+  loginSuccess(req: Request, res: Response) {
+    if (!req.user) return res.redirect('/login');
+    res.json({ message: 'Đăng nhập thành công', user: req.user });
+  }
+
+  loginFailure(req: Request, res: Response) {
+    res.status(401).json({ message: 'Đăng nhập thất bại' });
+  }
+
+  
 }
 
 export default new AuthController();

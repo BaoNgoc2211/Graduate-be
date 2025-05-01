@@ -7,6 +7,11 @@ import { IUser } from "../interface/user.interface";
 // Định nghĩa schema cho user
 const userSchema = new mongoose.Schema<IUser>(
   {
+    googleId:
+    {
+      type: String,
+      unique: true,
+    },
     email: {
       type: String,
       required: true,
