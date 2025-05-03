@@ -14,18 +14,18 @@ const MedicineCategorySchema = new Schema<IMedicineCategory>(
       type: String,
       required: true,
     },
-    medicine: [
+    medicineId: [
       {
         type: Schema.Types.ObjectId,
         ref: "Medicine",
       },
     ],
-    usageGroups: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Medicine Usage Group",
-      },
-    ],
+    // usageGroups: [
+    //   {
+    //     type: Schema.Types.ObjectId,
+    //     ref: "Medicine Usage Group",
+    //   },
+    // ],
   },
   { collection: "Medicine Category", timestamps: true }
 );

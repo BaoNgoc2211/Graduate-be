@@ -8,7 +8,7 @@ import notFoundRoute from "./src/middleware/not-found-routes.middleware";
 import errorHandler from "./src/middleware/error-handler.middleware";
 import session from 'express-session';
 import passport from 'passport';
-import './config/passport';
+import './src/config/passport';
 
 const app = express();
 
@@ -21,7 +21,7 @@ app.use("/api/admin",adminRoutes);
 // app.use("/api/disUsage", disUsage);
 // app.use("/api/disCategory", disCategory);
 // app.use("/api/voucher", disCategory);
-app.use("/api/medicine-categories", medicineRoutes);
+app.use("/api/medicine", medicineRoutes);
 
 //đăng nhập googlen
 app.use(session({

@@ -2,38 +2,37 @@ import MedicineCategory from "../model/medicine/medicine-category.model";
 import { IMedicineCategory } from "../interface/medicine/medicine-category.interface";
 import mongoose from "mongoose";
 
-export const MedicineCategoryRepository = {
+class MedicineCategoryRepository {
   // Lấy tất cả danh mục
-  findAll: async () => {
-    return MedicineCategory.find()
+  async findAll(){
+    return await MedicineCategory.find()
       // .populate("medicine")
       // .populate("usageGroups")
       .exec();
-  },
+  }
 
-  // Lấy 1 danh mục theo id
-  findById: async (id: string) => {
-    if (!mongoose.Types.ObjectId.isValid(id)) return null;
-    return MedicineCategory.findById(id)
-      // .populate("medicine")
-      // .populate("usageGroups")
-      .exec();
-  },
+  async findById(id: string){
+    return await MedicineCategory.findById(id);
+  }
 
-  // Tạo mới danh mục
-  create: async (data: IMedicineCategory) => {
-    return MedicineCategory.create(data);
-  },
+  async createMedicineCate(data: IMedicineCategory){
+    return await MedicineCategory.create(data);
+  }
 
-  // Cập nhật danh mục
-  update: async (id: string, data: Partial<IMedicineCategory>) => {
-    if (!mongoose.Types.ObjectId.isValid(id)) return null;
-    return MedicineCategory.findByIdAndUpdate(id, data, { new: true }).exec();
-  },
-
-  // Xóa danh mục
-  delete: async (id: string) => {
-    if (!mongoose.Types.ObjectId.isValid(id)) return null;
-    return MedicineCategory.findByIdAndDelete(id).exec();
-  },
-};
+  async updateMedicineCate(id:string, data:IMedicineCategory)
+  {
+    return await MedicineCategory.findByIdAndUpdate(id,data,{new:true}).exec();
+  }
+  
+  async deleteMedicineCate(id:string)
+  {
+    return await MedicineCategory.findByIdAndDelete(id).exec();
+  }
+  async updateMedCatetoMedicine(medCateId:mongoose.Types.ObjectId,medId:mongoose.Types.ObjectId )
+  {
+    return await MedicineCategory.findByIdAndUpdate(medCateId,{
+      $push:{medicineId:medId}
+    })
+  }
+}
+export default new MedicineCategoryRepository();

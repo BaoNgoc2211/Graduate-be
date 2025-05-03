@@ -84,19 +84,19 @@ const medicineSchema = new Schema<IMedicine>(
       type: String,
       required: true,
     },
-    review: [
-      {
-        type: Schema.Types.ObjectId,
-        default: null,
-      },
-    ],
-    drugUsageGroup: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Medicine Usage Group",
-        required: true,
-      },
-    ],
+    // review: [
+    //   {
+    //     type: Schema.Types.ObjectId,
+    //     default: null,
+    //   },
+    // ],
+    // drugUsageGroup: [
+    //   {
+    //     type: Schema.Types.ObjectId,
+    //     ref: "Medicine Usage Group",
+    //     required: true,
+    //   },
+    // ],
     categoryId: [
       {
         type: Schema.Types.ObjectId,
@@ -104,11 +104,11 @@ const medicineSchema = new Schema<IMedicine>(
         required: true,
       },
     ],
-    manufacturerId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Manufacturer",
-      required: true,
-    },
+    // manufacturerId: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: "Manufacturer",
+    //   required: true,
+    // },
   },
   {
     collection: "Medicine",

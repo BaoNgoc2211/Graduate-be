@@ -19,9 +19,9 @@ export interface IMedicine {
   ingredients: string;
   usageInstruction: string;
   review: IReview[];
-  drugUsageGroup: mongoose.Types.ObjectId[]; //IMedicineUsageGroup
+  // drugUsageGroup: mongoose.Types.ObjectId[]; //IMedicineUsageGroup
   categoryId: mongoose.Types.ObjectId[]; //IMedicineCategory
-  manufacturerId: mongoose.Types.ObjectId;
+  // manufacturerId: mongoose.Types.ObjectId;
 }
 
 export interface IReview {

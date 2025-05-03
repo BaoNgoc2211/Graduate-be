@@ -1,4 +1,4 @@
-import DiseaseCategory from "model/disease/disease-category.model";
+import DiseaseCategory from "../model/disease/disease-category.model";
 import mongoose from "mongoose";
 
 class DiseaseCategoryRepository {

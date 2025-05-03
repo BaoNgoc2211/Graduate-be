@@ -1,12 +1,20 @@
 import express from "express";
-import controller from "../controller/medicine/medicine-category.controller";
+import medicineCateController from "../controller/medicine/medicine-category.controller";
+import medicineController from "../controller/medicine/medicine.controller";
 
 const router = express.Router();
 
-router.get("/", controller.getAll);
-router.get("/:id", controller.getById);
-router.post("/", controller.create);
-router.put("/:id", controller.update);
-router.delete("/:id", controller.delete);
+router.get("/cate/", medicineCateController.getAll);
+router.get("/cate/:id", medicineCateController.getById);
+router.post("/cate/", medicineCateController.create);
+router.put("/cate/:id", medicineCateController.update);
+router.delete("/cate/:id", medicineCateController.delete);
+
+
+router.get("/", medicineController.getAll);
+router.get("/:id", medicineController.getById);
+router.post("/", medicineController.create);
+router.put("/:id", medicineController.update);
+router.delete("/:id", medicineController.delete);
 
 export default router;

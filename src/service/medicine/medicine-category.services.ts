@@ -1,23 +1,23 @@
-import { MedicineCategoryRepository } from "../../repository/medicine-category.repository";
+import medicineCategoryRepository from "../../repository/medicine-category.repository";
 
 export class MedicineCategoryService {
   static async getAll() {
-    return MedicineCategoryRepository.findAll();
+    return medicineCategoryRepository.findAll();
   }
 
   static async getById(id: string) {
-    return MedicineCategoryRepository.findById(id);
+    return medicineCategoryRepository.findById(id);
   }
 
   static async create(data: any) {
-    return MedicineCategoryRepository.create(data);
+    return medicineCategoryRepository.createMedicineCate(data);
   }
 
   static async update(id: string, data: any) {
-    return MedicineCategoryRepository.update(id, data);
+    return medicineCategoryRepository.updateMedicineCate(id, data);
   }
 
   static async delete(id: string) {
-    return MedicineCategoryRepository.delete(id);
+    return medicineCategoryRepository.deleteMedicineCate(id);
   }
 }
