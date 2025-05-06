@@ -3,7 +3,6 @@ import { genderType } from "../enum/user.enum";
 
 export interface IAdmin extends Document {
   email: string;
-  name?: string;
   isEmailVerified: boolean;
   otp?: {
     code: string;
@@ -15,20 +14,13 @@ export interface IAdmin extends Document {
   generateOTP(): string;
   isOTPLocked(): boolean;
   incrementOTPAttempts(): void;
+  info:{
+    name?: string;
+    phone?: string;
+    address?: string;
+    avatar?: string;
+    gender?: genderType;
+    birth?: Date;
+  }
 }
-export interface IUpdateProfileDto extends Document {
-  email: string;
-  name: string;
-  phone?: string;
-  address?: string;
-  avatar?: string;
-  gender?: genderType;
-  birth?: Date;
-}
-// export interface IAuthAction {
-//   generateAuthToken(): string;
-//   generateOTP(): string;
-//   isOTPLocked(): boolean;
-//   incrementOTPAttempts(): void;
-// }
-export type UserModel = mongoose.Model<IAdmin>;
+export type AdminModel = mongoose.Model<IAdmin>;

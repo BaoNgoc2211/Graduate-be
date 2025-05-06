@@ -27,10 +27,10 @@ export interface IUpdateProfileDto extends Document {
   birth?: Date;
   point: number;
 }
-// export interface IAuthAction {
-//   generateAuthToken(): string;
-//   generateOTP(): string;
-//   isOTPLocked(): boolean;
-//   incrementOTPAttempts(): void;
-// }
+export interface IAuthAction {
+  generateAuthToken(): string;
+  generateOTP(): string;
+  isOTPLocked(): boolean;
+  incrementOTPAttempts(): void;
+}
 export type UserModel = mongoose.Model<IUser>;

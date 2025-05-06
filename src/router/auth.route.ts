@@ -1,4 +1,4 @@
-import controller from "./../controller/auth.controller";
+import controller from "../controller/auth/auth.controller";
 import express from "express";
 import passport from 'passport';
 
@@ -12,15 +12,15 @@ const router = express.Router();
 router.post("/sign-in", controller.signin);
 router.post("/verify-otp", controller.verifyEmail);
 router.post("/logout", controller.logout);
-
+router.get("/",controller.findAll);
 
 //Đăng nhập bằng google
-router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-router.get(
-  '/google/callback',
-  passport.authenticate('google', { failureRedirect: '/auth/failure' }),
-  controller.loginSuccess
-);
+// router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+// router.get(
+//   '/google/callback',
+//   passport.authenticate('google', { failureRedirect: '/auth/failure' }),
+//   controller.loginSuccess
+// );
 router.get('/failure', controller.loginFailure);
 // Cập nhật thông tin khách hàng
 // router.put("/update/:userId", authController.signUp);

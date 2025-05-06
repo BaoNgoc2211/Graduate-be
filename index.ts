@@ -31,12 +31,10 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use('/auth', authRoutes);
 
 
 app.use(notFoundRoute);
 app.use(errorHandler);
-
 app.listen(appConfig.PORT, () => {
   console.log(`App started at http://localhost:${appConfig.PORT}`);
   connectDB();

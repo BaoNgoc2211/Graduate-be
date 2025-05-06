@@ -1,4 +1,3 @@
-import { IUpdateProfileDto } from "../interface/admin.interface";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import config from "../config";
@@ -10,16 +9,10 @@ const adminSchema = new mongoose.Schema<IAdmin>(
     email: {
       type: String,
       required: true,
-      unique: true,
+      // unique: true,
       trim: true,
       lowercase: true,
     },
-    name: {
-      type: String,
-      trim: true,
-      lowercase: true,
-    },
-
     isEmailVerified: {
       type: Boolean,
       default: false,
@@ -36,55 +29,42 @@ const adminSchema = new mongoose.Schema<IAdmin>(
       type: Date,
       default: null,
     },
+    info: {
+      name: {
+        type: String,
+        trim: true,
+        default: null,
+      },
+      phone: {
+        type: String,
+        trim: true,
+        default: null,
+      },
+      address: {
+        type: String,
+        trim: true,
+        default: null,
+      },
+      avatar: {
+        type: String,
+        default: null,
+      },
+      gender: {
+        type: String,
+        default: null,
+      },
+      birth: {
+        type: Date,
+        default: null,
+      },
+    },
   },
   { collection: "Admin", timestamps: true }
-);
-
-const updateProfileSchema = new mongoose.Schema<IUpdateProfileDto>(
-  {
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-      trim: true,
-      lowercase: true,
-    },
-    name: {
-      type: String,
-      trim: true,
-      lowercase: true,
-      required: true,
-    },
-    phone: {
-      type: String,
-      trim: true,
-      default: null,
-    },
-    address: {
-      type: String,
-      trim: true,
-    },
-    avatar: {
-      type: String,
-      default: null,
-    },
-    gender: {
-      type: String,
-      default: null,
-    },
-    birth: {
-      type: Date,
-      default: null,
-    },
-    
-  },
-  { timestamps: true }
 );
 adminSchema.methods.generateAuthToken = function () {
   const payload = {
     _id: this._id.toString(),
     email: this.email,
-    
   };
   return jwt.sign(payload, config.jwt.secret, { expiresIn: "7d" });
 };
