@@ -1,17 +1,19 @@
 import { Request, Response } from "express";
-import asyncError from "../middleware/error.middleware";
-import { returnRes } from "../../util/response";
-import jwtServices from "../service/auth/jwt.services";
-import authServices from "../service/auth/auth.services";
+import asyncError from "../../middleware/error.middleware";
+import { returnRes } from "../../../util/response";
+import jwtServices from "../../service/auth/jwt.services";
+import authServices from "../../service/auth/auth.services";
 
 class AuthController {
   //signin
   signin = asyncError(async (req: Request, res: Response) => {
-    const { email } = req.body;
+    const email = req.body.email;
     await authServices.signIn(email);
-    const accessToken = jwtServices.generateJwt;
+    console.log("🚀 ~ AuthController ~ signin=asyncError ~ email:", email)
+    // const accessToken = jwtServices.generateJwt;
     returnRes(res, 200, "Send OTP successful");
   });
+    
 
   verifyEmail = asyncError(async (req: Request, res: Response) => {
     const { email, otp } = req.body;
@@ -32,8 +34,14 @@ class AuthController {
   loginFailure(req: Request, res: Response) {
     res.status(401).json({ message: 'Đăng nhập thất bại' });
   }
+  findAll = asyncError(async(res:Response)=>{
+    const admins = await authServices.findAll();
+    // res.status(200).json(admins);
+    returnRes(res,200,"Find All",admins)
+  })
+  
 
   
 }
-
-export default new AuthController();
+const controller = new AuthController();
+export default controller;

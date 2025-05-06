@@ -92,7 +92,6 @@ userSchema.methods.generateAuthToken = function () {
   const payload = {
     _id: this._id.toString(),
     email: this.email,
-    role: this.role,
   };
   return jwt.sign(payload, config.jwt.secret, { expiresIn: "7d" });
 };
