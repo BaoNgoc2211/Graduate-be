@@ -4,7 +4,7 @@ import connectDB from "./database/connect-database";
 import authRoutes from "./src/router/auth.route";
 import adminRoutes from "./src/router/admin.route";
 import medicineRoutes from "./src/router/medicine.route";
-// import notFoundRoute from "./src/middleware/not-found-routes.middleware";
+import notFoundRoute from "./src/middleware/not-found-routes.middleware";
 import errorHandler from "./src/middleware/error-handler.middleware";
 import session from 'express-session';
 import passport from 'passport';
@@ -33,8 +33,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-// app.use(notFoundRoute);
-// app.use(errorHandler);
+app.use(notFoundRoute);
+app.use(errorHandler);
 app.listen(appConfig.PORT, () => {
   console.log(`App started at http://localhost:${appConfig.PORT}`);
   connectDB();
