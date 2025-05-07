@@ -1,5 +1,5 @@
 import mongoose, { Document } from "mongoose";
-import { genderType } from "../enum/user.enum";
+import { genderType } from "../../enum/user.enum";
 
 export interface IAdmin extends Document {
   email: string;

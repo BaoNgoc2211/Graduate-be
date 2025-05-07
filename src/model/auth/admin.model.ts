@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
-import config from "../config";
-import { IAdmin } from "../interface/admin.interface";
+import config from "../../config";
+import { IAdmin } from "../../interface/auth/admin.interface";
 
 // Định nghĩa schema cho user
 const adminSchema = new mongoose.Schema<IAdmin>(

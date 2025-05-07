@@ -3,6 +3,7 @@ import asyncError from "../../middleware/error.middleware";
 import { returnRes } from "../../../util/response";
 import jwtServices from "../../service/auth/jwt.services";
 import authServices from "../../service/auth/auth.services";
+import adminAuthServices from "../../service/auth/admin.auth.services";
 
 class AuthController {
   //signin
@@ -34,14 +35,20 @@ class AuthController {
   loginFailure(req: Request, res: Response) {
     res.status(401).json({ message: 'Đăng nhập thất bại' });
   }
-  findAll = asyncError(async(res:Response)=>{
+  findAll = asyncError(async(req:Request, res:Response)=>{
     const admins = await authServices.findAll();
-    // res.status(200).json(admins);
     returnRes(res,200,"Find All",admins)
-  })
-  
+  });
 
-  
+  updateInfo = asyncError(async(req:Request, res:Response)=>{
+    const userId = req.params.id;
+    const updateData = req.body;
+    const updateUser = await authServices.updateProfile(userId,updateData)
+    if (!updateUser) {
+          // Trả lỗi tại đây và return để kết thúc
+          return returnRes(res, 404, "Không tìm thấy admin");
+        }
+    returnRes(res,200,"Cập nhật thành công",updateUser);
+  });
 }
-const controller = new AuthController();
-export default controller;
+export default new AuthController;

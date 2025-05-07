@@ -12,7 +12,8 @@ const router = express.Router();
 router.post("/sign-in", controller.signin);
 router.post("/verify-otp", controller.verifyEmail);
 router.post("/logout", controller.logout);
-router.get("/",controller.findAll);
+router.get("/profile",controller.findAll);
+router.put("/profile/:id",controller.updateInfo)
 
 //Đăng nhập bằng google
 // router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));

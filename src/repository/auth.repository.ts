@@ -1,5 +1,5 @@
-import { IUser } from "../interface/user.interface";
-import User from "../model/user.model";
+import { IUser } from "../interface/auth/user.interface";
+import User from "../model/auth/user.model";
 
 class AuthRepository {
   async findEmail(email: string) {
