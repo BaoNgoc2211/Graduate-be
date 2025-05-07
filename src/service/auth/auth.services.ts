@@ -1,4 +1,4 @@
-import User from "../../model/user.model";
+import User from "../../model/auth/user.model";
 import { EmailService } from "../auth/email.services";
 import throwError from "../../util/create-error";
 import authRepository from "../../repository/auth.repository";
@@ -24,7 +24,7 @@ class AuthServices {
     return user;
   }
   findAll = async()=> {
-    return await User.find({});
+    return await User.find();
   };
 
   signIn = async (email: string) => {
@@ -134,21 +134,22 @@ class AuthServices {
 
     return newUser;
   };
+  updateProfile = async(userId:string, data:any) =>{
+    const {name, phone, address, avatar,gender, birth} = data;
+    const updateUser = await User.findByIdAndUpdate(userId,
+      {
+        $set:{
+          ...(name && { "info.name":name }),
+          ...(phone && { "info.phone": phone }),
+          ...(address && { "info.address": address }),
+          ...(avatar && { "info.avatar": avatar }),
+          ...(gender && { "info.gender": gender }),
+          ...(birth && { "info.birth": birth }),
+        }, 
+      },{new: true});
+    return updateUser;
+  };
+  
 }
 const authServices = new AuthServices();
 export default authServices;
-// signIn = async (email: string) => {
-//   const user = await this.getUserByEmail(email);
-//   return user.id;
-// };
-// verifyEmail = async (email: string, otp: string) => {
-//   this.otpInvoker.setCommand(new VerifyOTP(email, otp));
-//   return this.otpInvoker.executeCommand();
-// };
-// resendOTP = async (email: string) => {
-//   if (await this.checkVerifyEmail(email)) {
-//     throwError(400, "Email has already been verify");
-//   }
-//   this.otpInvoker.setCommand(new ResendOTP(email));
-//   return this.otpInvoker.executeCommand();
-// };

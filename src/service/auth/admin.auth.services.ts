@@ -1,4 +1,4 @@
-import Admin from "../../model/admin.model";
+import Admin from "../../model/auth/admin.model";
 import { EmailService } from "../auth/email.services";
 import throwError from "../../util/create-error";
 import authRepository from "../../repository/auth.repository";

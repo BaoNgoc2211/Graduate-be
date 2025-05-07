@@ -1,5 +1,5 @@
 import mongoose, { Document } from "mongoose";
-import { genderType } from "../enum/user.enum";
+import { genderType } from "../../enum/user.enum";
 
 export interface IUser extends Document {
   googleId?: string;
@@ -16,17 +16,16 @@ export interface IUser extends Document {
   generateOTP(): string;
   isOTPLocked(): boolean;
   incrementOTPAttempts(): void;
+  info:{
+    name?: string;
+    phone?: string;
+    address?: string;
+    avatar?: string;
+    gender?: genderType;
+    point?: number;
+  }
 }
-export interface IUpdateProfileDto extends Document {
-  email: string;
-  name: string;
-  phone?: string;
-  address?: string;
-  avatar?: string;
-  gender?: genderType;
-  birth?: Date;
-  point: number;
-}
+
 export interface IAuthAction {
   generateAuthToken(): string;
   generateOTP(): string;
