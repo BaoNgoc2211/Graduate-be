@@ -13,9 +13,9 @@ class MedicineController {
   getById = asyncError( async(req: Request, res: Response) => {
     const { id } = req.params;
     // Kiểm tra định dạng ID có hợp lệ không
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return returnRes(res,400,"Invalid ID format");
-    }
+    // if (!mongoose.Types.ObjectId.isValid(id)) {
+    //   return returnRes(res,400,"Invalid ID format");
+    // }
     const medicine = await medicineServices.getMedicineById(id);
     // Nếu không tìm thấy
     if (!medicine) {
@@ -46,6 +46,33 @@ class MedicineController {
     }
     return returnRes(res,200,"Deleted Medicine",deleted)
   });
-}
 
+  filterMedicine = asyncError(async (req: Request, res: Response) => {
+    const { name, categoryId, indications } = req.query;
+  
+    const medicines = await medicineServices.searchMedicince({
+      name: name as string,
+      categoryId: categoryId as string,
+      indications: indications as string,
+    });
+  
+    console.log('a'); // Sẽ chạy nếu không lỗi
+  
+    return res.status(200).json({ success: true, data: medicines });
+  });
+
+
+  searchMed = asyncError(async(req:Request,res:Response)=>{
+    try {
+      const { name } = req.query;
+      if (!name || typeof name !== 'string') {
+        return res.status(400).json({ message: 'Search query is required' });
+      }
+      const results = await medicineServices.searchMed(name);
+      res.json(results);
+    } catch (error) {
+      res.status(500).json({ message: 'Server error', error });
+    }
+  });
+}
 export default new MedicineController();

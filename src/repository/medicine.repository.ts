@@ -1,7 +1,7 @@
 import Medicine from "../model/medicine/medicine.model";
 import { IMedicine } from "../interface/medicine/medicine.interface";
 import { MainDosageEnum,DetailedDosageFormEnum } from "../enum/medicine/medicine.enum";
-import mongoose from "mongoose";
+import mongoose,{FilterQuery} from "mongoose";
 import medicineCategoryRepository from "./medicine-category.repository";
 
 class MedicineRepository
@@ -36,6 +36,16 @@ class MedicineRepository
   
     async findAll() {
       return await Medicine.find();
+    }
+
+    async searchMedicine(name:string)
+    {
+      return await Medicine.find({
+        name: { $regex: name, $options: 'i' } // tìm không phân biệt hoa thường
+      });
+    }
+    async findMedicine(filter: FilterQuery<any>){
+      return await Medicine.find(filter).populate("categoryId");
     }
 }
 

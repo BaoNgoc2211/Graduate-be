@@ -26,7 +26,7 @@ import { Response } from "express";
 // }
 
 // export default new JWTServices();import { Response } from "express";
-import { IJwt } from "../../interface/jwt.interface";
+import { IJwt } from "../../interface/auth/jwt.interface";
 import jwt from "jsonwebtoken";
 
 class JwtServices implements IJwt {

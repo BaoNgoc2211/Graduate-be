@@ -15,9 +15,9 @@ class MedicineCategoryController {
     const { id } = req.params;
 
     // Kiểm tra định dạng ID có hợp lệ không
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return returnRes(res,400,"Invalid ID format");
-    }
+    // if (!mongoose.Types.ObjectId.isValid(id)) {
+    //   return returnRes(res,400,"Invalid ID format");
+    // }
     const category = await MedicineCategoryService.getById(id);
     // Nếu không tìm thấy
     if (!category) {
