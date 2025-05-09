@@ -12,9 +12,13 @@ router.delete("/cate/:id", medicineCateController.delete);
 
 
 router.get("/", medicineController.getAll);
+router.get("/search",medicineController.searchMed);
+router.get("/filter",medicineController.filterMedicine);
 router.get("/:id", medicineController.getById);
 router.post("/", medicineController.create);
 router.put("/:id", medicineController.update);
 router.delete("/:id", medicineController.delete);
+
+
 
 export default router;

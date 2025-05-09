@@ -100,7 +100,7 @@ const medicineSchema = new Schema<IMedicine>(
     categoryId: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Medicine Category",
+        ref: "MedicineCategory",
         required: true,
       },
     ],
