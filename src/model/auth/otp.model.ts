@@ -1,4 +1,4 @@
-import { IOtp } from "../interface/auth/otp.interface";
+import { IOtp } from "../../interface/auth/otp.interface";
 import mongoose, { Schema } from "mongoose";
 
 const OtpModel:Schema<IOtp> = new Schema({

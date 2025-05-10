@@ -1,5 +1,4 @@
-import OTP from "../model/otp.model";
-
+import OTP from "../model/shipping.model";
 class OtpRepository {
   async saveOTP(email: string, otp: string) {
     await OTP.create({
