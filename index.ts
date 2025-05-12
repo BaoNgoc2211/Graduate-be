@@ -4,6 +4,7 @@ import connectDB from "./database/connect-database";
 import authRoutes from "./src/router/auth.route";
 import adminRoutes from "./src/router/admin.route";
 import medicineRoutes from "./src/router/medicine.route";
+import cartRoutes from "./src/router/cart.route";
 import notFoundRoute from "./src/middleware/not-found-routes.middleware";
 import errorHandler from "./src/middleware/error-handler.middleware";
 import session from 'express-session';
@@ -22,6 +23,8 @@ app.use("/api/admin",adminRoutes);
 // app.use("/api/disCategory", disCategory);
 // app.use("/api/voucher", disCategory);
 app.use("/api/medicine", medicineRoutes);
+app.use("/api/cart", cartRoutes);
+
 
 //đăng nhập googlen
 app.use(session({
