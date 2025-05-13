@@ -13,13 +13,13 @@ const DiseaseUsageGroupSchema = new Schema<IDiseaseUsageGroup>(
       type: String,
       required: true,
     },
-    diseaseCategory: [
+    disease: [
       {
         type: Schema.Types.ObjectId,
       },
     ],
   },
-  { collection: "Disease Usage Group", timestamps: true }
+  { collection: "Disease", timestamps: true }
 );
 const DiseaseUsageGroup = mongoose.model(
   "Disease Usage Group",
