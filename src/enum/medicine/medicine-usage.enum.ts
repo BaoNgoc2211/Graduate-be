@@ -1,5 +1,5 @@
 export const NameEnum = {
-  ANTIBIOTIC: "Thuốc kháng sinh",
+  ANTIBIOTIC: "",
   ONCOLOGY: "Thuốc ung thư",
   UROLOGY: "Thuốc tiết niệu",
   MALE_HEALTH: "Thuốc cho nam giới",

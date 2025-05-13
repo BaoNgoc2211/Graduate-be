@@ -13,10 +13,10 @@ const DiseaseCategorySchema = new Schema<IDiseaseCategory>(
       type: String,
       required: true,
     },
-    disease: [
+    disUsage: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Disease",
+        ref: "Disease Usage Group",
       },
     ],
   },
