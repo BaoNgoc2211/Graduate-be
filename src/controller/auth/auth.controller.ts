@@ -3,15 +3,12 @@ import asyncError from "../../middleware/error.middleware";
 import { returnRes } from "../../../util/response";
 import jwtServices from "../../service/auth/jwt.services";
 import authServices from "../../service/auth/auth.services";
-import adminAuthServices from "../../service/auth/admin.auth.services";
 
 class AuthController {
   //signin
   signin = asyncError(async (req: Request, res: Response) => {
     const email = req.body.email;
     await authServices.signIn(email);
-    console.log("🚀 ~ AuthController ~ signin=asyncError ~ email:", email)
-    // const accessToken = jwtServices.generateJwt;
     returnRes(res, 200, "Send OTP successful");
   });
     
@@ -41,13 +38,10 @@ class AuthController {
   });
 
   updateInfo = asyncError(async(req:Request, res:Response)=>{
-    const userId = req.params.id;
-    const updateData = req.body;
-    const updateUser = await authServices.updateProfile(userId,updateData)
+    const updateUser = await authServices.updateProfile(req.params.id,req.body);
     if (!updateUser) {
-          // Trả lỗi tại đây và return để kết thúc
-          return returnRes(res, 404, "Không tìm thấy admin");
-        }
+      return returnRes(res, 404, "Không tìm thấy admin");
+    }
     returnRes(res,200,"Cập nhật thành công",updateUser);
   });
 }

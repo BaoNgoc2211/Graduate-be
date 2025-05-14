@@ -6,7 +6,7 @@ const router = Router();
 
 router.post("/", cartDetailController.create);
 router.get("/", cartDetailController.getAll);
-// router.get("/:id", cartDetailController.getById);
+router.get("/:id", cartDetailController.getById);
 router.get("/user/:userId", cartDetailController.getByUserId);
 router.put("/:id", cartDetailController.update);
 router.delete("/:id", cartDetailController.delete);
