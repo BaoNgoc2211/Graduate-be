@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import asyncError from "../../middleware/error.middleware";
-import { returnRes } from "../../../util/response";
+import { returnRes } from "../../util/response";
 import jwtServices from "../../service/auth/jwt.services";
 import authServices from "../../service/auth/auth.services";
 
@@ -11,7 +11,6 @@ class AuthController {
     await authServices.signIn(email);
     returnRes(res, 200, "Send OTP successful");
   });
-    
 
   verifyEmail = asyncError(async (req: Request, res: Response) => {
     const { email, otp } = req.body;
@@ -25,16 +24,16 @@ class AuthController {
   });
 
   loginSuccess(req: Request, res: Response) {
-    if (!req.user) return res.redirect('/login');
-    res.json({ message: 'Đăng nhập thành công', user: req.user });
+    if (!req.user) return res.redirect("/login");
+    res.json({ message: "Đăng nhập thành công", user: req.user });
   }
 
   loginFailure(req: Request, res: Response) {
-    res.status(401).json({ message: 'Đăng nhập thất bại' });
+    res.status(401).json({ message: "Đăng nhập thất bại" });
   }
-  findAll = asyncError(async(req:Request, res:Response)=>{
+  findAll = asyncError(async (req: Request, res: Response) => {
     const admins = await authServices.findAll();
-    returnRes(res,200,"Find All",admins)
+    returnRes(res, 200, "Find All", admins);
   });
 
   updateInfo = asyncError(async(req:Request, res:Response)=>{
@@ -45,4 +44,4 @@ class AuthController {
     returnRes(res,200,"Cập nhật thành công",updateUser);
   });
 }
-export default new AuthController;
+export default new AuthController();

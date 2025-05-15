@@ -12,7 +12,8 @@ class MedicineCategoryController {
 
   getById = asyncError( async(req: Request, res: Response) => {
     const category = await MedicineCategoryService.getById(req.params.id);
-    return returnRes(res,200,"Get Id Medicine",category);
+    return returnRes(res,200,"Get Id Medicine",category!);
+
   });
 
   create = asyncError( async(req: Request, res: Response) =>{
@@ -22,12 +23,12 @@ class MedicineCategoryController {
   
   update = asyncError(async(req:Request,res:Response)=>{
     const updated =  await MedicineCategoryService.update(req.params.id, req.body);
-    return returnRes(res,200,"Updated MedCate",updated);
+    return returnRes(res,200,"Updated MedCate",updated!);
   });
   
   delete = asyncError(async(req:Request, res:Response)=>{
     const deleted = await MedicineCategoryService.delete(req.params.id);
-    return returnRes(res,200,"Deleted MedCate",deleted)
+    return returnRes(res,200,"Deleted MedCate",deleted!)
   });
 
 }

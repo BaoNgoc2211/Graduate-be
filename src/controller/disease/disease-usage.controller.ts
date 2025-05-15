@@ -11,12 +11,12 @@ class DisUsageGroupController {
   editDisUsage = asyncError(async (req: Request, res: Response) => {
     const { id } = req.params;
     const data = await disUsageGroupService.editDiseaseUsageGroup(id, req.body);
-    returnRes(res, 200, "Edit disease usage group successful", data);
+    returnRes(res, 200, "Edit disease usage group successful", data!);
   });
   deleteDisUsage = asyncError(async (req: Request, res: Response) => {
     const { id } = req.params;
     const data = await disUsageGroupService.removeDiseaseUsageGroup(id);
-    returnRes(res, 200, "Delete disease usage group successful", data);
+    returnRes(res, 200, "Delete disease usage group successful", data!);
   });
 }
 const disUsageGroupController = new DisUsageGroupController();

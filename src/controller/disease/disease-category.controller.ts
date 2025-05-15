@@ -11,12 +11,12 @@ class DisCategoryController {
   editDisCategory = asyncError(async (req: Request, res: Response) => {
     const { id } = req.params;
     const data = await disCategoryService.editDisCategory(id, req.body);
-    returnRes(res, 200, "Edit disease category successful", data);
+    returnRes(res, 200, "Edit disease category successful", data!);
   });
   deleteDisCategory = asyncError(async (req: Request, res: Response) => {
     const { id } = req.params;
     const data = await disCategoryService.deleteDisCategory(id);
-    returnRes(res, 200, "Delete disease category successful", data);
+    returnRes(res, 200, "Delete disease category successful", data!);
   });
 }
 const disCategoryController = new DisCategoryController();

@@ -10,7 +10,7 @@ class DiseaseController {
   editDisease = asyncError(async (req: Request, res: Response) => {
     const { id } = req.params;
     const data = await diseaseServices.editDisease(id, req.body);
-    returnRes(res, 200, "Edit disease successful", data);
+    returnRes(res, 200, "Edit disease successful", data!);
   });
 }
 const diseaseController = new DiseaseController();
