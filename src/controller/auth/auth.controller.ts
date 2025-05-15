@@ -13,6 +13,7 @@ class AuthController {
     console.log("🚀 ~ AuthController ~ signin=asyncError ~ email:", email)
     // const accessToken = jwtServices.generateJwt;
     returnRes(res, 200, "Send OTP successful");
+    
   });
     
 
