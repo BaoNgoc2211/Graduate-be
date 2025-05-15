@@ -8,7 +8,6 @@ class MedicineController {
     const medicines = await medicineServices.getAllMedicines();
     return returnRes(res, 200, "Fetch successfully", medicines);
   });
-
   getById = asyncError(async (req: Request, res: Response) => {
     const medicineId = await medicineServices.getMedicineById(req.params.id);
     return returnRes(res, 200, "Get Id Medicine", medicineId!);
@@ -30,6 +29,7 @@ class MedicineController {
   delete = asyncError(async (req: Request, res: Response) => {
     const deleted = await medicineServices.deleteMedicine(req.params.id);
     return returnRes(res, 200, "Deleted Medicine", deleted!);
+
   });
 
   filterMedicine = asyncError(async (req: Request, res: Response) => {

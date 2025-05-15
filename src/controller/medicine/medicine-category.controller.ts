@@ -13,6 +13,7 @@ class MedicineCategoryController {
   getById = asyncError( async(req: Request, res: Response) => {
     const category = await MedicineCategoryService.getById(req.params.id);
     return returnRes(res,200,"Get Id Medicine",category!);
+
   });
 
   create = asyncError( async(req: Request, res: Response) =>{

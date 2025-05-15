@@ -36,15 +36,12 @@ class AuthController {
     returnRes(res, 200, "Find All", admins);
   });
 
-  updateInfo = asyncError(async (req: Request, res: Response) => {
-    const updateUser = await authServices.updateProfile(
-      req.params.id,
-      req.body
-    );
+  updateInfo = asyncError(async(req:Request, res:Response)=>{
+    const updateUser = await authServices.updateProfile(req.params.id,req.body);
     if (!updateUser) {
       return returnRes(res, 404, "Không tìm thấy admin");
     }
-    returnRes(res, 200, "Cập nhật thành công", updateUser);
+    returnRes(res,200,"Cập nhật thành công",updateUser);
   });
 }
 export default new AuthController();
