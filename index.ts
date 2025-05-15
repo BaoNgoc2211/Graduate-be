@@ -7,11 +7,13 @@ import medicineRoutes from "./src/router/medicine.route";
 import disUsage from "./src/router/disease-usage.route";
 import disCategory from "./src/router/disease-category.route";
 import cartRoutes from "./src/router/cart.route";
+import uploadRoutes from "./src/router/upload.route";
 import notFoundRoute from "./src/middleware/not-found-routes.middleware";
 import errorHandler from "./src/middleware/error-handler.middleware";
-import session from 'express-session';
-import passport from 'passport';
-import './src/config/passport';
+import session from "express-session";
+import passport from "passport";
+import "./src/config/passport";
+import connectCloudinary from "./src/util/cloudinary";
 
 const app = express();
 
@@ -19,30 +21,32 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/auth", authRoutes);
-app.use("/api/admin",adminRoutes);
+app.use("/api/admin", adminRoutes);
 // app.use("/api/disease", disease);
 app.use("/api/disUsage", disUsage);
 app.use("/api/disCategory", disCategory);
 // app.use("/api/voucher", disCategory);
 app.use("/api/medicine", medicineRoutes);
 app.use("/api/cart", cartRoutes);
-
+app.use("/api/upload", uploadRoutes);
 
 //đăng nhập googlen
-app.use(session({
-  secret: 'your_secret',
-  resave: false,
-  saveUninitialized: true
-}));
+app.use(
+  session({
+    secret: "your_secret",
+    resave: false,
+    saveUninitialized: true,
+  })
+);
 app.use(passport.initialize());
 app.use(passport.session());
-
 
 app.use(notFoundRoute);
 app.use(errorHandler);
 app.listen(appConfig.PORT, () => {
   console.log(`App started at http://localhost:${appConfig.PORT}`);
   connectDB();
+  connectCloudinary();
 });
 
 export default app;

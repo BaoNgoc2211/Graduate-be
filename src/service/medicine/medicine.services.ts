@@ -43,21 +43,21 @@ class MedicineService {
       filters.name = { $regex: name, $options: "i" };
     }
   
-    if (categoryId) {
-      if (mongoose.Types.ObjectId.isValid(categoryId)) {
-        filters.categoryId = categoryId;
-      } else {
-        const error: any = new Error("Invalid categoryId format");
-        error.statusCode = 400; // ⚠️ BẮT BUỘC PHẢI CÓ
-        throw error;
-      }
-    }
+    // if (categoryId) {
+    //   if (mongoose.Types.ObjectId.isValid(categoryId)) {
+    //     filters.categoryId = categoryId;
+    //   } else {
+    //     const error: any = new Error("Invalid categoryId format");
+    //     error.statusCode = 400; // ⚠️ BẮT BUỘC PHẢI CÓ
+    //     throw error;
+    //   }
+    // }
   
     if (indications) {
       filters.indications = { $regex: indications, $options: "i" };
     }
   
-    console.log("Searching with filters:", filters);
+    // console.log("Searching with filters:", filters);
     return await medicineRepository.findMedicine(filters);
   }
 
