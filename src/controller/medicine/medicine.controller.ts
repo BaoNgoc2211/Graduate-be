@@ -6,16 +6,16 @@ import { returnRes } from "../../util/response";
 class MedicineController {
   getAll = asyncError(async (req: Request, res: Response) => {
     const medicines = await medicineServices.getAllMedicines();
-    return returnRes(res, 200, "Fetch successfully", medicines);
+    returnRes(res, 200, "Fetch successfully", medicines);
   });
   getById = asyncError(async (req: Request, res: Response) => {
     const medicineId = await medicineServices.getMedicineById(req.params.id);
-    return returnRes(res, 200, "Get Id Medicine", medicineId!);
+    returnRes(res, 200, "Get Id Medicine", medicineId!);
   });
 
   create = asyncError(async (req: Request, res: Response) => {
     const newMedicine = await medicineServices.createMedicine(req.body);
-    return returnRes(res, 201, "Created Medicine", newMedicine);
+    returnRes(res, 201, "Created Medicine", newMedicine);
   });
 
   update = asyncError(async (req: Request, res: Response) => {
@@ -23,12 +23,12 @@ class MedicineController {
       req.params.id,
       req.body
     );
-    return returnRes(res, 200, "Updated Medicine", updated!);
+    returnRes(res, 200, "Updated Medicine", updated!);
   });
 
   delete = asyncError(async (req: Request, res: Response) => {
     const deleted = await medicineServices.deleteMedicine(req.params.id);
-    return returnRes(res, 200, "Deleted Medicine", deleted!);
+    returnRes(res, 200, "Deleted Medicine", deleted!);
 
   });
 

@@ -5,23 +5,26 @@ import {
 } from "../../enum/medicine/medicine.enum";
 
 export interface IMedicine {
-  image: string;
+  code?: string;
   name: string;
-  price: number;
-  soldQuantity: number;
-  stockQuantity: number;
+  thumbnail?: string;
+  image: string[];
   packaging: string;
-  mainDosageForm: MainDosageFormEnum;
-  detailedDosageForm: DetailedDosageFormEnum;
-  expiryDate: Date;
-  description: string;
-  indications: string;
-  ingredients: string;
+  dosageForm: DetailedDosageFormEnum;
+  dosage?: string;
+  soldQuantity?: number;
+  stockQuantity: number;
   usageInstruction: string;
-  review: IReview[];
-  // drugUsageGroup: mongoose.Types.ObjectId[]; //IMedicineUsageGroup
-  categoryId: mongoose.Types.ObjectId[]; //IMedicineCategory
-  // manufacturerId: mongoose.Types.ObjectId;
+  indication?: string;
+  side_Effect?: string;
+  contraindication?: string;
+  precaution?: string;
+  ability?: string;
+  pregnacy?: string;
+  drug_Interaction?: string;
+  preserve?: string;
+  active?: string;
+  med_CategoryId: mongoose.Types.ObjectId[];
 }
 
 export interface IReview {

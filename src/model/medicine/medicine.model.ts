@@ -26,19 +26,43 @@ const ReviewSchema = new Schema<IReview>(
 
 const medicineSchema = new Schema<IMedicine>(
   {
-    image: {
+    code: {
       type: String,
-      required: true,
+      trim: true,
+      unique: true,
+      sparse: true,
     },
     name: {
       type: String,
       required: true,
       trim: true,
     },
-    price: {
-      type: Number,
+    thumbnail: {
+      type: String,
+      trim: true,
+    },
+    image: [
+      {
+        type: String,
+        required: true,
+        trim: true,
+      },
+    ],
+    packaging: {
+      type: String,
       required: true,
-      min: 0,
+      trim: true,
+    },
+    // dạng điều chế
+    dosageForm: {
+      type: String,
+      required: true,
+      enum: Object.values(DetailedDosageEnum),
+    },
+    //liều dùng
+    dosage: {
+      type: String,
+      trim: true,
     },
     soldQuantity: {
       type: Number,
@@ -50,65 +74,87 @@ const medicineSchema = new Schema<IMedicine>(
       required: true,
       min: 0,
     },
-    packaging: {
-      type: String,
-      required: true,
-    },
-    mainDosageForm: {
-      type: String,
-      enum: Object.values(MainDosageEnum), 
-      required: true,
-    },
-    detailedDosageForm: {
-      type: String,
-      required: true,
-      enum: Object.values(DetailedDosageEnum),
-    },
-    expiryDate: {
-      type: Date,
-      required: true,
-    },
-    description: {
-      type: String,
-      required: true,
-    },
-    indications: {
-      type: String,
-      required: true,
-    },
-    ingredients: {
-      type: String,
-      required: true,
-    },
+    //hướng dẫn sử dụng
     usageInstruction: {
       type: String,
       required: true,
+      trim: true,
     },
-    // review: [
-    //   {
-    //     type: Schema.Types.ObjectId,
-    //     default: null,
-    //   },
-    // ],
-    // drugUsageGroup: [
-    //   {
-    //     type: Schema.Types.ObjectId,
-    //     ref: "Medicine Usage Group",
-    //     required: true,
-    //   },
-    // ],
-    categoryId: [
+    //công dụng
+    indication: {
+      type: String,
+      trim: true,
+    },
+    //tác dụng phụ
+    side_Effect: {
+      type: String,
+      trim: true,
+    },
+    //chống chỉ định
+    contraindication: {
+      type: String,
+      trim: true,
+    },
+    // thận trọng khi sử dụng
+    precaution: {
+      type: String,
+      trim: true,
+    },
+    ability: {
+      type: String,
+      trim: true,
+    },
+    pregnacy: {
+      type: String,
+      trim: true,
+    },
+    // tương tác thuốc
+    drug_Interaction: {
+      type: String,
+      trim: true,
+    },
+    //bảo quản
+    preserve: {
+      type: String,
+      trim: true,
+    },
+    active: {
+      type: String,
+      trim: true,
+    },
+    med_CategoryId: [
       {
         type: Schema.Types.ObjectId,
         ref: "MedicineCategory",
         required: true,
       },
     ],
+    // med_UsageId: {
+    //   type: Schema.Types.ObjectId,
+    //   ref: "MedicineCategory",
+    //   required: true,
+    // },
+    // batch_Id:{
+    //   type: Schema.Types.ObjectId,
+    //   ref: "MedicineCategory",
+    //   required: true,
+    // }
     // manufacturerId: {
     //   type: mongoose.Schema.Types.ObjectId,
     //   ref: "Manufacturer",
     //   required: true,
     // },
+    // medBatchId:{
+    //   type: Schema.Types.ObjectId,
+    //     ref: "MedicineCategory",
+    //     required: true,
+    // }
+    // review: [
+    //   {
+    //     type: Schema.Types.ObjectId,
+    //     default: null,
+    //   },
+    // ],
   },
   {
     collection: "Medicine",
