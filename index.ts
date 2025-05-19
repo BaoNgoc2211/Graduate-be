@@ -10,6 +10,7 @@ import cartRoutes from "./src/router/cart.route";
 import uploadRoutes from "./src/router/upload.route";
 import distributorRoutes from "./src/router/distributor.route";
 import manufactureRoutes from "./src/router/manufacture.route";
+import importBatchRoutes from "./src/router/import-batch.route";
 import notFoundRoute from "./src/middleware/not-found-routes.middleware";
 import errorHandler from "./src/middleware/error-handler.middleware";
 import session from "express-session";
@@ -33,6 +34,7 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/distributor", distributorRoutes);
 app.use("/api/manufacture", manufactureRoutes);
+app.use("/api/import-batch", importBatchRoutes);
 //đăng nhập googlen
 app.use(
   session({
