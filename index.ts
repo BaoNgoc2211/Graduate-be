@@ -8,6 +8,8 @@ import disUsage from "./src/router/disease-usage.route";
 import disCategory from "./src/router/disease-category.route";
 import cartRoutes from "./src/router/cart.route";
 import uploadRoutes from "./src/router/upload.route";
+import distributorRoutes from "./src/router/distributor.route";
+import manufactureRoutes from "./src/router/manufacture.route";
 import notFoundRoute from "./src/middleware/not-found-routes.middleware";
 import errorHandler from "./src/middleware/error-handler.middleware";
 import session from "express-session";
@@ -29,7 +31,8 @@ app.use("/api/disCategory", disCategory);
 app.use("/api/medicine", medicineRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/upload", uploadRoutes);
-
+app.use("/api/distributor", distributorRoutes);
+app.use("/api/manufacture", manufactureRoutes);
 //đăng nhập googlen
 app.use(
   session({

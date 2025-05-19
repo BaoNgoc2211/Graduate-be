@@ -1,7 +1,7 @@
-import { IDisease } from "../interface/disease/disease.interface";
-import Disease from "../model/disease/disease.model";
-import diseaseCategoryRepository from "./disease-category.reposite";
+import { IDisease } from "../../interface/disease/disease.interface";
+import Disease from "../../model/disease/disease.model";
 import mongoose from "mongoose";
+import diseaseCategoryReposite from "./disease-category.repository";
 
 class DiseaseRepository {
   async findId(id: string) {
@@ -13,7 +13,7 @@ class DiseaseRepository {
   async add(disease: IDisease) {
     const newDisease = await Disease.create(disease);
     for (const diseaseCategoryId of disease.diseaseCategory) {
-      await diseaseCategoryRepository.updateDiseaseToCategory(
+      await diseaseCategoryReposite.updateDiseaseToCategory(
         diseaseCategoryId,
         newDisease._id
       );

@@ -1,5 +1,6 @@
 import { IDiseaseUsageGroup } from "../../interface/disease/disease-usage.interface";
-import disUsageRepository from "../../repository/disease-usage.repository ";
+import disUsageRepository from "../../repository/disease/disease-usage.repository ";
+// import disUsageRepository from "../../repository/disease-usage.repository ";
 // import disUsageRepository from "../../repository/disease-usage.repository";
 import throwError from "../../util/create-error";
 

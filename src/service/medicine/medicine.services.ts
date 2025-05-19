@@ -1,4 +1,4 @@
-import medicineRepository from "../../repository/medicine.repository";
+import medicineRepository from "../../repository/medicine/medicine.repository";
 
 import mongoose from "mongoose";
 
@@ -22,27 +22,29 @@ class MedicineService {
     return await medicineRepository.findByName(name);
   }
 
-  async createMedicine(medicine:any ) {
+  async createMedicine(medicine: any) {
     return await medicineRepository.createMedicine(medicine);
   }
 
-  async updateMedicine(id: string, updatedData:any ) {
+  async updateMedicine(id: string, updatedData: any) {
     return await medicineRepository.updateMedicine(id, updatedData);
   }
 
   async deleteMedicine(id: string) {
-    return await medicineRepository.deleteMedicine(new mongoose.Types.ObjectId(id));
+    return await medicineRepository.deleteMedicine(
+      new mongoose.Types.ObjectId(id)
+    );
   }
 
   async searchMedicince(params: FilterParams) {
     const { name, categoryId, indications } = params;
-  
+
     const filters: any = {};
-  
+
     if (name) {
       filters.name = { $regex: name, $options: "i" };
     }
-  
+
     // if (categoryId) {
     //   if (mongoose.Types.ObjectId.isValid(categoryId)) {
     //     filters.categoryId = categoryId;
@@ -52,20 +54,18 @@ class MedicineService {
     //     throw error;
     //   }
     // }
-  
+
     if (indications) {
       filters.indications = { $regex: indications, $options: "i" };
     }
-  
+
     // console.log("Searching with filters:", filters);
     return await medicineRepository.findMedicine(filters);
   }
 
-  async searchMed(name:string)
-  {
+  async searchMed(name: string) {
     return await medicineRepository.searchMedicine(name);
   }
-
 }
 
 export default new MedicineService();
