@@ -1,5 +1,5 @@
-import MedicineCategory from "../model/medicine/medicine-category.model";
-import { IMedicineCategory } from "../interface/medicine/medicine-category.interface";
+import MedicineCategory from "../../model/medicine/medicine-category.model";
+import { IMedicineCategory } from "../../interface/medicine/medicine-category.interface";
 import mongoose from "mongoose";
 
 class MedicineCategoryRepository {

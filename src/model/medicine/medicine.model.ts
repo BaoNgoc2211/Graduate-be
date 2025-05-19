@@ -1,10 +1,12 @@
 import mongoose, { Schema } from "mongoose";
 import {
   DetailedDosageEnum,
-  MainDosageEnum,
 } from "../../enum/medicine/medicine.enum";
-import { IMedicine, IReview } from "../../interface/medicine/medicine.interface";
-const ReviewSchema = new Schema<IReview>(
+import {
+  IMedicine,
+  IReview,
+} from "../../interface/medicine/medicine.interface";
+const reviewSchema = new Schema<IReview>(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
@@ -19,6 +21,11 @@ const ReviewSchema = new Schema<IReview>(
     },
     comment: {
       type: String,
+    },
+    medicine_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Medicine",
+      required: true,
     },
   },
   { collection: "Review", timestamps: true }
@@ -44,7 +51,6 @@ const medicineSchema = new Schema<IMedicine>(
     image: [
       {
         type: String,
-        required: true,
         trim: true,
       },
     ],
@@ -59,26 +65,20 @@ const medicineSchema = new Schema<IMedicine>(
       required: true,
       enum: Object.values(DetailedDosageEnum),
     },
-    //liều dùng
-    dosage: {
-      type: String,
-      trim: true,
-    },
-    soldQuantity: {
-      type: Number,
-      default: 0,
-      min: 0,
-    },
     stockQuantity: {
       type: Number,
       required: true,
       min: 0,
     },
     //hướng dẫn sử dụng
-    usageInstruction: {
+    use: {
       type: String,
       required: true,
       trim: true,
+    },
+    // liều dùng
+    dosage: {
+      type: String,
     },
     //công dụng
     indication: {
@@ -86,7 +86,7 @@ const medicineSchema = new Schema<IMedicine>(
       trim: true,
     },
     //tác dụng phụ
-    side_Effect: {
+    adverse: {
       type: String,
       trim: true,
     },
@@ -104,17 +104,17 @@ const medicineSchema = new Schema<IMedicine>(
       type: String,
       trim: true,
     },
-    pregnacy: {
+    pregnancy: {
       type: String,
       trim: true,
     },
     // tương tác thuốc
-    drug_Interaction: {
+    drugInteractions: {
       type: String,
       trim: true,
     },
     //bảo quản
-    preserve: {
+    storage: {
       type: String,
       trim: true,
     },
@@ -122,39 +122,32 @@ const medicineSchema = new Schema<IMedicine>(
       type: String,
       trim: true,
     },
-    med_CategoryId: [
+    age_group: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "AgeGroup",
+        required: true,
+      },
+    ],
+    medCategory_id: [
       {
         type: Schema.Types.ObjectId,
         ref: "MedicineCategory",
         required: true,
       },
     ],
-    // med_UsageId: {
-    //   type: Schema.Types.ObjectId,
-    //   ref: "MedicineCategory",
-    //   required: true,
-    // },
-    // batch_Id:{
-    //   type: Schema.Types.ObjectId,
-    //   ref: "MedicineCategory",
-    //   required: true,
-    // }
-    // manufacturerId: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: "Manufacturer",
-    //   required: true,
-    // },
-    // medBatchId:{
-    //   type: Schema.Types.ObjectId,
-    //     ref: "MedicineCategory",
-    //     required: true,
-    // }
-    // review: [
-    //   {
-    //     type: Schema.Types.ObjectId,
-    //     default: null,
-    //   },
-    // ],
+    medUsage_id: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "MedicineUsage",
+        required: true,
+      },
+    ],
+    manufacturer_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Manufacturer",
+      required: true,
+    },
   },
   {
     collection: "Medicine",
@@ -162,5 +155,7 @@ const medicineSchema = new Schema<IMedicine>(
   }
 );
 
+// const Review = mongoose.model("Review", reviewSchema);
+// export default Review;
 const Medicine = mongoose.model("Medicine", medicineSchema);
 export default Medicine;

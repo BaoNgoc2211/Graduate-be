@@ -1,13 +1,13 @@
-import Medicine from "../model/medicine/medicine.model";
-import { IMedicine } from "../interface/medicine/medicine.interface";
-import { MainDosageEnum,DetailedDosageFormEnum } from "../enum/medicine/medicine.enum";
-import mongoose,{FilterQuery} from "mongoose";
+import Medicine from "../../model/medicine/medicine.model";
+import { IMedicine } from "../../interface/medicine/medicine.interface";
+import {
+} from "../../enum/medicine/medicine.enum";
+import mongoose, { FilterQuery } from "mongoose";
 import medicineCategoryRepository from "./medicine-category.repository";
 
-class MedicineRepository
-{
+class medicineRepository {
   async findById(id: string) {
-    return await Medicine.findById(id)
+    return await Medicine.findById(id);
   }
 
   async findByName(name: string) {
@@ -16,16 +16,15 @@ class MedicineRepository
 
   async createMedicine(medicine: IMedicine) {
     const newMedicine = await Medicine.create(medicine);
-    for (const medicineCategoryId of medicine.med_CategoryId)
-    {
-        await medicineCategoryRepository.updateMedCatetoMedicine(
-          medicineCategoryId,
-          newMedicine._id
-        );
+    for (const medicineCategoryId of medicine.medCategory_id) {
+      await medicineCategoryRepository.updateMedCatetoMedicine(
+        medicineCategoryId,
+        newMedicine._id
+      );
     }
     return newMedicine;
   }
-  
+
   async deleteMedicine(id: mongoose.Types.ObjectId) {
     return await Medicine.findByIdAndDelete(id);
   }
@@ -38,15 +37,14 @@ class MedicineRepository
     return await Medicine.find();
   }
 
-  async searchMedicine(name:string)
-  {
+  async searchMedicine(name: string) {
     return await Medicine.find({
-      name: { $regex: name, $options: 'i' } // tìm không phân biệt hoa thường
+      name: { $regex: name, $options: "i" }, // tìm không phân biệt hoa thường
     });
   }
-  async findMedicine(filter: FilterQuery<any>){
+  async findMedicine(filter: FilterQuery<any>) {
     return await Medicine.find(filter).populate("categoryId");
   }
 }
 
-export default new MedicineRepository();
+export default new medicineRepository();

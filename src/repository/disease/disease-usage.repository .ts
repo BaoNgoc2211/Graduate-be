@@ -1,5 +1,5 @@
-import { IDiseaseUsageGroup } from "../interface/disease/disease-usage.interface";
-import DisUsageGroup from "../model/disease/disease-usage.model";
+import { IDiseaseUsageGroup } from "../../interface/disease/disease-usage.interface";
+import DisUsageGroup from "../../model/disease/disease-usage.model";
 
 class DisUsageGroupRepository {
   async findName(name: string) {

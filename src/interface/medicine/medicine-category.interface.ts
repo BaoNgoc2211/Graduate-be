@@ -5,6 +5,4 @@ import mongoose from "mongoose";
 export interface IMedicineCategory {
   name: MedicineCategoryEnum;
   icon: string;
-  medicineId: mongoose.Types.ObjectId[];
-  // usageGroups: mongoose.Types.ObjectId[];
 }

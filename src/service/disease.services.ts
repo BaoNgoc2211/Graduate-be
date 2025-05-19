@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { IDisease } from "../interface/disease/disease.interface";
-import diseaseRepository from "../repository/disease.repository";
+import diseaseRepository from "../repository/disease/disease.repository";
 import throwError from "../util/create-error";
 
 class DiseaseServices {

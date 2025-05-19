@@ -13,19 +13,7 @@ const MedicineCategorySchema = new Schema<IMedicineCategory>(
     icon: {
       type: String,
       required: true,
-    },
-    medicineId: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Medicine",
-      },
-    ],
-    // usageGroups: [
-    //   {
-    //     type: Schema.Types.ObjectId,
-    //     ref: "Medicine Usage Group",
-    //   },
-    // ],
+    }
   },
   { collection: "Medicine Category", timestamps: true }
 );

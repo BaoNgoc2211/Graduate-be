@@ -1,5 +1,4 @@
-import medicineCategoryRepository from "../../repository/medicine-category.repository";
-
+import medicineCategoryRepository from "../../repository/medicine/medicine-category.repository";
 export class MedicineCategoryService {
   static async getAll() {
     return medicineCategoryRepository.findAll();

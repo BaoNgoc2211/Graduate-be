@@ -8,22 +8,17 @@ const MedicineUsageGroupSchema = new Schema<IMedicineUsageGroup>(
     name: {
       type: String,
       enum: Object.values(NameEnum),
+      unique: true,
       required: true,
     },
     icon: {
       type: String,
-    },
-    medicineCategory: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Medicine Category",
-      },
-    ],
+    }
   },
-  { collection: "Medicine Usage Group", timestamps: true }
+  { collection: "MedicineUsageGroup", timestamps: true }
 );
 const MedicineUsageGroup = mongoose.model(
-  "Medicine Usage Group",
+  "MedicineUsageGroup",
   MedicineUsageGroupSchema
 );
 export default MedicineUsageGroup;
