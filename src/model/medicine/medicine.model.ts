@@ -1,7 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import {
-  DetailedDosageEnum,
-} from "../../enum/medicine/medicine.enum";
+import { DetailedDosageEnum } from "../../enum/medicine/medicine.enum";
 import {
   IMedicine,
   IReview,
@@ -42,6 +40,7 @@ const medicineSchema = new Schema<IMedicine>(
     name: {
       type: String,
       required: true,
+      unique: true,
       trim: true,
     },
     thumbnail: {
@@ -64,11 +63,6 @@ const medicineSchema = new Schema<IMedicine>(
       type: String,
       required: true,
       enum: Object.values(DetailedDosageEnum),
-    },
-    stockQuantity: {
-      type: Number,
-      required: true,
-      min: 0,
     },
     //hướng dẫn sử dụng
     use: {
@@ -122,11 +116,16 @@ const medicineSchema = new Schema<IMedicine>(
       type: String,
       trim: true,
     },
+    note: {
+      type: String,
+      trim: true,
+    },
     age_group: [
       {
-        type: Schema.Types.ObjectId,
-        ref: "AgeGroup",
-        required: true,
+        type: String,
+        // type: Schema.Types.ObjectId,
+        // ref: "AgeGroup",
+        // required: true,
       },
     ],
     medCategory_id: [

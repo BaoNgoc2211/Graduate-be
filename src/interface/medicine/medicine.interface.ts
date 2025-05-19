@@ -1,30 +1,6 @@
 import mongoose from "mongoose";
 import { DetailedDosageFormEnum } from "../../enum/medicine/medicine.enum";
 
-// export interface IMedicine {
-//   code?: string;
-//   name: string;
-//   thumbnail?: string;
-//   image: string[];
-//   packaging: string;
-//   dosageForm: DetailedDosageFormEnum;
-//   dosage?: string;
-//   soldQuantity?: number;
-//   stockQuantity: number;
-//   usageInstruction: string;
-//   indication?: string;
-//   side_Effect?: string;
-//   contraindication?: string;
-//   precaution?: string;
-//   ability?: string;
-//   pregnacy?: string;
-//   drug_Interaction?: string;
-//   preserve?: string;
-//   active?: string;
-//   med_CategoryId: mongoose.Types.ObjectId[];
-//   med_
-// }
-
 export interface IReview {
   user: mongoose.Types.ObjectId;
   rating: number;
@@ -37,8 +13,7 @@ export interface IMedicine {
   thumbnail: string;
   image?: string[];
   packaging: string;
-  dosageForm: DetailedDosageFormEnum;
-  stockQuantity: number;
+  dosageForm: DetailedDosageFormEnum; // dạng điều chế
   use: string; // cách dùng
   dosage?: string; // liều dùng
   indication?: string; // công dụng
@@ -50,8 +25,9 @@ export interface IMedicine {
   drugInteractions?: string; // Tương tác thuốc
   storage: string; // bảo quản
   active: string;
-  age_group: mongoose.Types.ObjectId[];
+  note: string;
+  age_group: string; //mongoose.Types.ObjectId[]
   medCategory_id: mongoose.Types.ObjectId[];
-  medUsage_id: mongoose.Types.ObjectId[];
+  medUsage_id?: mongoose.Types.ObjectId[];
   manufacturer_id: mongoose.Types.ObjectId;
 }

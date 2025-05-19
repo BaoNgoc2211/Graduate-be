@@ -7,8 +7,8 @@ class importBatchRepository {
       "medicine_id distributor_id"
     );
   }
-  async findByMedicine(medicineId: string) {
-    return await ImportBatch.find({ medicine_id: medicineId });
+  async findBatchNumber(batchNumber: string) {
+    return await ImportBatch.find({ batchNumber: batchNumber });
   }
 
   async create(importBatch: IImportBatch) {
@@ -17,7 +17,6 @@ class importBatchRepository {
   async findAll() {
     return await ImportBatch.find().populate("medicine_id distributor_id");
   }
-
   async updateStatus(id: string, status: string) {
     return await ImportBatch.findByIdAndUpdate(id, { status }, { new: true });
   }

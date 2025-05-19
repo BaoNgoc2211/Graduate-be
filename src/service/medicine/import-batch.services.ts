@@ -4,11 +4,11 @@ import importBatchRepository from "../../repository/medicine/import-batch.reposi
 import throwError from "../../util/create-error";
 
 class ImportBatchServices {
-  private async checkIdExist(id: string) {
-    if (!(await importBatchRepository.findId(id))) {
-      throwError(404, "Import Batch not found");
-    }
-  }
+  // private async checkIdExist(id: string) {
+  //   if (!(await importBatchRepository.findId(id))) {
+  //     throwError(404, "Import Batch not found");
+  //   }
+  // }
 
   async addImportBatch(importBatch: IImportBatch) {
     if (importBatch.quantity <= 0) {
@@ -17,10 +17,10 @@ class ImportBatchServices {
     return await importBatchRepository.create(importBatch);
   }
 
-  async getImportBatch(id: string) {
-    await this.checkIdExist(id);
-    return await importBatchRepository.findId(id);
-  }
+  // async getImportBatch(id: string) {
+  //   await this.checkIdExist(id);
+  //   return await importBatchRepository.findId(id);
+  // }
 
   // async updateImportBatchStatus(id: string, status: string) {
   //   await this.checkIdExist(id);
@@ -30,18 +30,18 @@ class ImportBatchServices {
   //   return await importBatchRepository.updateStatus(id, status);
   // }
 
-  async deleteImportBatch(id: string) {
-    await this.checkIdExist(id);
-    return await importBatchRepository.delete(id);
-  }
+  // async deleteImportBatch(id: string) {
+  //   await this.checkIdExist(id);
+  //   return await importBatchRepository.delete(id);
+  // }
 
-  async getAllImportBatches() {
-    return await importBatchRepository.findAll();
-  }
+  // async getAllImportBatches() {
+  //   return await importBatchRepository.findAll();
+  // }
 
-  async getBatchesByMedicine(medicineId: string) {
-    return await importBatchRepository.findByMedicine(medicineId);
-  }
+  // async getBatchesByMedicine(medicineId: string) {
+  //   return await importBatchRepository.findByMedicine(medicineId);
+  // }
 }
 
 const importBatchServices = new ImportBatchServices();
