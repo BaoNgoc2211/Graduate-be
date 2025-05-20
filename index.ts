@@ -6,7 +6,8 @@ import adminRoutes from "./src/router/admin.route";
 import medicineRoutes from "./src/router/medicine.route";
 import disUsage from "./src/router/disease-usage.route";
 import disCategory from "./src/router/disease-category.route";
-import cartRoutes from "./src/router/cart.route";
+import orderRoutes from "./src/router/order.route";
+// import batchRoutes from "./src/router/batch.route";
 import uploadRoutes from "./src/router/upload.route";
 import distributorRoutes from "./src/router/distributor.route";
 import manufactureRoutes from "./src/router/manufacture.route";
@@ -30,8 +31,11 @@ app.use("/api/disUsage", disUsage);
 app.use("/api/disCategory", disCategory);
 // app.use("/api/voucher", disCategory);
 app.use("/api/medicine", medicineRoutes);
-app.use("/api/cart", cartRoutes);
+app.use("/api/order", orderRoutes);
 app.use("/api/upload", uploadRoutes);
+// app.use("/api/batch",batchRoutes);
+
+
 app.use("/api/distributor", distributorRoutes);
 app.use("/api/manufacture", manufactureRoutes);
 app.use("/api/import-batch", importBatchRoutes);

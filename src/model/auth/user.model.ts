@@ -18,12 +18,6 @@ const userSchema = new mongoose.Schema<IUser>(
       trim: true,
       lowercase: true,
     },
-    name: {
-      type: String,
-      trim: true,
-      lowercase: true,
-    },
-
     isEmailVerified: {
       type: Boolean,
       default: false,
