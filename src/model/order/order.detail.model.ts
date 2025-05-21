@@ -5,7 +5,7 @@ const orderDetail = new Schema({
         code: {
             type: mongoose.Types.ObjectId,
             ref: 'Medicine',
-            require: true
+            required: true
         },
         price:{
             type: mongoose.Types.ObjectId,
@@ -17,6 +17,9 @@ const orderDetail = new Schema({
             min: 1,
         }
     }],
+    totalAmount:{
+        type: String
+    },
     note:{
         type: String,
     }
