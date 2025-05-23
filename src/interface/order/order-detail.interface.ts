@@ -1,15 +1,15 @@
 import { Types } from "mongoose";
 
 export interface IMedicineItem {
-  code: Types.ObjectId; // Mã thuốc (tham chiếu đến Medicine)
-  price?: Types.ObjectId; // Tham chiếu đến lô thuốc (Batch)
-  
+  stock: Types.ObjectId; 
+  name: string;
+  price: number;
+  quantity: number;
 }
-
 export interface IOrderDetail {
-  _id?: Types.ObjectId;
+  _id?: string; // Optional vì khi tạo mới thì chưa có ID
   medicine: IMedicineItem[];
-  totalAmount:number;
+  totalAmount: number;
   note?: string;
   createdAt?: Date;
   updatedAt?: Date;

@@ -1,10 +1,11 @@
-import mongoose, { mongo, Schema } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import { monitorEventLoopDelay } from "perf_hooks";
+import { IOrder } from "../../interface/order/order.interface";
 
-const orderSchema = new Schema(
+const orderSchema = new Schema<IOrder>(
     {
         user_Id:{
-            type:mongoose.Types.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             ref:"User",
             require:true
         },
@@ -33,7 +34,7 @@ const orderSchema = new Schema(
             default: Date.now
         },
         orderDetail:{
-            type: mongoose.Types.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             ref: "OrderDetail"
         }
 

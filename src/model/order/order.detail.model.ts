@@ -1,15 +1,18 @@
 import mongoose, { Schema } from "mongoose";
+import { IOrderDetail } from "../../interface/order/order-detail.interface";
 
-const orderDetail = new Schema({
+const orderDetail = new Schema<IOrderDetail>({
     medicine:[{
-        code: {
+        stock: {
             type: mongoose.Types.ObjectId,
-            ref: 'Medicine',
+            ref: 'Stock',
             required: true
         },
+        name:{
+            type: String,
+        },
         price:{
-            type: mongoose.Types.ObjectId,
-            ref:"ImportBatch",
+            type: Number,
         },
         quantity: {
             type: Number,
@@ -18,7 +21,7 @@ const orderDetail = new Schema({
         }
     }],
     totalAmount:{
-        type: String
+        type: Number,
     },
     note:{
         type: String,
