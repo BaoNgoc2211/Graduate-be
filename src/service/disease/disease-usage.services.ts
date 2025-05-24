@@ -15,16 +15,16 @@ class DiseaseUsageGroupServices {
       throwError(404, "Disease Usage Group name not found");
     }
   }
-  async addDiseaseUsageGroup(name: string, icon: string) {
+  async create(name: string, icon: string) {
     await this.checkNameExist(name);
     return await disUsageRepository.create(name, icon);
   }
-  async removeDiseaseUsageGroup(id: string) {
+  async delete(id: string) {
     await this.checkIdExist(id);
-    return await disUsageRepository.remove(id);
+    return await disUsageRepository.delete(id);
   }
-  async editDiseaseUsageGroup(id: string, disUsage: IDiseaseUsageGroup) {
-    return await disUsageRepository.edit(id, disUsage);
+  async update(id: string, disUsage: IDiseaseUsageGroup) {
+    return await disUsageRepository.update(id, disUsage);
   }
 }
 const disUsageGroupService = new DiseaseUsageGroupServices();

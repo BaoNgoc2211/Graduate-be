@@ -137,7 +137,7 @@ const medicineSchema = new Schema<IMedicine>(
     ],
     medUsage_id: [
       {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "MedicineUsage",
         required: true,
       },

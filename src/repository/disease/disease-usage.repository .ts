@@ -11,11 +11,11 @@ class DisUsageGroupRepository {
   async create(name: string, icon: string) {
     return await DisUsageGroup.create({ name, icon });
   }
-  async remove(id: string) {
-    return await DisUsageGroup.findByIdAndDelete(id);
-  }
-  async edit(id: string, disUsage: IDiseaseUsageGroup) {
+  async update(id: string, disUsage: IDiseaseUsageGroup) {
     return await DisUsageGroup.findByIdAndUpdate(id, disUsage, { new: true });
+  }
+  async delete(id: string) {
+    return await DisUsageGroup.findByIdAndDelete(id);
   }
 }
 export default new DisUsageGroupRepository();

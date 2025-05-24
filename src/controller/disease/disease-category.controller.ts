@@ -3,19 +3,19 @@ import { Response, Request } from "express";
 import { returnRes } from "../../util/response";
 import disCategoryService from "../../service/disease/disease-category.services";
 class DisCategoryController {
-  addDisCategory = asyncError(async (req: Request, res: Response) => {
+  create = asyncError(async (req: Request, res: Response) => {
     const { name, icon } = req.body;
-    await disCategoryService.addDisCategory(name, icon);
+    await disCategoryService.create(name, icon);
     returnRes(res, 200, "Add Disease Category Successful");
   });
-  editDisCategory = asyncError(async (req: Request, res: Response) => {
+  update = asyncError(async (req: Request, res: Response) => {
     const { id } = req.params;
-    const data = await disCategoryService.editDisCategory(id, req.body);
+    const data = await disCategoryService.update(id, req.body);
     returnRes(res, 200, "Edit disease category successful", data!);
   });
-  deleteDisCategory = asyncError(async (req: Request, res: Response) => {
+  delete = asyncError(async (req: Request, res: Response) => {
     const { id } = req.params;
-    const data = await disCategoryService.deleteDisCategory(id);
+    const data = await disCategoryService.delete(id);
     returnRes(res, 200, "Delete disease category successful", data!);
   });
 }

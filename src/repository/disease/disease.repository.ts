@@ -1,33 +1,34 @@
 import { IDisease } from "../../interface/disease/disease.interface";
 import Disease from "../../model/disease/disease.model";
 import mongoose from "mongoose";
-import diseaseCategoryReposite from "./disease-category.repository";
+import disCategoryRepository from "./disease-category.repository";
 
 class DiseaseRepository {
   async findId(id: string) {
     return await Disease.findById(id);
   }
   async findName(name: string) {
-    return await Disease.findOne({ name: name });
+    return await Disease.findOne({ name });
   }
-  async add(disease: IDisease) {
+  async create(disease: IDisease) {
     const newDisease = await Disease.create(disease);
-    for (const diseaseCategoryId of disease.diseaseCategory) {
-      await diseaseCategoryReposite.updateDiseaseToCategory(
-        diseaseCategoryId,
+    for (const categoryId of disease.symptomIds) {
+      await disCategoryRepository.updateDiseaseToCategory(
+        categoryId,
         newDisease._id
       );
     }
     return newDisease;
   }
-  async remove(id: mongoose.Types.ObjectId) {
+  async update(id: string, disease: IDisease) {
+    return await Disease.findByIdAndUpdate(id, disease, { new: true });
+  }
+  async delete(id: mongoose.Types.ObjectId) {
     return await Disease.findByIdAndDelete(id);
   }
-
-  async edit(id: string, product: IDisease) {
-    return await Disease.findByIdAndUpdate(id, product);
+  async findAll() {
+    return await Disease.find();
   }
-
   async getProduct() {
     return await Disease.find();
   }

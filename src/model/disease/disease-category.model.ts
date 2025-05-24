@@ -13,14 +13,14 @@ const DiseaseCategorySchema = new Schema<IDiseaseCategory>(
       type: String,
       required: true,
     },
-    disUsage: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Disease Usage Group",
-      },
-    ],
+    // disUsage: [
+    //   {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "DiseaseUsageGroup",
+    //   },
+    // ],
   },
-  { collection: "Disease Category" }
+  { collection: "DiseaseCategory" }
 );
 
 const DiseaseCategory = mongoose.model(
