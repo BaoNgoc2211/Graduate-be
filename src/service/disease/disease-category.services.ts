@@ -13,16 +13,16 @@ class DisCategoryServices {
       throwError(404, " Disease Category name not found ");
     }
   }
-  async addDisCategory(name: string, icon: string) {
+  async create(name: string, icon: string) {
     await this.checkNameExist(name);
     return await disCategoryRepository.create(name, icon);
   }
-  async deleteDisCategory(id: string) {
+  async delete(id: string) {
     await this.checkIdExist(id);
-    return await disCategoryRepository.remove(id);
+    return await disCategoryRepository.delete(id);
   }
-  async editDisCategory(id: string, disCategory: IDiseaseCategory) {
-    return await disCategoryRepository.edit(id, disCategory);
+  async update(id: string, disCategory: IDiseaseCategory) {
+    return await disCategoryRepository.update(id, disCategory);
   }
 }
 const disCategoryService = new DisCategoryServices();

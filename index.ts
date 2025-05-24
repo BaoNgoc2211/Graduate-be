@@ -1,11 +1,14 @@
+import cors from "cors";
 import express from "express";
 import appConfig from "./src/config/app.config";
 import connectDB from "./database/connect-database";
 import authRoutes from "./src/router/auth.route";
 import adminRoutes from "./src/router/admin.route";
 import medicineRoutes from "./src/router/medicine.route";
-import disUsage from "./src/router/disease-usage.route";
-import disCategory from "./src/router/disease-category.route";
+import disUsageRoutes from "./src/router/disease/disease-usage.route";
+import disCategory from "./src/router/disease/disease-category.route";
+import diseaseRoutes from "./src/router/disease/disease.route";
+import symptomRoutes from "./src/router/disease/symptom.route";
 import orderRoutes from "./src/router/order.route";
 // import batchRoutes from "./src/router/batch.route";
 import uploadRoutes from "./src/router/upload.route";
@@ -20,21 +23,26 @@ import "./src/config/passport";
 import connectCloudinary from "./src/util/cloudinary";
 
 const app = express();
-
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
-// app.use("/api/disease", disease);
-app.use("/api/disUsage", disUsage);
+app.use("/api/disease", diseaseRoutes);
 app.use("/api/disCategory", disCategory);
+app.use("/api/disUsage", disUsageRoutes);
+app.use("/api/symptom", symptomRoutes);
 // app.use("/api/voucher", disCategory);
 app.use("/api/medicine", medicineRoutes);
 app.use("/api/order", orderRoutes);
 app.use("/api/upload", uploadRoutes);
 // app.use("/api/batch",batchRoutes);
-
 
 app.use("/api/distributor", distributorRoutes);
 app.use("/api/manufacture", manufactureRoutes);

@@ -1,27 +1,28 @@
 import { IDiseaseCategory } from "../../interface/disease/disease-category.interface";
 import DisCategory from "../../model/disease/disease-category.model";
 import mongoose from "mongoose";
+import Symptom from "../../model/disease/symptom.interface";
+import { ISymptom } from "../../interface/disease/symptom.interface";
 
-class DisCategoryRepository {
+class SymptomRepository {
   async findName(name: string) {
-    return await DisCategory.findOne({ name });
+    return await Symptom.findOne({ name });
   }
   async findId(id: string) {
-    return await DisCategory.findById(id);
+    return await Symptom.findById(id);
   }
 
-  async create(name: string, icon: string) {
-    return await DisCategory.create({ name, icon });
+  async create(symptom: ISymptom) {
+    return await Symptom.create( symptom );
   }
-  async update(id: string, disCategory: IDiseaseCategory) {
-    return await DisCategory.findByIdAndUpdate(id, disCategory, {
+  async update(id: string, symptom: ISymptom) {
+    return await Symptom.findByIdAndUpdate(id, symptom, {
       new: true,
     });
   }
   async delete(id: string) {
-    return await DisCategory.findByIdAndDelete(id);
+    return await Symptom.findByIdAndDelete(id);
   }
-
   async getAll(categoryName?: string) {
     return categoryName
       ? await this.findName(categoryName)
@@ -37,5 +38,5 @@ class DisCategoryRepository {
     });
   }
 }
-const disCategoryRepository = new DisCategoryRepository();
-export default disCategoryRepository;
+const symptomRepository = new SymptomRepository();
+export default symptomRepository;

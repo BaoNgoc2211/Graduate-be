@@ -8,7 +8,7 @@ const DistributorSchema = new Schema<IDistributor>(
     email: {
       type: String,
       unique: true,
-      trim: true, // Tự động loại bỏ khoảng trắng đầu và cuối
+      trim: true,
       lowercase: true, // Chuyển email về chữ thường
       match: /^\S+@\S+\.\S+$/, // Kiểm tra đúng định dạng email
       required: true,

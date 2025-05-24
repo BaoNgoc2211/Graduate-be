@@ -1,42 +1,56 @@
-import { SeverityEnum } from "./../../enum/disease/disease.enum";
+import { riskGroup, SeverityEnum } from "./../../enum/disease/disease.enum";
 import mongoose, { Schema } from "mongoose";
-import { IDisease } from "../../interface/disease/disease.interface";
-import { StageEnum } from "../../enum/disease/disease.enum";
+import {
+  IDisease,
+  IDiseaseMedicine,
+  IDiseaseSymptom,
+} from "../../interface/disease/disease.interface";
 
 const DiseaseSchema = new Schema<IDisease>(
   {
+    code: {
+      type: String,
+      required: true,
+      trim: true,
+      maxlength: 20,
+    },
     name: {
       type: String,
       required: true,
+      trim: true,
+      maxlength: 100,
     },
-    symptom: {
+    nameDiff: {
       type: String,
-      required: true,
-    },
-    stages: {
-      type: String,
-      enum: Object.values(StageEnum),
-      required: true,
-    },
-    causes: {
-      type: String,
-      required: true,
-    },
-    riskGroup: {
-      type: String,
-    },
-    diagnosis: {
-      type: String,
-    },
-    prevention: {
-      type: String,
+      trim: true,
+      maxlength: 100,
     },
     image: {
       type: String,
-      required: true,
+      trim: true,
     },
-    notes: {
+    common: {
       type: String,
+      trim: true,
+    },
+    riskGroup: [
+      {
+        type: String,
+        enum: Object.values(riskGroup),
+      },
+    ],
+    causes: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    diagnosis: {
+      type: String,
+      trim: true,
+    },
+    prevention: {
+      type: String,
+      trim: true,
     },
     severityLevel: {
       type: String,
@@ -45,24 +59,48 @@ const DiseaseSchema = new Schema<IDisease>(
     },
     treatmentPlan: {
       type: String,
+      trim: true,
     },
-    diseaseUsageGroup: [
+    notes: {
+      type: String,
+      trim: true,
+    },
+    status: {
+      type: String,
+      enum: ["active", "inactive"],
+      default: "active",
+    },
+    symptomIds: [
       {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Symptom",
         required: true,
       },
     ],
-    diseaseCategory: [
+    diseaseCategoryIds: [
       {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "DiseaseCategory",
+        required: true,
+      },
+    ],
+    diseaseUsageGroupIds: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "DiseaseUsageGroup",
         required: true,
       },
     ],
   },
   { collection: "Disease", timestamps: true }
 );
-const Disease = mongoose.model(
-  "Disease",
-  DiseaseSchema
-);
+const DiseaseSymptomSchema = new Schema<IDiseaseSymptom>({
+  disease_id: { type: mongoose.Schema.Types.ObjectId, ref: "Disease" },
+  symptom_id: { type: mongoose.Schema.Types.ObjectId, ref: "Symptom" },
+});
+const DiseaseMedicineSchema = new Schema<IDiseaseMedicine>({
+  disease_id: { type: mongoose.Schema.Types.ObjectId, ref: "Disease" },
+  medicine_id: { type: mongoose.Schema.Types.ObjectId, ref: "Medicine" },
+});
+const Disease = mongoose.model("Disease", DiseaseSchema);
 export default Disease;

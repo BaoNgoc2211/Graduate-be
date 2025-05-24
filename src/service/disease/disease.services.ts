@@ -4,40 +4,32 @@ import diseaseRepository from "../../repository/disease/disease.repository";
 import throwError from "../../util/create-error";
 
 class DiseaseServices {
-  private async checkExistName(name: string) {
-    if (await diseaseRepository.findName(name)) {
-      throwError(409, "Disease name is already exist");
+  // private async checkExistName(name: string, ) {
+  //   if (await diseaseRepository.findName(name)) {
+  //     throwError(409, "Disease name is already exist");
+  //   }
+  // }
+  private async checkExistName(name: string, ignoreId?: string) {
+    const existing = await diseaseRepository.findName(name);
+    if (existing && existing._id.toString() !== ignoreId) {
+      throwError(409, "Disease name already exists");
     }
   }
-  async createDisease(disease: IDisease) {
+  async create(disease: IDisease) {
     await this.checkExistName(disease.name);
-    return await diseaseRepository.add(disease);
+    return await diseaseRepository.create(disease);
   }
-  async editDisease(id: string, disease: IDisease) {
-    return await diseaseRepository.edit(id, disease);
+  async update(id: string, disease: IDisease) {
+    await this.checkExistName(disease.name, id);
+    return await diseaseRepository.update(id, disease);
   }
-  async deleteDisease(id: mongoose.Types.ObjectId) {
-    return await diseaseRepository.remove(id);
+  async delete(id: mongoose.Types.ObjectId) {
+    return await diseaseRepository.delete(id);
   }
-  async getDisease(
-    name: string,
-    symptom: string,
-    stages: string,
-    causes: string,
-    riskGroup: string,
-    diagnosis: string,
-    prevention: string,
-    image: string,
-    notes: string,
-    severityLevel: string,
-    treatmentPlan: string,
-    diseaseUsageGroup: string,
-    diseaseCategory: string,
-    page: number,
-    size: number
-  ) {
-    // const builder = new DiseaseQueryBuilder().setNa
-  }
+  // async getAllDisease(disease: IDisease) {
+  //   return await diseaseRepository.findAll();
+  //   // const builder = new DiseaseQueryBuilder().setNa
+  // }
 }
 const diseaseServices = new DiseaseServices();
 export default diseaseServices;
