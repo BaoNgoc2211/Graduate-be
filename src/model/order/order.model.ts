@@ -1,6 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import { monitorEventLoopDelay } from "perf_hooks";
 import { IOrder } from "../../interface/order/order.interface";
+import { OrderStatus } from "../../enum/order-status.enum";
 
 const orderSchema = new Schema<IOrder>(
     {
@@ -19,7 +20,8 @@ const orderSchema = new Schema<IOrder>(
         // },
         status: {
             type: String,
-            default: "Pending",
+            enum: Object.values(OrderStatus),
+            default: "PENDING",
             require: true,
         },
         // totalAmount:{

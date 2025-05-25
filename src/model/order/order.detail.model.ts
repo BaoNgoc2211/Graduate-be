@@ -8,9 +8,9 @@ const orderDetail = new Schema<IOrderDetail>({
             ref: 'Stock',
             required: true
         },
-        name:{
-            type: String,
-        },
+        // name:{
+        //     type: String,
+        // },
         price:{
             type: Number,
         },

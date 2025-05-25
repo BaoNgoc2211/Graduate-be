@@ -4,20 +4,15 @@ import OrderDetail from "../../model/order/order.detail.model";
 
 class OrderDetailRepository{
     async findAll(){
-        return await OrderDetail.find();;
+        return await OrderDetail.find();
     }
 
     async findById(id: string){
         const orderDetail = await OrderDetail.findById(id)
         .populate({
-            path: 'medicine.code',
+            path: 'medicine.stock',
             model: 'Medicine',
             select: 'code name thumbnail'
-        })
-        .populate({
-            path: 'medicine.price',
-            model: 'ImportBatch',
-            select: 'sellingPrice medicine_id'
         });
         return orderDetail;
     }
