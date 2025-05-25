@@ -19,6 +19,13 @@ class OrderDetailController {
     returnRes(res, 201, "Created", result);
   });
 
+  updateStatus =  asyncError(async (req: Request, res: Response) => {
+    const result = await orderServices.updateStatusOrder(
+      req.params.id,
+      req.body
+    );
+    returnRes(res, 200, "Updated", result!);
+  });
   update = asyncError(async (req: Request, res: Response) => {
     const result = await orderServices.updateOrder(
       req.params.id,
