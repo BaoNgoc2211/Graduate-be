@@ -7,11 +7,11 @@ import medicineRoutes from "./src/router/medicine.route";
 import disUsage from "./src/router/disease-usage.route";
 import disCategory from "./src/router/disease-category.route";
 import orderRoutes from "./src/router/order.route";
-// import batchRoutes from "./src/router/batch.route";
 import uploadRoutes from "./src/router/upload.route";
 import distributorRoutes from "./src/router/distributor.route";
 import manufactureRoutes from "./src/router/manufacture.route";
 import importBatchRoutes from "./src/router/import-batch.route";
+import sotckRoutes from "./src/router/stock.route";
 import notFoundRoute from "./src/middleware/not-found-routes.middleware";
 import errorHandler from "./src/middleware/error-handler.middleware";
 import session from "express-session";
@@ -33,6 +33,7 @@ app.use("/api/disCategory", disCategory);
 app.use("/api/medicine", medicineRoutes);
 app.use("/api/order", orderRoutes);
 app.use("/api/upload", uploadRoutes);
+app.use("/api/stock",sotckRoutes);
 // app.use("/api/batch",batchRoutes);
 
 

@@ -1,3 +1,4 @@
+import { OrderStatus } from "../../enum/order-status.enum";
 import orderRepository from "../../repository/order/order.repository";
 
 class OrderService {
@@ -10,6 +11,22 @@ class OrderService {
     return await orderRepository.findById(id);
   }
 
+  async updateStatusOrder(id:string, newStatus:OrderStatus){
+      const order =  await orderRepository.findById(id);
+      if (!order) throw new Error("Order not found");
+  
+      const currentStatus = order.status;
+  
+       if (newStatus === OrderStatus.CANCELLED) {
+        if (
+          currentStatus === OrderStatus.DELIVERING ||
+          currentStatus === OrderStatus.COMPLETED
+        ) {
+          throw new Error("Không thể huỷ đơn hàng khi đang giao hoặc đã hoàn thành");
+        } 
+      }
+      return await orderRepository.updateOrder(id,{status:newStatus});
+    }
   async updateOrder(id: string, data: any) {
     return await orderRepository.updateOrder(id, data);
   }

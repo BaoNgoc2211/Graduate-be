@@ -1,7 +1,9 @@
 import { IOrderDetail } from "../../interface/order/order-detail.interface";
 import orderDetailRepository from "../../repository/order/order-detail.repository";
-import ImportBatch from "../../model/medicine/import-batch.model";
-import Medicine from "../../model/medicine/medicine.model";
+import Stock from "../../model/stock.model";
+import orderRepository from "../../repository/order/order.repository";
+import { OrderStatus } from "../../enum/order-status.enum";
+import Order from "../../model/order/order.model";
 class OrderDetailService {
   async getAllOrderDetails() {
     return await orderDetailRepository.findAll();
@@ -15,33 +17,28 @@ class OrderDetailService {
     let totalAmount = 0;
     for(const item of data.medicine)
     {
-      const importBatch = await ImportBatch.findById(item.price);
-      console.log(item.quantity);
-      console.log(item.price);
-      if (!importBatch || typeof importBatch.sellingPrice !== "number") {
-      throw new Error(`ImportBatch not found or importPrice invalid for id: ${item.price}`);}
+      const stock = await Stock.findById(item.stock);
+        console.log(item.quantity);
+        console.log(item.stock);
+        if (!stock || typeof stock.sellingPrice !== "number") {
+        throw new Error(`Stock not found or importPrice invalid for id: ${item.price}`);}
 
-      totalAmount += item.quantity * importBatch.sellingPrice;
-
-      // const medicine = await Medicine.findById(item.code);
-      // if (!medicine) {
-      //   throw new Error(`Medicine not found for ID: ${item.code}`);
-      // }
-
-      // if (medicine. < item.quantity) {
-      //   throw new Error(`Not enough stock for medicine ${medicine.name}`);
-      // }
-
-      // // Trừ tồn kho và cộng số lượng đã bán
-      // medicine.stock -= item.quantity;
-      // medicine.sold += item.quantity;
-      // await medicine.save(); // lưu thay đổi
-    // }
+      totalAmount += item.quantity * stock.sellingPrice;
     }
     
     data.totalAmount = totalAmount
+
+    if (!data.orderId) {
+      const newOrder = await Order.create({
+        // user_Id: data.userId || "Khách hàng chưa đặt tên",
+        status: "đang chờ xác nhận"
+      });
+      data.orderId = newOrder._id;
+    }
     return await orderDetailRepository.createOrderDetail(data);
   }
+  
+  
 
   async updateOrderDetail(id: string, data: Partial<IOrderDetail>) {
     return await orderDetailRepository.updateOrderDetail(id, data);
