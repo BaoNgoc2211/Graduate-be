@@ -1,4 +1,4 @@
-const genderEnum = {
+export const genderEnum = {
   MALE: 'Nam',
   FEMALE: 'Nữ'
 } as const 

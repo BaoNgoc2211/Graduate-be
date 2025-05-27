@@ -19,7 +19,7 @@ export const riskGroup = {
   ADOLESCENT: "Thiếu niên",
   ADULT: "Người trưởng thành",
   ELDERLY: "Người cao tuổi",
-};
+} as const;
 export type StagesEnum = keyof typeof StageEnum;
 export type SeverityLevelEnum = keyof typeof SeverityEnum;
 export type RiskGroup = keyof typeof riskGroup;

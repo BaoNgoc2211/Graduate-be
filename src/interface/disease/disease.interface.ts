@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 import {
   RiskGroup,
   SeverityLevelEnum,
-  StagesEnum,
 } from "../../enum/disease/disease.enum";
 // import file csv
 export interface IDisease {
