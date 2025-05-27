@@ -1,50 +1,54 @@
+import { InfoSchema } from "./info.model";
+import {
+  PaymentMethod,
+  PaymentStatus,
+} from "./../../enum/order/order.enum";
 import mongoose, { Schema } from "mongoose";
 import { monitorEventLoopDelay } from "perf_hooks";
-import { IOrder } from "../../interface/order/order.interface";
+import { IInfo, IOrder } from "../../interface/order/order.interface";
 import { OrderStatus } from "../../enum/order-status.enum";
 
 const orderSchema = new Schema<IOrder>(
-    {
-        user_Id:{
-            type: mongoose.Schema.Types.ObjectId,
-            ref:"User",
-            require:true
-        },
-        // voucher:{
-        //     type:mongoose.Types.ObjectId,
-        //     require:true,
-        // },
-        // shipping_id:{
-        //     type:mongoose.Types.ObjectId,
-        //     require:true,
-        // },
-        status: {
-            type: String,
-            enum: Object.values(OrderStatus),
-            default: "PENDING",
-            require: true,
-        },
-        // totalAmount:{
-        //     type: Number,
-        //     require: true,
-        // },
-        // finalAmount:{
-        //     type: String,
-        // },
-        orderDate: {
-            type: Date,
-            default: Date.now
-        },
-        orderDetail:{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "OrderDetail"
-        }
-
+  {
+    user_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      require: true,
     },
-    {
-        collection:"Order",
-        timestamps:true
-    }
+    IInfo: {
+      InfoSchema,
+    },
+    voucher_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Voucher",
+      require: true,
+    },
+    shipping_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Shipping",
+      require: true,
+    },
+    status: {
+      type: String,
+      enum: Object.values(OrderStatus),
+    },
+    totalAmount: {
+      type: Number,
+      require: true,
+    },
+    finalAmount: {
+      type: Number,
+    },
+    paymentMethod: { type: String, enum: Object.values(PaymentMethod) },
+    paymentStatus: {
+      type: String,
+      enum: Object.values(PaymentStatus),
+    },
+  },
+  {
+    collection: "Order",
+    timestamps: true,
+  }
 );
-const Order = mongoose.model("Order",orderSchema);
+const Order = mongoose.model("Order", orderSchema);
 export default Order;

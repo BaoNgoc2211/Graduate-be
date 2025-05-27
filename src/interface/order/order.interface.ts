@@ -1,13 +1,24 @@
-import { Types } from "mongoose";
+import mongoose from "mongoose";
+import {
+  PaymentMethodEnum,
+  PaymentStatusEnum,
+} from "../../enum/order/order.enum";
+import { OrderStatus } from "../../enum/order-status.enum";
 
 export interface IOrder {
-  _id?: Types.ObjectId;
-  user_Id: Types.ObjectId; // Tham chiếu User
-  status: string;
+  user_id: mongoose.Types.ObjectId;
+  IInfo: IInfo;
+  voucher_id: mongoose.Types.ObjectId;
+  shipping_id: mongoose.Types.ObjectId;
+  status: OrderStatus;
   totalAmount: number;
-  finalAmount?: string;
-  orderDate?: Date;
-  orderDetail?: Types.ObjectId; // Tham chiếu đến OrderDetail
-  createdAt?: Date;
-  updatedAt?: Date;
+  finalAmount?: number;
+  paymentMethod: PaymentMethodEnum;
+  paymentStatus: PaymentStatusEnum;
+  orderDetail: mongoose.Types.ObjectId[];
+}
+export interface IInfo {
+  address: string;
+  phone: string;
+  name: string;
 }
