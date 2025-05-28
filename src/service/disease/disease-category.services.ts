@@ -24,6 +24,9 @@ class DisCategoryServices {
   async update(id: string, disCategory: IDiseaseCategory) {
     return await disCategoryRepository.update(id, disCategory);
   }
+  async getAllCategory(categoryName?: string) {
+    return await disCategoryRepository.getAll(categoryName);
+  }
 }
 const disCategoryService = new DisCategoryServices();
 export default disCategoryService;

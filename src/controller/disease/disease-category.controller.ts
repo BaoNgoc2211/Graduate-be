@@ -18,6 +18,13 @@ class DisCategoryController {
     const data = await disCategoryService.delete(id);
     returnRes(res, 200, "Delete disease category successful", data!);
   });
+  getAllCategory = asyncError(async (req: Request, res: Response) => {
+    const { categoryName } = req.query;
+    const data = await disCategoryService.getAllCategory(
+      categoryName as string
+    );
+    returnRes(res, 200, "Get disease category successful", data!);
+  });
 }
 const disCategoryController = new DisCategoryController();
 export default disCategoryController;
