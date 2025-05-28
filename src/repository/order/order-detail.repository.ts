@@ -6,7 +6,6 @@ class OrderDetailRepository{
     async findAll(){
         return await OrderDetail.find();
     }
-
     async findById(id: string){
         const orderDetail = await OrderDetail.findById(id)
         .populate({

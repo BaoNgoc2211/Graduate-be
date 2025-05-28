@@ -35,7 +35,9 @@ class MedicineService {
       new mongoose.Types.ObjectId(id)
     );
   }
-
+  async getId(id: string) {
+    return await medicineRepository.getId(id);
+  }
   async searchMedicince(params: FilterParams) {
     const { name, categoryId, indications } = params;
 

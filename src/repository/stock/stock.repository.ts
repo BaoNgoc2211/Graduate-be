@@ -6,7 +6,7 @@ class StockRepository{
         return await Stock.find();
     }
     async findById(id: string){
-        const stock = await Stock.findById(id)
+        const stock = await Stock.findOne({medicine: id})
         return stock;
     }
     async createStock(data:IStock){

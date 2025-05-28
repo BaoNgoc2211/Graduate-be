@@ -1,7 +1,6 @@
 import Medicine from "../../model/medicine/medicine.model";
 import { IMedicine } from "../../interface/medicine/medicine.interface";
-import {
-} from "../../enum/medicine/medicine.enum";
+import {} from "../../enum/medicine/medicine.enum";
 import mongoose, { FilterQuery } from "mongoose";
 import medicineCategoryRepository from "./medicine-category.repository";
 
@@ -31,6 +30,9 @@ class medicineRepository {
 
   async updateMedicine(id: string, updated: Partial<IMedicine>) {
     return await Medicine.findByIdAndUpdate(id, updated, { new: true });
+  }
+  async getId(id: string) {
+    return await Medicine.findById(id);
   }
 
   async findAll() {

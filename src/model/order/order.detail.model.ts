@@ -1,11 +1,20 @@
 import mongoose, { Schema } from "mongoose";
 import { IOrderDetail } from "../../interface/order/order-detail.interface";
 
-const orderDetail = new Schema<IOrderDetail>(
+const orderDetaiSchema = new Schema<IOrderDetail>(
   {
+    medicine_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Medicine",
+      required: true,
+    },
     stock_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Stock",
+      required: true,
+    },
+    thumbnail: {
+      type: String,
       required: true,
     },
     name: {
@@ -13,6 +22,10 @@ const orderDetail = new Schema<IOrderDetail>(
       required: true,
     },
     price: {
+      type: Number,
+      required: true,
+    },
+    quantity: {
       type: Number,
       required: true,
     },
@@ -28,5 +41,5 @@ const orderDetail = new Schema<IOrderDetail>(
     timestamps: true,
   }
 );
-const OrderDetail = mongoose.model("OrderDetail", orderDetail);
+const OrderDetail = mongoose.model("OrderDetail", orderDetaiSchema);
 export default OrderDetail;

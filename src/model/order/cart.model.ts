@@ -11,7 +11,7 @@ const cartItemSchema = new Schema<ICartItem>(
     },
     thumbnail: { type: String },
     name: { type: String },
-    price: { type: Number },
+    price: { type: Number, required: true },
     quantity: { type: Number, default: 1 },
   },
   { _id: false }
@@ -23,11 +23,9 @@ const cartSchema = new Schema<ICart>(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      unique: true,
     },
     medicine_item: [cartItemSchema],
-    totalItems: { type: Number },
-    totalPrice: { type: Number },
+    totalPrice: { type: Number, default: 0, required: true },
   },
   { collection: "Cart", timestamps: true }
 );
