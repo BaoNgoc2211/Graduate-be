@@ -1,8 +1,9 @@
 import { MedicineCategoryEnum } from "../../enum/medicine/medicine-category.enum";
 import {} from "../../enum/medicine/medicine-category.enum";
-import mongoose from "mongoose";
+import {Types} from "mongoose";
 
 export interface IMedicineCategory {
+  _id?: Types.ObjectId;
   name: MedicineCategoryEnum;
   icon: string;
 }

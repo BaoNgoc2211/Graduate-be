@@ -1,9 +1,9 @@
 import { Router } from "express";
-import vnPayController from "../controller/vnpay.controller";
+import { generatePaymentUrl, handlePaymentResponse } from "../controller/vnpay.controller";
 
 const router = Router();
 
-router.post("/payment", vnPayController.createPayment);
-router.get("/callback", vnPayController.paymentCallback);
+router.post("/payment", generatePaymentUrl);
+router.get("/callback", handlePaymentResponse);
 
 export default router;
