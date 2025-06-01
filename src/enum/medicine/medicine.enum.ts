@@ -48,6 +48,7 @@ export const DetailedDosageEnum = {
   VAGINAL_SOLUTION: "Dung dịch âm đạo",
   DISPERSIBLE_TABLET: "Viên phân tán",
   WASH_SOLUTION: "Dung dịch rửa",
+  OTHER: "Khác",
 };
 export type MainDosageFormEnum = keyof typeof MainDosageEnum;
 export type DetailedDosageFormEnum = keyof typeof DetailedDosageEnum;

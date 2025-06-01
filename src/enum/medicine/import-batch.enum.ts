@@ -1,7 +1,7 @@
 export const StatusEnum = {
-  EXPIRE: "Hết hạn",
+  EXPIRE: "Còn hạn sử dụng",
   INST_OCK: "Hết hạn",
-  SOLD_OUT: "Hết hạn",
+  SOLD_OUT: "Hết hàng",
 } as const;
 
 export type StatusEnum = keyof typeof StatusEnum;

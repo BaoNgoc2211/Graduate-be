@@ -17,6 +17,8 @@ export interface ICart {
   medicine_item: ICartItem[];
   totalItems: number;
   totalPrice: number;
+
+
 }
 export interface ICartItem {
   medicine_id: mongoose.Types.ObjectId;
@@ -24,5 +26,5 @@ export interface ICartItem {
   name: string;
   price: number;
   quantity: number;
-  totalPrice: number;
+  totalAmount?: number; // Optional, can be calculated as price * quantity
 }

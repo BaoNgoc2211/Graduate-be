@@ -15,10 +15,10 @@ export const NameEnum = {
   ANTI_ALLERGY: "Kháng dị ứng",
   TOPICAL_PAIN_RELIEF: "Dầu xoa bóp, dầu gió",
   ANTI_INFLAMMATORY: "Thuốc kháng viêm",
-  OTHER: "Thuốc khác",
+  OTHER: "Khác",
   NEUROLOGY: "Thuốc thần kinh",
   ANALGESIC: "Thuốc giảm đau, hạ sốt",
-  RESPIRATORY: "Hệ hô hấp",
+  RESPIRATORY: "Thuốc hô hấp",
   MUSCULOSKELETAL: "Thuốc cơ xương khớp",
 } as const;
 export type MedicineUsageGroup = keyof typeof NameEnum;

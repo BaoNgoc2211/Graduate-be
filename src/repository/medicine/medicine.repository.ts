@@ -5,22 +5,31 @@ import mongoose, { FilterQuery } from "mongoose";
 import medicineCategoryRepository from "./medicine-category.repository";
 
 class medicineRepository {
+  //list danh sach thuoc
+  async findAll() {
+    return await Medicine.find() // Lấy tất cả thuốc và thông tin kho liên quan;
+    .populate({
+      path: "stock_id",
+      select: "sellingPrice quantity", 
+    });
+  }
+
+  //list detail thuoc
   async findById(id: string) {
-    return await Medicine.findById(id);
+    return await Medicine.findById(id)
+    .populate({
+      path: "stock_id",
+      select: "sellingPrice quantity", // Chỉ lấy price và quantity từ Stock  
+    });;
   }
-
-  async findByName(name: string) {
-    return await Medicine.findOne({ name: name });
-  }
-
-  async createMedicine(medicine: IMedicine) {
+   async createMedicine(medicine: IMedicine) {
     const newMedicine = await Medicine.create(medicine);
-    for (const medicineCategoryId of medicine.medCategory_id) {
-      await medicineCategoryRepository.updateMedCatetoMedicine(
-        medicineCategoryId,
-        newMedicine._id
-      );
-    }
+    // for (const medicineCategoryId of medicine.medCategory_id) {
+    //   await medicineCategoryRepository.updateMedCatetoMedicine(
+    //     medicineCategoryId,
+    //     newMedicine._id
+    //   );
+    // }
     return newMedicine;
   }
 
@@ -31,12 +40,13 @@ class medicineRepository {
   async updateMedicine(id: string, updated: Partial<IMedicine>) {
     return await Medicine.findByIdAndUpdate(id, updated, { new: true });
   }
+
+  async findByName(name: string) {
+    return await Medicine.findOne({ name: name });
+  }
+ 
   async getId(id: string) {
     return await Medicine.findById(id);
-  }
-
-  async findAll() {
-    return await Medicine.find();
   }
 
   async searchMedicine(name: string) {
