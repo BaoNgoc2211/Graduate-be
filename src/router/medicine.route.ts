@@ -2,7 +2,7 @@ import express from "express";
 import medicineCateController from "../controller/medicine/medicine-category.controller";
 import medicineController from "../controller/medicine/medicine.controller";
 import medicineUsageGroup from "../controller/medicine/medicine-usage.controller";
-const  router = express.Router();
+const router = express.Router();
 
 router.get("/cate/", medicineCateController.getAll);
 router.get("/cate/:id", medicineCateController.getById);
@@ -13,6 +13,7 @@ router.delete("/cate/:id", medicineCateController.delete);
 router.get("/", medicineController.getAll);
 router.get("/search", medicineController.searchMed);
 router.get("/filter", medicineController.filterMedicine);
+router.get("/createdAdd", medicineController.getCreateAdd);
 router.get("/:id", medicineController.getById);
 router.post("/", medicineController.create);
 router.put("/:id", medicineController.update);
