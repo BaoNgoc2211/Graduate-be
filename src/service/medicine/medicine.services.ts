@@ -13,7 +13,9 @@ class MedicineService {
   async getAllMedicines() {
     return await medicineRepository.findAll();
   }
-
+  async getMedByCreatedDate() {
+    return await medicineRepository.findCreateAddWithin30Days();
+  }
   async getMedicineById(id: string) {
     return await medicineRepository.findById(id);
   }

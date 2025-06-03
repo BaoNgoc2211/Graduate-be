@@ -8,6 +8,15 @@ class MedicineController {
     const medicines = await medicineServices.getAllMedicines();
     returnRes(res, 200, "Fetch successfully", medicines);
   });
+  getCreateAdd = asyncError(async (req: Request, res: Response) => {
+    try {
+      const result = await medicineServices.getMedByCreatedDate();
+      returnRes(res, 200, "Fetch last 30 days medicines", result);
+    } catch (error) {
+      console.error("Error in getRecentMedicines:", error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  });
   getById = asyncError(async (req: Request, res: Response) => {
     const medicineId = await medicineServices.getMedicineById(req.params.id);
     returnRes(res, 200, "Get Id Medicine", medicineId!);
@@ -29,7 +38,6 @@ class MedicineController {
   delete = asyncError(async (req: Request, res: Response) => {
     const deleted = await medicineServices.deleteMedicine(req.params.id);
     returnRes(res, 200, "Deleted Medicine", deleted!);
-
   });
 
   filterMedicine = asyncError(async (req: Request, res: Response) => {
