@@ -13,6 +13,17 @@ class medicineRepository {
       select: "sellingPrice quantity", 
     });
   }
+  //  5 sản phẩm mới nhất trong vòng 30 ngày 
+  async findCreateAddWithin30Days() {
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  
+    return await Medicine.find({
+      createdAt: { $gte: thirtyDaysAgo }
+    })
+      .sort({ createdAt: -1 }) // mới nhất trước
+      .limit(5); // chỉ lấy 5 sản phẩm
+  }
 
   //list detail thuoc
   async findById(id: string) {
