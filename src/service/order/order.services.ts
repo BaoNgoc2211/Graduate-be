@@ -3,14 +3,20 @@ import { IOrder } from "../../interface/order/order.interface";
 import orderRepository from "../../repository/order/order.repository";
 
 class OrderService {
-  async createOrder(userId: string, data: IOrder) {
-    // Có thể thêm validate hoặc business logic ở đây
-    return await orderRepository.createOrder(userId,data);
-  }
+  // async createOrder(userId: string, data: IOrder) {
+  //   // Có thể thêm validate hoặc business logic ở đây
+  //   return await orderRepository.createOrder(userId,data);
+  // }
 
   async getOrderById(id: string) {
     return await orderRepository.findById(id);
   }
+  async checkOut(userId: string) {
+    const order = await orderRepository.checkOut(userId);
+    if (!order) throw new Error("Không tìm thấy đơn hàng");
+    return order;
+  }
+
 
   async updateStatusOrder(id: string, newStatus: OrderStatus) {
     const order = await orderRepository.findById(id);

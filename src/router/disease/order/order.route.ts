@@ -13,9 +13,10 @@ router.put("/orderdetail/:id", orderDetailController.update);
 router.delete("orderdetail/:id", orderDetailController.delete);
 
 //order
-router.post("/", orderController.create);
+// router.post("/", orderController.create);
 router.get("/", orderController.getAll);
 router.get("/:id", orderController.getById);
+router.post("/checkout/", orderController.checkOut);
 // router.get("/user/:userId", orderDetailController.getByUserId);
 router.put("/:id", orderController.update);
 router.delete("/:id", orderController.delete);
