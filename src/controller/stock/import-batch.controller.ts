@@ -1,6 +1,6 @@
 import { Response, Request } from "express";
 import asyncError from "../../middleware/error.middleware";
-import importBatchServices from "../../service/medicine/import-batch.services";
+import importBatchServices from "../../service/inventory/import-batch.services";
 import { returnRes } from "../../util/response";
 class ImportBatchController {
   addDistributor = asyncError(async (req: Request, res: Response) => {

@@ -1,5 +1,5 @@
-import { IStock } from "../../interface/order/stock.interface";
-import stockRepository from "../../repository/stock/stock.repository";
+import { IStock } from "../../interface/inventory/stock.interface";
+import stockRepository from "../../repository/inventory/stock.repository";
 
 class StockService {
   async getAllStock() {

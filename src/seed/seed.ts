@@ -84,12 +84,12 @@
 // seed();
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import Manufacturer from "../model/medicine/manufacturer.model";
-import Distributor from "../model/medicine/distributor.model";
+import Manufacturer from "../model/inventory/manufacturer.model";
+import Distributor from "../model/inventory/distributor.model";
 import MedicineCategory from "../model/medicine/medicine-category.model";
 import MedicineUsageGroup from "../model/medicine/medicine-usage.model";
 import Medicine from "../model/medicine/medicine.model";
-import ImportBatch from "../model/medicine/import-batch.model";
+import ImportBatch from "../model/inventory/import-batch.model";
 
 dotenv.config();
 

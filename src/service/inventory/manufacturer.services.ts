@@ -1,5 +1,5 @@
-import { IManufacturer } from "../../interface/medicine/manufacturer.interface";
-import manufactureRepository from "../../repository/medicine/manufacture.repository";
+import { IManufacturer } from "../../interface/inventory/manufacturer.interface";
+import manufactureRepository from "../../repository/inventory/manufacture.repository";
 import throwError from "../../util/create-error";
 class ManufacturerServices {
   private async checkNameCoExist(nameCo: string) {

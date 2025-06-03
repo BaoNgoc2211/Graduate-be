@@ -1,5 +1,5 @@
-import { IDistributor } from "../../interface/medicine/distributor.interface";
-import distributorRepository from "../../repository/medicine/distributor.repository";
+import { IDistributor } from "../../interface/inventory/distributor.interface";
+import distributorRepository from "../../repository/inventory/distributor.repository";
 import throwError from "../../util/create-error";
 class DistributorServices {
   private async checkNameCoExist(nameCo: string) {

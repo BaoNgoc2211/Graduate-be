@@ -1,6 +1,6 @@
 import { StatusEnum } from "../../enum/medicine/import-batch.enum";
-import { IImportBatch } from "../../interface/medicine/import-batch.interface";
-import importBatchRepository from "../../repository/medicine/import-batch.repository";
+import { IImportBatch } from "../../interface/inventory/import-batch.interface";
+import importBatchRepository from "../../repository/inventory/import-batch.repository";
 import throwError from "../../util/create-error";
 
 class ImportBatchServices {

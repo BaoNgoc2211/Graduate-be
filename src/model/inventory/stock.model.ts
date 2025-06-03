@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { IStock } from "../../interface/order/stock.interface";
+import { IStock } from "../../interface/inventory/stock.interface";
 
 const stockSchema = new Schema<IStock>(
   {

@@ -1,7 +1,7 @@
 import { ICart, ICartItem } from "../../interface/order/cart.interface";
 import Medicine from "../../model/medicine/medicine.model";
 import Cart from "../../model/order/cart.model";
-import Stock from "../../model/order/stock.model";
+import Stock from "../../model/inventory/stock.model";
 import cartRepository from "../../repository/order/cart.repository";
 import throwError from "../../util/create-error";
 

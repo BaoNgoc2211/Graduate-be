@@ -3,7 +3,7 @@ import { IOrder } from "../../interface/order/order.interface";
 import OrderDetail from "../../model/order/order.detail.model";
 import User from "../../model/auth/user.model";
 import throwError from "../../util/create-error";
-import Stock from "../../model/order/stock.model";
+import Stock from "../../model/inventory/stock.model";
 import Cart from "../../model/order/cart.model";
 import { IOrderDetail } from "../../interface/order/order-detail.interface";
 

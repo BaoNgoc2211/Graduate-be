@@ -1,4 +1,4 @@
-import controller from "../controller/auth/auth.controller";
+import authController from "../../controller/auth/auth.controller";
 import express from "express";
 import passport from 'passport';
 
@@ -9,11 +9,11 @@ const router = express.Router();
 // router.post("/sign-up", authController.signUp);
 // Đăng nhập khách hàng
 // router.post("/sign-in", authController.signUp);
-router.post("/sign-in", controller.signin);
-router.post("/verify-otp", controller.verifyEmail);
-router.post("/logout", controller.logout);
-router.get("/profile",controller.findAll);
-router.put("/profile/:id",controller.updateInfo)
+router.post("/sign-in", authController.signin);
+router.post("/verify-otp", authController.verifyEmail);
+router.post("/logout", authController.logout);
+router.get("/profile",authController.findAll);
+router.put("/profile/:id",authController.updateInfo)
 
 //Đăng nhập bằng google
 // router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
@@ -22,7 +22,7 @@ router.put("/profile/:id",controller.updateInfo)
 //   passport.authenticate('google', { failureRedirect: '/auth/failure' }),
 //   controller.loginSuccess
 // );
-router.get('/failure', controller.loginFailure);
+router.get('/failure', authController.loginFailure);
 // Cập nhật thông tin khách hàng
 // router.put("/update/:userId", authController.signUp);
 // Lấy thông tin khách hàng theo ID

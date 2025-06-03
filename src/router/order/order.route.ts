@@ -1,7 +1,7 @@
 // routes/cartDetail.route.ts
 import { Router } from "express";
-import orderDetailController from "../../../controller/order/order-detail.controller";
-import orderController from "../../../controller/order/order.controller";
+import orderDetailController from "../../controller/order/order-detail.controller";
+import orderController from "../../controller/order/order.controller";
 const router = Router();
 
 //orderdetail
