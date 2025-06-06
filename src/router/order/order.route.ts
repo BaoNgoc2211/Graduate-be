@@ -4,6 +4,12 @@ import orderDetailController from "../../controller/order/order-detail.controlle
 import orderController from "../../controller/order/order.controller";
 const router = Router();
 
+
+//status order
+router.get("/status/:userId", orderController.checkStatusAll);
+router.get("/status/:userId/:status", orderController.checkStatus);
+
+
 //orderdetail
 router.post("/orderdetail/", orderDetailController.create);
 router.get("/orderdetail/", orderDetailController.getAll);
@@ -12,13 +18,14 @@ router.get("/orderdetail/:id", orderDetailController.getById);
 router.put("/orderdetail/:id", orderDetailController.update);
 router.delete("orderdetail/:id", orderDetailController.delete);
 
+router.put("/:id", orderController.update);
 //order
 // router.post("/", orderController.create);
 router.get("/", orderController.getAll);
 router.get("/:id", orderController.getById);
 router.post("/checkout/", orderController.checkOut);
 // router.get("/user/:userId", orderDetailController.getByUserId);
-router.put("/:id", orderController.update);
+
 router.delete("/:id", orderController.delete);
 
 export default router;

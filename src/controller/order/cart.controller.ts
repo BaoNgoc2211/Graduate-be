@@ -37,11 +37,12 @@ class CartController {
         return res.status(400).json({ message: "Missing required fields" });
     }
     // Extract medicineId and quantity from the first item in medicine_item
-    const { medicine_id, quantity = 1 } = medicine_item[0]; // Default quantity to 1 if not provided
-    if (!medicine_id || quantity <= 0) {
-        return res.status(400).json({ message: "Invalid medicine_id or quantity" });
+     for (const item of medicine_item) {
+        if (!item.medicine_id || !item.quantity || item.quantity <= 0) {
+            return res.status(400).json({ message: "Each item must have valid medicine_id and quantity > 0" });
+        }
     }
-    const result = await cartService.addToCart(user_id, medicine_id, quantity);
+    const result = await cartService.addToCart(user_id,medicine_item );
   returnRes(res, 200, "Add item to cart successful", result);
 });
 //   addToCart = asyncError(async (req: Request, res: Response) => {
