@@ -6,6 +6,9 @@ import throwError from "../../util/create-error";
 import Stock from "../../model/inventory/stock.model";
 import Cart from "../../model/order/cart.model";
 import { IOrderDetail } from "../../interface/order/order-detail.interface";
+import { Status } from "cloudinary";
+import { StatusEnum } from "../../enum/medicine/import-batch.enum";
+import { OrderStatus } from "../../enum/order-status.enum";
 
 class OrderDetailRepository {
   async findAll() {
@@ -58,10 +61,6 @@ class OrderDetailRepository {
   }
 
 
-  // async checkOut(userId: string, data: IOrder) {
-  //   // 1. Kiểm tra user tồn tại
-  //   const user_id = await User.findById(userId);async checkout(userId: string) {
-        // Step 1: Find the user's cart with populated medicine items
   async checkOut(userId: string) {
     const cart = await Cart.findOne({ user_id: userId }).populate("medicine_item.medicine_id");
     if (!cart || cart.medicine_item.length === 0) {
@@ -72,15 +71,27 @@ class OrderDetailRepository {
     // Calculate totalAmount for order
     let totalAmount = 0;
     for (const item of cart.medicine_item) {
-        // Using the item.price saved in the cart at the time medicine was added,
-        // so prices are locked as per user's cart experience.
+        const medicineData = item.medicine_id as any; // populated medicine document
+        const stockId = medicineData.stock_id;
+        const stock = await Stock.findById(stockId);
+        if (!stock) {
+            throw new Error(`Không tìm thấy tồn kho cho thuốc ${medicineData.name}`);
+        }
+
+        // Kiểm tra số lượng
+        if (stock.quantity < item.quantity) {
+            throw new Error(`Sản phẩm ${medicineData.name} chỉ còn ${stock.quantity} trong kho`);
+        }
+        stock.quantity -= item.quantity; // Trừ số lượng tồn kho
+        await stock.save(); // Lưu thay đổi tồn kho
+        
         const itemPrice = item.price;
         const itemQuantity = item.quantity;
         const totalAmountForItem = itemPrice * itemQuantity;
         totalAmount += totalAmountForItem;
         // Stock ID - get from populated medicine if available
-        const medicineData = item.medicine_id as any; // populated medicine document
-        const stockId = medicineData.stock_id;
+        // const medicineData = item.medicine_id as any; // populated medicine document
+        
         const orderDetail = new OrderDetail({
             medicine_id: item.medicine_id._id,
             stock_id: stockId,
@@ -106,50 +117,62 @@ class OrderDetailRepository {
     // Step 4: Clear user's cart after successful order
     await Cart.deleteOne({ user_id: userId });
     return {
-        message: "Đặt hàng thành công",
+        message: "Đặt hàng thành công", 
         order,
     };
   }
-      
-  //   if (!user_id) {
-  //     throwError(404, "Not found User");
-  //   }
-  //   // 2. Kiểm tra tồn kho cho từng sản phẩm trong orderDetail
-  //   // const medicineIds = data.orderDetail.map((item) => item.medicine_id);
-  //   // const medicines = await Stock.find({ medicine_id: { $in: medicineIds } });
-  //   // console.log(medicines);
-  //   for (const item of data.orderDetail) {
-  //     const stock = await Stock.findById(item.stock_id);
-  //     if (!stock) {
-  //       throw new Error(`Không tìm thấy stock với ID: ${item.stock_id}`);
-  //     }
+  async checkStatus(userId: string) {
+    const orders = await Order.find({ user_id: userId })
+        .sort({ createdAt: -1 })
+        .populate({
+            path: "orderDetail",
+            populate: {
+                path: "medicine_id",
+                model: "Medicine" // thay bằng tên model thật nếu khác
+            }
+        });
 
-  //     if (stock.quantity == null) {
-  //       throw new Error(`Tồn kho không hợp lệ cho stock ID: ${item.stock_id}`);
-  //     }
+    if (!orders || orders.length === 0) {
+        throw new Error("Người dùng chưa có đơn hàng nào.");
+    }
 
-  //     if (item.quantity > stock.quantity) {
-  //       throw new Error(
-  //         `Số lượng đặt (${item.quantity}) vượt quá tồn kho (${stock.quantity}) cho thuốc có ID: ${stock.medicine}`
-  //       );
-  //     }
-  //     if (item.quantity < stock.quantity) {
-  //       throwError(404, "Hết sản phẩm");
-  //     }
-
-  //     // ❗ Nếu muốn trừ kho khi đặt hàng thành công, bật đoạn sau:
-  //     // stock.quantity -= item.quantity;
-  //     // await stock.save();
-  //   }
-  //   // 3. Tạo đơn hàng
-  //   const order = await Order.create({
-  //     ...data,
-  //     user_id: userId,
-  //   });
-  //   return order;
-  //   // 3. Trừ số lượng tồn kho 
-
-  // }
+    return orders.map(order => ({
+        orderId: order._id,
+        status: order.status,
+        totalAmount: order.totalAmount,
+        finalAmount: order.finalAmount,
+        items: order.orderDetail.map((detail: any) => ({
+            medicineId: detail.medicine_id.id,
+            medicineName: detail.name,
+            quantity: detail.quantity,
+            price: detail.price,
+            total: detail.totalAmount,
+            thumbnail: detail.thumbnail,
+            // medicineInfo: detail.medicine_id // nếu muốn hiển thị thêm thông tin thuốc
+        }))
+    }));
+  }
+  async checkStatusOrder(userId: string, status: OrderStatus) {
+    const orders = await Order.find({ user_id: userId, status })
+            .sort({ createdAt: -1 })
+            .populate("orderDetail");
+    return orders.map(order => ({
+        orderId: order._id,
+        status: order.status,
+        totalAmount: order.totalAmount,
+        finalAmount: order.finalAmount,
+        items: order.orderDetail.map((detail: any) => ({
+            medicicneId: detail.medicine_id,
+            medicineName: detail.name,
+            quantity: detail.quantity,
+            price: detail.price,
+            total: detail.totalAmount,
+            thumbnail: detail.thumbnail,
+            // medicineInfo: detail.medicine_id // nếu muốn hiển thị thêm thông tin thuốc
+        }))
+    }));
+    
+  }
 
   async updateOrder(id: string, data: Partial<IOrder>) {
     const order = await Order.findByIdAndUpdate(id, data, { new: true });

@@ -34,8 +34,22 @@ class OrderDetailController {
     );
     returnRes(res, 200, "Updated", result!);
   });
+
+  checkStatusAll = asyncError(async (req: Request, res: Response) => {
+    const result = await orderServices.checkStatusAllOrder(req.params.userId);
+    returnRes(res, 200, "Get Status Order", result!);
+  });
+
+  checkStatus = asyncError(async (req: Request, res: Response) => {
+    const result = await orderServices.checkStatusOrder(
+      req.params.userId,
+      req.params.status
+    );
+    returnRes(res, 200, "Get Status Order", result!);
+  });
+
   update = asyncError(async (req: Request, res: Response) => {
-    const result = await orderServices.updateOrder(req.params.id, req.body);
+    const result = await orderServices.updateStatusOrder(req.params.id, req.body.status);
     returnRes(res, 200, "Updated", result!);
   });
 
