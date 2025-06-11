@@ -1,11 +1,11 @@
-import { OrderStatus } from "../../enum/order-status.enum";
-import { IOrder } from "../../interface/order/order.interface";
-import orderRepository from "../../repository/order/order.repository";
+import { OrderStatus } from "../../../enum/order-status.enum";
+import { IOrder } from "../../../interface/order/order.interface";
+import orderRepository from "../../../repository/order/order.repository";
 
 class OrderService {
   async createOrder(userId: string, data: IOrder) {
     // Có thể thêm validate hoặc business logic ở đây
-    return await orderRepository.createOrder(userId,data);
+    return await orderRepository.createOrder(userId, data);
   }
 
   async getOrderById(id: string) {

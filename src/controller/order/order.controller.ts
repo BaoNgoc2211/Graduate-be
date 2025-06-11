@@ -1,6 +1,6 @@
 import { IOrder } from "./../../interface/order/order.interface";
 import asyncError from "../../middleware/error.middleware";
-import orderServices from "../../service/order/order.services";
+import orderServices from "../../service/medicine/order/order.services";
 import { returnRes } from "../../util/response";
 import { Request, Response } from "express";
 
@@ -16,8 +16,8 @@ class OrderDetailController {
   });
 
   create = asyncError(async (req: Request, res: Response) => {
-    const {user_id} = req.body;
-    console.log(user_id)
+    const { user_id } = req.body;
+    console.log(user_id);
     const result = await orderServices.createOrder(user_id, req.body);
     returnRes(res, 201, "Created", result);
   });

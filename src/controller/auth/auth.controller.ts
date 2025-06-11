@@ -5,6 +5,11 @@ import jwtServices from "../../service/auth/jwt.services";
 import authServices from "../../service/auth/auth.services";
 
 class AuthController {
+  // signUp = asyncError(async (req: Request, res: Response) => {
+  //   const data = await authServices.signUp(req.body);
+  //   const accessToken = jwtServices.generateJwt(res, data.id);
+  //   returnRes(res, 201, "Sign up successful", accessToken);
+  // });
   //signin
   signin = asyncError(async (req: Request, res: Response) => {
     const email = req.body.email;
@@ -35,13 +40,37 @@ class AuthController {
     const admins = await authServices.findAll();
     returnRes(res, 200, "Find All", admins);
   });
+  resendOTP = asyncError(async (req: Request, res: Response) => {
+    const { email } = req.body;
+    await authServices.resendOTP(email);
+    returnRes(res, 200, "Resend OTP successful");
+  });
 
-  updateInfo = asyncError(async(req:Request, res:Response)=>{
-    const updateUser = await authServices.updateProfile(req.params.id,req.body);
+  // forgotPassword = asyncError(async (req: Request, res: Response) => {
+  //   const { email } = req.body;
+  //   await authServices.forgotPassword(email);
+  //   returnRes(res, 200, `OTP sent to ${email}`);
+  // });
+
+  // resetPassword = asyncError(async (req: Request, res: Response) => {
+  //   const { email, otp, newPassword } = req.body;
+  //   await authServices.resetPassword(email, otp, newPassword);
+  //   returnRes(res, 200, "Reset password successful");
+  // });
+
+  checkAuth = asyncError(async (req: Request, res: Response) => {
+    const user = req.user;
+    returnRes(res, 200, "Check authentication successful", user);
+  });
+  updateInfo = asyncError(async (req: Request, res: Response) => {
+    const updateUser = await authServices.updateProfile(
+      req.params.id,
+      req.body
+    );
     if (!updateUser) {
       return returnRes(res, 404, "Không tìm thấy admin");
     }
-    returnRes(res,200,"Cập nhật thành công",updateUser);
+    returnRes(res, 200, "Cập nhật thành công", updateUser);
   });
 }
 export default new AuthController();

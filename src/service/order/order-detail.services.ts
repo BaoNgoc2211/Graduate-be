@@ -1,9 +1,9 @@
-import { IOrderDetail } from "../../interface/order/order-detail.interface";
-import orderDetailRepository from "../../repository/order/order-detail.repository";
-import Stock from "../../model/order/stock.model";
-import orderRepository from "../../repository/order/order.repository";
-import { OrderStatus } from "../../enum/order-status.enum";
-import Order from "../../model/order/order.model";
+import { IOrderDetail } from "../../../interface/order/order-detail.interface";
+import orderDetailRepository from "../../../repository/order/order-detail.repository";
+import Stock from "../../../model/order/stock.model";
+import orderRepository from "../../../repository/order/order.repository";
+import { OrderStatus } from "../../../enum/order-status.enum";
+import Order from "../../../model/order/order.model";
 class OrderDetailService {
   async getAllOrderDetails() {
     return await orderDetailRepository.findAll();

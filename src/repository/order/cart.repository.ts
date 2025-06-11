@@ -12,7 +12,9 @@ class CartRepository {
     return await Cart.findByIdAndDelete(id);
   }
   async getAll(userId: string) {
-    return await Cart.find({ userId: userId });
+    return await Cart.find({ user_id: userId }).populate(
+      "medicine_item.medicine_id"
+    );
   }
 }
 export default new CartRepository();

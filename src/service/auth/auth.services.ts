@@ -2,6 +2,7 @@ import User from "../../model/auth/user.model";
 import { EmailService } from "../auth/email.services";
 import throwError from "../../util/create-error";
 import authRepository from "../../repository/auth.repository";
+import { IUser } from "../../interface/auth/user.interface";
 
 class AuthServices {
   private async checkEmail(email: string) {
@@ -23,7 +24,21 @@ class AuthServices {
     }
     return user;
   }
-  findAll = async()=> {
+  // private async comparePassword(password: string, hashPassword: string) {
+  //   if (!(await bcrypt.Compare(password, hashPassword))) {
+  //     throwError(400, "Email or password wrong");
+  //   }
+  // }
+  // signUp = async (user: IUser) => {
+  //   await this.checkEmail(user.email);
+  //   user.password = await bcrypt.Hash(user.password!);
+  //   this.otpInvoker.setCommand(new GenerateOTP(user.email));
+  //   this.otpInvoker.setCommand(new sendOTP(user.email));
+  //   await this.otpInvoker.executeCommand();
+  //   return await authRepository.createUser(user);
+  // };
+
+  findAll = async () => {
     return await User.find();
   };
 
@@ -54,7 +69,8 @@ class AuthServices {
     };
   };
   verifyEmail = async (email: string, otp: string) => {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email: email });
+    console.log(user);
     if (!user) throw new Error("Email không tồn tại");
 
     if (user.isOTPLocked()) {
@@ -134,22 +150,44 @@ class AuthServices {
 
     return newUser;
   };
-  updateProfile = async(userId:string, data:any) =>{
-    const {name, phone, address, avatar,gender, birth} = data;
-    const updateUser = await User.findByIdAndUpdate(userId,
+  // resendOTP = async (email: string) => {
+  //   if (await this.checkVerifyUser(email)) {
+  //     throwError(400, "Email has already been verify");
+  //   }
+  //   this.otpInvoker.setCommand(new ResendOTP(email));
+  //   return this.otpInvoker.executeCommand();
+  // };
+
+  // forgotPassword = async (email: string) => {
+  //   await this.getUserByEmail(email);
+  //   const otp = otpServices.generateOTP();
+  //   await otpServices.saveOTP(email, otp);
+  //   mailServices.sendForgotPasswordEmail(email, otp);
+  // };
+
+  // resetPassword = async (email: string, otp: string, newPassword: string) => {
+  //   await otpServices.findOTP(email, otp);
+  //   await authRepository.updatePassword(email, await bcrypt.Hash(newPassword));
+  //   await otpRepository.deleteOTP(email);
+  // };
+  updateProfile = async (userId: string, data: any) => {
+    const { name, phone, address, avatar, gender, birth } = data;
+    const updateUser = await User.findByIdAndUpdate(
+      userId,
       {
-        $set:{
-          ...(name && { "info.name":name }),
+        $set: {
+          ...(name && { "info.name": name }),
           ...(phone && { "info.phone": phone }),
           ...(address && { "info.address": address }),
           ...(avatar && { "info.avatar": avatar }),
           ...(gender && { "info.gender": gender }),
           ...(birth && { "info.birth": birth }),
-        }, 
-      },{new: true});
+        },
+      },
+      { new: true }
+    );
     return updateUser;
   };
-  
 }
 const authServices = new AuthServices();
 export default authServices;

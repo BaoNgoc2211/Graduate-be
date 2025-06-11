@@ -11,6 +11,7 @@ const router = express.Router();
 // router.post("/sign-in", authController.signUp);
 router.post("/sign-in", controller.signin);
 router.post("/verify-otp", controller.verifyEmail);
+
 router.post("/logout", controller.logout);
 router.get("/profile",controller.findAll);
 router.put("/profile/:id",controller.updateInfo)
