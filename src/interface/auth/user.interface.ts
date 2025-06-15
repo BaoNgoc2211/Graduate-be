@@ -5,6 +5,7 @@ export interface IUser extends Document {
   googleId?: string;
   email: string;
   name?: string;
+  password: string;
   isEmailVerified: boolean;
   otp?: {
     code: string;
@@ -16,14 +17,14 @@ export interface IUser extends Document {
   generateOTP(): string;
   isOTPLocked(): boolean;
   incrementOTPAttempts(): void;
-  info:{
+  info: {
     name?: string;
     phone?: string;
     address?: string;
     avatar?: string;
     gender?: genderType;
     point?: number;
-  }
+  };
 }
 
 export interface IAuthAction {

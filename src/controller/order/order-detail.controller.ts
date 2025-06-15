@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import orderDetailServices from "../../service/order/order-detail.services";
 import asyncError from "../../middleware/error.middleware";
 import { returnRes } from "../../util/response";
+import orderDetailServices from "../../service/order/order-detail.services";
 
 class OrderDetailController {
   getAll = asyncError(async (req: Request, res: Response) => {
@@ -10,12 +10,12 @@ class OrderDetailController {
   });
 
   getById = asyncError(async (req: Request, res: Response) => {
-    const result = await orderDetailServices.getOrderDetailById(req.params.id)
+    const result = await orderDetailServices.getOrderDetailById(req.params.id);
     returnRes(res, 200, "Get Cart By ID", result!);
-  });  
+  });
 
   create = asyncError(async (req: Request, res: Response) => {
-    const result = await orderDetailServices.createOrderDetail(req.body)
+    const result = await orderDetailServices.createOrderDetail(req.body);
     returnRes(res, 201, "Created", result);
   });
 
@@ -31,8 +31,6 @@ class OrderDetailController {
     const result = await orderDetailServices.deleteOrderDetail(req.params.id);
     returnRes(res, 200, "Deleted", result!);
   });
-
- 
 
   // getByUserId = asyncError(async (req: Request, res: Response) => {
   //   const result = await cartDetailServices.getCartDetailsByUserId(

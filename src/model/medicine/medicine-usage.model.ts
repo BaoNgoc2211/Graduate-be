@@ -2,7 +2,6 @@ import { NameEnum } from "./../../enum/medicine/medicine-usage.enum";
 import { IMedicineUsageGroup } from "./../../interface/medicine/medicine-usage.interface";
 import mongoose, { Schema } from "mongoose";
 
-
 const MedicineUsageGroupSchema = new Schema<IMedicineUsageGroup>(
   {
     name: {
@@ -13,7 +12,10 @@ const MedicineUsageGroupSchema = new Schema<IMedicineUsageGroup>(
     },
     icon: {
       type: String,
-    }
+    },
+    medicine: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "Medicine", required: true },
+    ],
   },
   { collection: "MedicineUsageGroup", timestamps: true }
 );

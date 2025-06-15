@@ -5,4 +5,5 @@ router.post("/create", cartController.create);
 router.put("/update/:id", cartController.update);
 router.delete("/delete/:id", cartController.delete);
 router.post("/add-item", cartController.addToCart);
+router.get("/get-cart/:userId", cartController.getAll);
 export default router;

@@ -1,8 +1,7 @@
-import { IOrder } from "./../../interface/order/order.interface";
 import asyncError from "../../middleware/error.middleware";
-import orderServices from "../../service/order/order.services";
 import { returnRes } from "../../util/response";
 import { Request, Response } from "express";
+import orderServices from "../../service/order/order.services";
 
 class OrderDetailController {
   getAll = asyncError(async (req: Request, res: Response) => {
@@ -26,7 +25,7 @@ class OrderDetailController {
     const result = await orderServices.checkOut(user_id);
     returnRes(res, 200, "Checkout Success", result);
   });
-  
+
   updateStatus = asyncError(async (req: Request, res: Response) => {
     const result = await orderServices.updateStatusOrder(
       req.params.id,
@@ -49,7 +48,10 @@ class OrderDetailController {
   });
 
   update = asyncError(async (req: Request, res: Response) => {
-    const result = await orderServices.updateStatusOrder(req.params.id, req.body.status);
+    const result = await orderServices.updateStatusOrder(
+      req.params.id,
+      req.body.status
+    );
     returnRes(res, 200, "Updated", result!);
   });
 
