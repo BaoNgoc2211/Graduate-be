@@ -150,7 +150,7 @@ const medicineSchema = new Schema<IMedicine>(
     stock_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Stock",
-      required: true,
+      // required: true,
     },
   },
   {
