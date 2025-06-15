@@ -17,7 +17,7 @@ export interface IDisease {
   severityLevel: SeverityLevelEnum;
   treatmentPlan: string;
   notes?: string;
-  status: string;
+  status?: string;
   symptomIds: mongoose.Types.ObjectId[];
   diseaseCategoryIds: mongoose.Types.ObjectId[];
   diseaseUsageGroupIds: mongoose.Types.ObjectId[];

@@ -1,5 +1,5 @@
-import Distributor from "../../model/medicine/distributor.model";
-import { IDistributor } from "../../interface/medicine/distributor.interface";
+import Distributor from "../../model/inventory/distributor.model";
+import { IDistributor } from "../../interface/inventory/distributor.interface";
 class DistributorRepository {
   async findName(nameCo: string) {
     return await Distributor.findOne({ nameCo });

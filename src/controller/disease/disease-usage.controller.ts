@@ -18,6 +18,11 @@ class DisUsageGroupController {
     const data = await disUsageGroupService.delete(id);
     returnRes(res, 200, "Delete disease usage group successful", data!);
   });
+  getAll = asyncError(async (req: Request, res: Response) => {
+    const { usageName } = req.query;
+    const data = await disUsageGroupService.getAll(usageName as string);
+    returnRes(res, 200, "Get disease usage group successful", data!);
+  });
 }
 const disUsageGroupController = new DisUsageGroupController();
 export default disUsageGroupController;

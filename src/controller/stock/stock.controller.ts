@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import asyncError from "../../middleware/error.middleware";
-import stockServices from "../../service/stock/stock.services";
+import stockServices from "../../service/inventory/stock.services";
 import { returnRes } from "../../util/response";
 
 class StockController {

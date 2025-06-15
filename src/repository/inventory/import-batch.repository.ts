@@ -1,5 +1,5 @@
-import { IImportBatch } from "../../interface/medicine/import-batch.interface";
-import ImportBatch from "../../model/medicine/import-batch.model";
+import { IImportBatch } from "../../interface/inventory/import-batch.interface";
+import ImportBatch from "../../model/inventory/import-batch.model";
 
 class importBatchRepository {
   async findId(id: string) {

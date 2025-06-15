@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import orderDetailServices from "../../service/medicine/order/order-detail.services";
 import asyncError from "../../middleware/error.middleware";
 import { returnRes } from "../../util/response";
+import orderDetailServices from "../../service/order/order-detail.services";
 
 class OrderDetailController {
   getAll = asyncError(async (req: Request, res: Response) => {

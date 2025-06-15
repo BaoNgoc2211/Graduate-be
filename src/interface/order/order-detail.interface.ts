@@ -9,4 +9,5 @@ export interface IOrderDetail {
   quantity: number;
   totalAmount: number;
   note?: string;
+  _id?: mongoose.Types.ObjectId;
 }

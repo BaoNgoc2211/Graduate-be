@@ -1,5 +1,5 @@
-import Manufacturer from "../../model/medicine/manufacturer.model";
-import { IManufacturer } from "../../interface/medicine/manufacturer.interface";
+import Manufacturer from "../../model/inventory/manufacturer.model";
+import { IManufacturer } from "../../interface/inventory/manufacturer.interface";
 class ManufactureRepository {
   async findName(nameCo: string) {
     return await Manufacturer.findOne({ nameCo });

@@ -1,5 +1,5 @@
 import asyncError from "../../middleware/error.middleware";
-import distributorServices from "../../service/medicine/distributor.services";
+import distributorServices from "../../service/inventory/distributor.services";
 import { returnRes } from "../../util/response";
 import { Response, Request } from "express";
 class DistributorController {

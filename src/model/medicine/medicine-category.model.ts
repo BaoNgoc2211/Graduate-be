@@ -13,7 +13,10 @@ const MedicineCategorySchema = new Schema<IMedicineCategory>(
     icon: {
       type: String,
       required: true,
-    }
+    },
+    medicine: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "Medicine", required: true },
+    ],
   },
   { collection: "Medicine Category", timestamps: true }
 );

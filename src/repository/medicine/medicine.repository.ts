@@ -11,6 +11,9 @@ class medicineRepository {
     .populate({
       path: "stock_id",
       select: "sellingPrice quantity", 
+    }).populate({
+      path: "manufacturer_id",
+      select: "nameCo country", 
     });
   }
   //  5 sản phẩm mới nhất trong vòng 30 ngày 
@@ -31,7 +34,11 @@ class medicineRepository {
     .populate({
       path: "stock_id",
       select: "sellingPrice quantity", // Chỉ lấy price và quantity từ Stock  
-    });;
+    }).populate({
+      path: "manufacturer_id",
+      select: "nameCo country", 
+    });
+
   }
    async createMedicine(medicine: IMedicine) {
     const newMedicine = await Medicine.create(medicine);

@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { IManufacturer } from "../../interface/medicine/manufacturer.interface";
+import { IManufacturer } from "../../interface/inventory/manufacturer.interface";
 
 const ManufacturerSchema = new Schema<IManufacturer>(
   {

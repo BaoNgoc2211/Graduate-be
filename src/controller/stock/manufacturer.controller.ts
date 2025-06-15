@@ -1,6 +1,6 @@
 import { Response, Request } from "express";
 import asyncError from "../../middleware/error.middleware";
-import manufacturerServices from "../../service/medicine/manufacturer.services";
+import manufacturerServices from "../../service/inventory/manufacturer.services";
 import { returnRes } from "../../util/response";
 class ManufacturerController {
   addManufacturer = asyncError(async (req: Request, res: Response) => {

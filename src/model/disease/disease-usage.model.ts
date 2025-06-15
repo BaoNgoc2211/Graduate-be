@@ -15,7 +15,7 @@ const DiseaseUsageGroupSchema = new Schema<IDiseaseUsageGroup>(
     disease: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "DiseaseCategory"
+        ref: "Disease"
       },
     ],
   },

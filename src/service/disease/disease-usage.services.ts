@@ -1,4 +1,5 @@
 import { IDiseaseUsageGroup } from "../../interface/disease/disease-usage.interface";
+import DiseaseUsageGroup from "../../model/disease/disease-usage.model";
 import disUsageRepository from "../../repository/disease/disease-usage.repository ";
 // import disUsageRepository from "../../repository/disease-usage.repository ";
 // import disUsageRepository from "../../repository/disease-usage.repository";
@@ -26,6 +27,12 @@ class DiseaseUsageGroupServices {
   async update(id: string, disUsage: IDiseaseUsageGroup) {
     return await disUsageRepository.update(id, disUsage);
   }
+  async getAll(usageName?: string) {
+    return usageName
+      ? await this.checkNameExist(usageName)
+      : await DiseaseUsageGroup.find();
+  }
+
 }
 const disUsageGroupService = new DiseaseUsageGroupServices();
 export default disUsageGroupService;
