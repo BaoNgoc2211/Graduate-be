@@ -28,13 +28,13 @@ class MedicineCategoryRepository {
   async deleteMedicineCate(id: string) {
     return await MedicineCategory.findByIdAndDelete(id).exec();
   }
-  async updateMedCatetoMedicine(
-    medCateId: mongoose.Types.ObjectId,
-    medId: mongoose.Types.ObjectId
-  ) {
+  async updateMedCatetoMedicine(medCateId: mongoose.Types.ObjectId,medId: mongoose.Types.ObjectId) {
     return await MedicineCategory.findByIdAndUpdate(medCateId, {
-      $push: { medicineId: medId },
+      $push: { medicine: medId },
     });
   }
+
+  
+
 }
 export default new MedicineCategoryRepository();

@@ -3,6 +3,8 @@ import { IMedicine } from "../../interface/medicine/medicine.interface";
 import {} from "../../enum/medicine/medicine.enum";
 import mongoose, { FilterQuery } from "mongoose";
 import medicineCategoryRepository from "./medicine-category.repository";
+import medUsageRepository from "./medicine-usage.repository";
+
 
 class medicineRepository {
   //list danh sach thuoc
@@ -42,12 +44,18 @@ class medicineRepository {
   }
    async createMedicine(medicine: IMedicine) {
     const newMedicine = await Medicine.create(medicine);
-    // for (const medicineCategoryId of medicine.medCategory_id) {
-    //   await medicineCategoryRepository.updateMedCatetoMedicine(
-    //     medicineCategoryId,
-    //     newMedicine._id
-    //   );
-    // }
+    for (const medicineCategoryId of medicine.medCategory_id) {
+      await medicineCategoryRepository.updateMedCatetoMedicine(
+        medicineCategoryId,
+        newMedicine._id
+      );
+    }
+    for (const medicineUsageId of medicine.medUsage_id) {
+      await medUsageRepository.UsageToMedicine(
+        medicineUsageId,
+        newMedicine._id
+      );
+    }
     return newMedicine;
   }
 

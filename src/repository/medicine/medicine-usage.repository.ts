@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { IMedicineUsageGroup } from "../../interface/medicine/medicine-usage.interface";
 import MedicineUsageGroup from "../../model/medicine/medicine-usage.model";
 
@@ -17,6 +18,11 @@ class MedGroupRepository {
   async edit(id: string, medUsage: IMedicineUsageGroup) {
     return await MedicineUsageGroup.findByIdAndUpdate(id, medUsage, {
       new: true,
+    });
+  }
+  async UsageToMedicine(medUsage: mongoose.Types.ObjectId,medId: mongoose.Types.ObjectId) {
+    return await MedicineUsageGroup.findByIdAndUpdate(medUsage, {
+      $push: { medicine: medUsage },
     });
   }
 }
