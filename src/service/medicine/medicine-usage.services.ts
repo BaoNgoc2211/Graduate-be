@@ -7,6 +7,12 @@ import medUsageRepository from "../../repository/medicine/medicine-usage.reposit
 import throwError from "../../util/create-error";
 
 class MedicineUsageGroupServices {
+  async getAll() {
+    return await medUsageRepository.getAll();
+  }
+  async getById(id: string) {
+    const data = await medUsageRepository.getById(id);
+  }
   private async checkNameExist(name: string) {
     if (await medUsageRepository.findName(name)) {
       throwError(409, "Medicine Usage Group is already exist");

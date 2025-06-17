@@ -11,7 +11,7 @@ class OrderDetailController {
 
   getById = asyncError(async (req: Request, res: Response) => {
     const result = await orderDetailServices.getOrderDetailById(req.params.id);
-    returnRes(res, 200, "Get Cart By ID", result!);
+    returnRes(res, 200, "Get OrderDetail By OrderId", result!);
   });
 
   create = asyncError(async (req: Request, res: Response) => {

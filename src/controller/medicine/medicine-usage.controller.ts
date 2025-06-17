@@ -3,6 +3,16 @@ import medUsageGroupService from "../../service/medicine/medicine-usage.services
 import { returnRes } from "../../util/response";
 import { Response, Request } from "express";
 class MedUsageGroupController {
+
+  getAll = asyncError(async (req: Request, res: Response) => {
+    const usage = await medUsageGroupService.getAll();
+    returnRes(res, 200, "GetAll" );
+  });
+  getById = asyncError(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const data = await medUsageGroupService.getById(id);
+    returnRes(res, 200, "Get Medicine usage group by id successful", data!);
+  });
   addMedUsage = asyncError(async (req: Request, res: Response) => {
     const { name, icon } = req.body;
     const data = await medUsageGroupService.add(name, icon);

@@ -3,6 +3,12 @@ import { IMedicineUsageGroup } from "../../interface/medicine/medicine-usage.int
 import MedicineUsageGroup from "../../model/medicine/medicine-usage.model";
 
 class MedGroupRepository {
+  async getAll() {
+   return await MedicineUsageGroup.find().populate("medicine");
+  }
+  async getById(id: string) {
+    return await MedicineUsageGroup.findById(id).populate("medicine");
+  }
   async findName(name: string) {
     return await MedicineUsageGroup.findOne({ name });
   }
