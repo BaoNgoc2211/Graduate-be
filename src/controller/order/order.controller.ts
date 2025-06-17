@@ -20,11 +20,11 @@ class OrderDetailController {
   //   const result = await orderServices.createOrder(user_id, req.body);
   //   returnRes(res, 201, "Created", result);
   // });
-  checkOut = asyncError(async (req: Request, res: Response) => {
-    const { user_id } = req.body;
-    const result = await orderServices.checkOut(user_id);
-    returnRes(res, 200, "Checkout Success", result);
-  });
+  // checkOut = asyncError(async (req: Request, res: Response) => {
+  //   const { user_id } = req.body;
+  //   const result = await orderServices.checkOut(user_id);
+  //   returnRes(res, 200, "Checkout Success", result);
+  // });
 
   updateStatus = asyncError(async (req: Request, res: Response) => {
     const result = await orderServices.updateStatusOrder(

@@ -6,7 +6,7 @@ import passport from "passport";
 
 const router = express.Router();
 // Đăng ký khách hàng
-// router.post("/sign-up", authController.signUp);
+router.post("/sign-up", authController.signUp);
 // Đăng nhập khách hàng
 // router.post("/sign-in", authController.signUp);
 

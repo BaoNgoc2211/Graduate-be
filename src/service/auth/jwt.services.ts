@@ -34,7 +34,7 @@ class JwtServices implements IJwt {
     const payload = {
       userId,
     };
-    const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN!, {
+    const accessToken = jwt.sign(payload, process.env.JWT_SECRET!, {
       expiresIn: "2h",
     });
     res.cookie("accessToken", accessToken, {

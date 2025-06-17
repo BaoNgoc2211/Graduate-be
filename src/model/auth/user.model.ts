@@ -6,8 +6,7 @@ import { IUser } from "../../interface/auth/user.interface";
 // Định nghĩa schema cho user
 const userSchema = new mongoose.Schema<IUser>(
   {
-    googleId:
-    {
+    googleId: {
       type: String,
       unique: true,
     },
@@ -17,6 +16,11 @@ const userSchema = new mongoose.Schema<IUser>(
       unique: true,
       trim: true,
       lowercase: true,
+    },
+    password: {
+      type: String,
+      required: true,
+      trim: true,
     },
     isEmailVerified: {
       type: Boolean,
@@ -35,9 +39,9 @@ const userSchema = new mongoose.Schema<IUser>(
       default: null,
     },
     info: {
-      name:{
-        type:String,
-        trim:true,
+      name: {
+        type: String,
+        trim: true,
       },
       phone: {
         type: String,
@@ -63,13 +67,12 @@ const userSchema = new mongoose.Schema<IUser>(
       },
       point: {
         type: Number,
-        default:0,
-      }
+        default: 0,
+      },
     },
   },
   { collection: "User", timestamps: true }
 );
-
 
 userSchema.methods.generateAuthToken = function () {
   const payload = {

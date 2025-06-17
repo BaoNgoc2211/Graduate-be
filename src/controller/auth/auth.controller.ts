@@ -5,27 +5,22 @@ import jwtServices from "../../service/auth/jwt.services";
 import authServices from "../../service/auth/auth.services";
 
 class AuthController {
-  // signUp = asyncError(async (req: Request, res: Response) => {
-  //   const data = await authServices.signUp(req.body);
-  //   const accessToken = jwtServices.generateJwt(res, data.id);
-  //   returnRes(res, 201, "Sign up successful", accessToken);
-  // });
-  //signin
-  signin = asyncError(async (req: Request, res: Response) => {
-    const email = req.body.email;
-    await authServices.signIn(email);
-    returnRes(res, 200, "Send OTP successful");
+  signUp = asyncError(async (req: Request, res: Response) => {
+    const data = await authServices.signUp(req.body);
+    const accessToken = jwtServices.generateJwt(res, data.id);
+    returnRes(res, 201, "Sign up successful", accessToken);
   });
-
   verifyEmail = asyncError(async (req: Request, res: Response) => {
     const { email, otp } = req.body;
     await authServices.verifyEmail(email, otp);
     returnRes(res, 200, "Verify email successful");
   });
-
-  logout = asyncError(async (req: Request, res: Response) => {
-    jwtServices.clearJwt(res);
-    returnRes(res, 200, "Log out successful");
+  // signin
+  signin = asyncError(async (req: Request, res: Response) => {
+    const data = await authServices.signIn(req.body);
+    console.log(data);
+    const accessToken = jwtServices.generateJwt(res, data);
+    returnRes(res, 200, "Đăng nhập thành công", accessToken);
   });
 
   loginSuccess(req: Request, res: Response) {
@@ -36,15 +31,20 @@ class AuthController {
   loginFailure(req: Request, res: Response) {
     res.status(401).json({ message: "Đăng nhập thất bại" });
   }
+  logout = asyncError(async (req: Request, res: Response) => {
+    jwtServices.clearJwt(res);
+    returnRes(res, 200, "Log out successful");
+  });
+
   findAll = asyncError(async (req: Request, res: Response) => {
     const admins = await authServices.findAll();
     returnRes(res, 200, "Find All", admins);
   });
-  resendOTP = asyncError(async (req: Request, res: Response) => {
-    const { email } = req.body;
-    await authServices.resendOTP(email);
-    returnRes(res, 200, "Resend OTP successful");
-  });
+  // resendOTP = asyncError(async (req: Request, res: Response) => {
+  //   const { email } = req.body;
+  //   await authServices.resendOTP(email);
+  //   returnRes(res, 200, "Resend OTP successful");
+  // });
 
   // forgotPassword = asyncError(async (req: Request, res: Response) => {
   //   const { email } = req.body;

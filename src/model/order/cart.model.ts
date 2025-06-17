@@ -9,11 +9,7 @@ const cartItemSchema = new Schema<ICartItem>(
       ref: "Medicine",
       required: true,
     },
-    thumbnail: { type: String },
-    name: { type: String },
-    price: { type: Number,},
     quantity: { type: Number, default: 1 },
-
   },
   { _id: false }
 );
@@ -26,7 +22,7 @@ const cartSchema = new Schema<ICart>(
       required: true,
     },
     medicine_item: [cartItemSchema],
-    totalPrice: { type: Number },
+    quantity: { type: Number, default: 1 },
   },
   { collection: "Cart", timestamps: true }
 );
