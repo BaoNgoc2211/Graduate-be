@@ -17,6 +17,7 @@ import importBatchRoutes from "./src/router/inventory/import-batch.route";
 import stockRoutes from "./src/router/inventory/stock.route";
 import vnpayRoutes from "./src/router/vnpay.route";
 import cartRoutes from "./src/router/order/cart.route";
+import chatRoute from "./src/router/chat.route";
 import notFoundRoute from "./src/middleware/not-found-routes.middleware";
 import errorHandler from "./src/middleware/error-handler.middleware";
 import session from "express-session";
@@ -36,22 +37,34 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
+
+//disease
 app.use("/api/disease", diseaseRoutes);
 app.use("/api/disCategory", disCategory);
 app.use("/api/disUsage", disUsageRoutes);
 app.use("/api/symptom", symptomRoutes);
-// app.use("/api/voucher", disCategory);
-app.use("/api/medicine", medicineRoutes);
-app.use("/api/order", orderRoutes);
-app.use("/api/upload", uploadRoutes);
-app.use("/api/stock", stockRoutes);
-app.use("/api/vnpay", vnpayRoutes);
-app.use("/api/cart", cartRoutes);
-// app.use("/api/batch",batchRoutes);
 
+// app.use("/api/voucher", disCategory);
+//medicine
+app.use("/api/medicine", medicineRoutes);
+
+app.use("/api/order", orderRoutes);
+app.use("/api/cart", cartRoutes);
+
+app.use("/api/upload", uploadRoutes);
+
+app.use("/api/vnpay", vnpayRoutes);
+
+// app.use("/api/batch",batchRoutes);
+app.use("/api/chat", chatRoute);
+
+//inventory
 app.use("/api/distributor", distributorRoutes);
 app.use("/api/manufacture", manufactureRoutes);
 app.use("/api/import-batch", importBatchRoutes);
+app.use("/api/stock", stockRoutes);
+
+
 //đăng nhập googlen
 app.use(
   session({
