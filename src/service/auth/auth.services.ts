@@ -3,6 +3,8 @@ import { EmailService } from "../auth/email.services";
 import throwError from "../../util/create-error";
 import authRepository from "../../repository/auth.repository";
 import { IUser } from "../../interface/auth/user.interface";
+import bcrypt from "../../util/bcrypt";
+import { use } from "passport";
 
 class AuthServices {
   private async checkEmail(email: string) {
@@ -13,14 +15,14 @@ class AuthServices {
   private async checkVerifyEmail(email: string) {
     const user = await User.findOne({ email });
     if (!user) {
-      throwError(404, "User not found");
+      throwError(404, "Email chưa tạo tài khoản hoặc không tồn tại");
     }
     return user?.isEmailVerified;
   }
   private async getUserByEmail(email: string) {
     const user = await User.findOne({ email });
     if (!user) {
-      throw new Error("User not found");
+      throwError(404, "User không tồn tại");
     }
     return user;
   }
@@ -42,31 +44,27 @@ class AuthServices {
     return await User.find();
   };
 
-  signIn = async (email: string) => {
-    let user = await User.findOne({ email });
-    if (!user) {
-      user = await User.create({ email });
+  signUp = async (user: IUser) => {
+    await this.checkEmail(user.email);
+    user.password = await bcrypt.Hash(user.password!);
+    const newUser = await User.create(user);
+    const otp = newUser.generateOTP();
+    await newUser.save();
+    EmailService.sendOTP(newUser.email, otp);
+    return newUser;
+  };
+  // signin
+  signIn = async (data: { email: string; password: string }) => {
+    const checkUser = await this.getUserByEmail(data.email);
+    console.log(checkUser!.id);
+    const checkPassword = await bcrypt.Compare(
+      data.password,
+      checkUser?.password!
+    );
+    if (!checkPassword) {
+      throwError(400, "Email hoặc mật khẩu không đúng");
     }
-
-    if (user.isOTPLocked()) {
-      const lockTime = user.otpLockedUntil!;
-      const minutesLeft = Math.ceil(
-        (lockTime.getTime() - Date.now()) / (1000 * 60)
-      );
-      throw new Error(
-        `Tài khoản bị khóa. Vui lòng thử lại sau ${minutesLeft} phút.`
-      );
-    } else {
-    }
-
-    const otp = user.generateOTP();
-    await user.save();
-    EmailService.sendOTP(email, otp);
-
-    return {
-      success: true,
-      message: "OTP đã được gửi đến email của bạn",
-    };
+    return checkUser!.id;
   };
   verifyEmail = async (email: string, otp: string) => {
     const user = await User.findOne({ email: email });
@@ -105,39 +103,39 @@ class AuthServices {
       },
     };
   };
-  resendOTP = async (email: string) => {
-    const user = await this.getUserByEmail(email);
+  // resendOTP = async (email: string) => {
+  //   const user = await this.getUserByEmail(email);
 
-    if (user.isEmailVerified) {
-      throwError(400, "Email đã được xác minh");
-    }
+  //   if (user.isEmailVerified) {
+  //     throwError(400, "Email đã được xác minh");
+  //   }
 
-    if (user.isOTPLocked()) {
-      const minutesLeft = Math.ceil(
-        (user.otpLockedUntil!.getTime() - Date.now()) / 60000
-      );
-      throwError(
-        403,
-        `Tài khoản bị khóa. Vui lòng thử lại sau ${minutesLeft} phút.`
-      );
-    }
+  //   if (user.isOTPLocked()) {
+  //     const minutesLeft = Math.ceil(
+  //       (user.otpLockedUntil!.getTime() - Date.now()) / 60000
+  //     );
+  //     throwError(
+  //       403,
+  //       `Tài khoản bị khóa. Vui lòng thử lại sau ${minutesLeft} phút.`
+  //     );
+  //   }
 
-    if (user.otp && user.otp.expiresAt > new Date()) {
-      throwError(
-        400,
-        "OTP hiện tại vẫn còn hiệu lực. Vui lòng kiểm tra email."
-      );
-    }
+  //   if (user.otp && user.otp.expiresAt > new Date()) {
+  //     throwError(
+  //       400,
+  //       "OTP hiện tại vẫn còn hiệu lực. Vui lòng kiểm tra email."
+  //     );
+  //   }
 
-    const otp = user.generateOTP();
-    await user.save();
-    EmailService.sendOTP(email, otp);
+  //   const otp = user.generateOTP();
+  //   await user.save();
+  //   EmailService.sendOTP(email, otp);
 
-    return {
-      success: true,
-      message: "OTP đã được gửi lại thành công.",
-    };
-  };
+  //   return {
+  //     success: true,
+  //     message: "OTP đã được gửi lại thành công.",
+  //   };
+  // };
   validateOAuthLogin = async (profile: any) => {
     const existingUser = await authRepository.findByGoogleId(profile.id);
     if (existingUser) return existingUser;

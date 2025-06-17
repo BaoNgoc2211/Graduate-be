@@ -1,9 +1,10 @@
 import express from "express";
 import cartController from "../../controller/order/cart.controller";
+import { protect } from "../../middleware/auth.middleware";
 const router = express.Router();
 router.post("/create", cartController.create);
 router.put("/update/:id", cartController.update);
 router.delete("/delete/:id", cartController.delete);
-router.post("/add-item", cartController.addToCart);
+router.post("/add-item", protect, cartController.addToCart);
 router.get("/get-cart/:userId", cartController.getAll);
 export default router;

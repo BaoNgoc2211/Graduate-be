@@ -23,8 +23,9 @@ import session from "express-session";
 import passport from "passport";
 import "./src/config/passport";
 import connectCloudinary from "./src/util/cloudinary";
-
+import cookieParser from "cookie-parser";
 const app = express();
+app.use(cookieParser());
 app.use(
   cors({
     origin: ["http://localhost:3000", "http://localhost:3001"],

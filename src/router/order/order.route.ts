@@ -23,7 +23,7 @@ router.put("/:id", orderController.update);
 // router.post("/", orderController.create);
 router.get("/", orderController.getAll);
 router.get("/:id", orderController.getById);
-router.post("/checkout/", orderController.checkOut);
+// router.post("/checkout/", orderController.checkOut);
 // router.get("/user/:userId", orderDetailController.getByUserId);
 
 router.delete("/:id", orderController.delete);

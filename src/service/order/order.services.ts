@@ -12,11 +12,11 @@ class OrderService {
   async getOrderById(id: string) {
     return await orderRepository.findById(id);
   }
-  async checkOut(userId: string) {
-    const order = await orderRepository.checkOut(userId);
-    if (!order) throw new Error("Không tìm thấy đơn hàng");
-    return order;
-  }
+  // async checkOut(userId: string) {
+  //   const order = await orderRepository.checkOut(userId);
+  //   if (!order) throw new Error("Không tìm thấy đơn hàng");
+  //   return order;
+  // }
 
 
   async updateStatusOrder(orderId: string, newStatus: OrderStatus) {
