@@ -25,12 +25,13 @@ class CartController {
   });
   addToCart = asyncError(async (req: Request, res: Response) => {
     const userId = req.user!;
-    const { medicine_id, quantity = 1 } = req.body;
+    const { medicine_id, quantity } = req.body;
     const data = await cartService.addToCart(
       String(userId),
       medicine_id,
       quantity
     );
+    console.log(quantity)
     returnRes(res, 200, "Add item to cart successful", data!);
   });
 }

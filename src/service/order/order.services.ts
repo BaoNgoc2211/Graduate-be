@@ -25,6 +25,7 @@ class OrderService {
   }
   //#region checkout: Quy
   async checkOut(userId: string) {
+    console.log("User ID:", userId);
     const order = await orderRepository.checkOut(userId);
     if (!order) throw new Error("Không tìm thấy đơn hàng");
     return order;

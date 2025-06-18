@@ -87,7 +87,7 @@ class CartServices {
   //     }
   //   }
   //#endregion
-  addToCart = async (user_id: string, medicine_id: string, quantity = 1) => {
+  addToCart = async (user_id: string, medicine_id: string, quantity:number) => {
     const checkUser = await this.getUserById(user_id);
 
     // Kiểm tra xem thuốc có tồn tại không
@@ -108,10 +108,17 @@ class CartServices {
     //   );
     // }
     // 3. Tìm giỏ hàng hiện tại của user
-    let cart = await Cart.findOne({ user_id });
+    
+   let cart = await Cart.findOne({ user_id });
     if (!cart) {
-      // 2. Nếu chưa có giỏ hàng thì tạo mới
-      cart = await Cart.create({ user_id, medicine_item: [], quantity: 0 });
+      cart = await Cart.create({
+        user_id,
+        medicine_item: [{
+          medicine_id: new mongoose.Types.ObjectId(medicine_id),
+          quantity
+        }],
+        quantity
+      });
     } else {
       // 3. Nếu đã có giỏ hàng thì kiểm tra xem thuốc đã có trong giỏ hàng chưa
       const existingItem = cart.medicine_item.find(
