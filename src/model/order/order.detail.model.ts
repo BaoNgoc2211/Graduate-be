@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
-import { IOrderDetail } from "../../interface/order/order-detail.interface";
+import { IOrderDetail, IOrderItem } from "../../interface/order/order-detail.interface";
 
-const orderDetaiSchema = new Schema<IOrderDetail>(
+const orderItemSchema = new Schema<IOrderItem>(
   {
     medicine_id: {
       type: mongoose.Schema.Types.ObjectId,
@@ -35,11 +35,24 @@ const orderDetaiSchema = new Schema<IOrderDetail>(
     note: {
       type: String,
     },
+   
+  },
+  { _id: false }
+);
+
+const orderDetailSchema = new Schema<IOrderDetail>(
+  {
+    order_items: [orderItemSchema],
+    
+    totalOrder: {
+      type: Number,
+    },
   },
   {
     collection: "OrderDetail",
     timestamps: true,
   }
 );
-const OrderDetail = mongoose.model("OrderDetail", orderDetaiSchema);
+
+const OrderDetail = mongoose.model("OrderDetail", orderDetailSchema);
 export default OrderDetail;
