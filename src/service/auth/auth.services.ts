@@ -56,7 +56,6 @@ class AuthServices {
   // signin
   signIn = async (data: { email: string; password: string }) => {
     const checkUser = await this.getUserByEmail(data.email);
-    console.log(checkUser!.id);
     const checkPassword = await bcrypt.Compare(
       data.password,
       checkUser?.password!
@@ -68,7 +67,6 @@ class AuthServices {
   };
   verifyEmail = async (email: string, otp: string) => {
     const user = await User.findOne({ email: email });
-    console.log(user);
     if (!user) throw new Error("Email không tồn tại");
 
     if (user.isOTPLocked()) {

@@ -18,7 +18,6 @@ class AuthController {
   // signin
   signin = asyncError(async (req: Request, res: Response) => {
     const data = await authServices.signIn(req.body);
-    console.log(data);
     const accessToken = jwtServices.generateJwt(res, data);
     returnRes(res, 200, "Đăng nhập thành công", accessToken);
   });

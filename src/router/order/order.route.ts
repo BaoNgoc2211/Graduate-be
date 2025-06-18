@@ -2,6 +2,7 @@
 import { Router } from "express";
 import orderDetailController from "../../controller/order/order-detail.controller";
 import orderController from "../../controller/order/order.controller";
+import { protect } from "../../middleware/auth.middleware";
 const router = Router();
 
 
@@ -23,7 +24,7 @@ router.put("/:id", orderController.update);
 // router.post("/", orderController.create);
 router.get("/", orderController.getAll);
 router.get("/:id", orderController.getById);
-// router.post("/checkout/", orderController.checkOut);
+router.post("/checkout/",protect, orderController.checkOut);
 // router.get("/user/:userId", orderDetailController.getByUserId);
 
 router.delete("/:id", orderController.delete);

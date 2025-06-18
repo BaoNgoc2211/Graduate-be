@@ -21,10 +21,17 @@ class OrderDetailController {
   //   returnRes(res, 201, "Created", result);
   // });
   // checkOut = asyncError(async (req: Request, res: Response) => {
-  //   const { user_id } = req.body;
-  //   const result = await orderServices.checkOut(user_id);
-  //   returnRes(res, 200, "Checkout Success", result);
+  //   const userId = req.user;
+  //   console.log(userId);
+  //   const data = await orderServices.checkout(String(userId!), req.body);
+  //   returnRes(res, 200, "Checkout Success", data!);
   // });
+  checkOut = asyncError(async (req: Request, res: Response) => {
+    // const { user_id } = req.body;
+    const userId = req.user;
+    const result = await orderServices.checkOut(String(userId!));
+    returnRes(res, 200, "Checkout Success", result);
+  });
 
   updateStatus = asyncError(async (req: Request, res: Response) => {
     const result = await orderServices.updateStatusOrder(

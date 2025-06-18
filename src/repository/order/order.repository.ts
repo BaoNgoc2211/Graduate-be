@@ -9,6 +9,7 @@ import { IOrderDetail } from "../../interface/order/order-detail.interface";
 import { Status } from "cloudinary";
 import { StatusEnum } from "../../enum/medicine/import-batch.enum";
 import { OrderStatus } from "../../enum/order-status.enum";
+import Medicine from "../../model/medicine/medicine.model";
 
 class OrderDetailRepository {
   async findAll() {
@@ -60,68 +61,79 @@ class OrderDetailRepository {
     return order;
   }
 
-  //#region Quy
-  // async checkOut(userId: string) {
-  //   const cart = await Cart.findOne({ user_id: userId }).populate("medicine_item.medicine_id");
-  //   if (!cart || cart.medicine_item.length === 0) {
-  //       throw new Error("Giỏ hàng trống hoặc không tìm thấy");
-  //   }
-  //   // Step 2: Prepare order details array
-  //   const orderDetails: IOrderDetail[] = [];
-  //   // Calculate totalAmount for order
-  //   let totalAmount = 0;
-  //   for (const item of cart.medicine_item) {
-  //       const medicineData = item.medicine_id as any; // populated medicine document
-  //       const stockId = medicineData.stock_id;
-  //       const stock = await Stock.findById(stockId);
-  //       if (!stock) {
-  //           throw new Error(`Không tìm thấy tồn kho cho thuốc ${medicineData.name}`);
-  //       }
+  async checkOut(userId: string) {
+    const cart = await Cart.findOne({ user_id: userId }).populate(
+      "medicine_item.medicine_id"
+    );
+    if (!cart || cart.medicine_item.length === 0) {
+      throw new Error("Giỏ hàng trống hoặc không tìm thấy");
+    }
 
-  //       // Kiểm tra số lượng
-  //       if (stock.quantity < item.quantity) {
-  //           throw new Error(`Sản phẩm ${medicineData.name} chỉ còn ${stock.quantity} trong kho`);
-  //       }
-  //       stock.quantity -= item.quantity; // Trừ số lượng tồn kho
-  //       await stock.save(); // Lưu thay đổi tồn kho
+    // Step 2: Prepare order details array
+    const orderDetails: IOrderDetail[] = [];
+    // Calculate totalAmount for order
+    let totalAmount = 0;
+    for (const item of cart.medicine_item) {
+      const medicineData = item.medicine_id as any; // populated medicine document
+      //#region moi
+      // const newMedicine = await Medicine.findOne({
+      //   _id: item.medicine_id,
+      // }).select("name sellingPrice thumbnail");
+      //#endregion
+      const stockId = medicineData.stock_id;
+      const stock = await Stock.findById(stockId);
+      if (!stock) {
+        throw new Error(
+          `Không tìm thấy tồn kho cho thuốc ${medicineData.name}`
+        );
+      }
 
-  //       const itemPrice = item.price;
-  //       const itemQuantity = item.quantity;
-  //       const totalAmountForItem = itemPrice * itemQuantity;
-  //       totalAmount += totalAmountForItem;
-  //       // Stock ID - get from populated medicine if available
-  //       // const medicineData = item.medicine_id as any; // populated medicine document
+      // Kiểm tra số lượng
+      if (stock.quantity < item.quantity) {
+        throw new Error(
+          `Sản phẩm ${medicineData.name} chỉ còn ${stock.quantity} trong kho`
+        );
+      }
+      stock.quantity -= item.quantity; // Trừ số lượng tồn kho
+      await stock.save(); // Lưu thay đổi tồn kho
 
-  //       const orderDetail = new OrderDetail({
-  //           medicine_id: item.medicine_id._id,
-  //           stock_id: stockId,
-  //           thumbnail: item.thumbnail,
-  //           name: item.name,
-  //           price: itemPrice, // locked price
-  //           quantity: itemQuantity,
-  //           totalAmount: totalAmountForItem,
-  //           note: "", // optionally add if needed
-  //       });
-  //       await orderDetail.save();
-  //       orderDetails.push(orderDetail);
-  //   }
-  //   // Step 3: Create order referencing orderDetails
-  //   const order = new Order({
-  //       user_id: userId,
-  //       status: "đang chờ xác nhận", // or your default status enum
-  //       totalAmount,
-  //       finalAmount: totalAmount, // could be modified for discounts, shipping etc
-  //       orderDetail: orderDetails.map((detail) => detail._id), // store orderDetail IDs
-  //   });
-  //   await order.save();
-  //   // Step 4: Clear user's cart after successful order
-  //   await Cart.deleteOne({ user_id: userId });
-  //   return {
-  //       message: "Đặt hàng thành công",
-  //       order,
-  //   };
-  // }
-  //#endregion
+      const itemPrice = medicineData.sellingPrice; // Giá bán đã được lock
+      // item.quantity
+      const itemQuantity = medicineData.sellingPrice;
+      const totalAmountForItem = itemPrice * itemQuantity;
+      totalAmount += totalAmountForItem;
+      // Stock ID - get from populated medicine if available
+      // const medicineData = item.medicine_id as any; // populated medicine document
+
+      const orderDetail = new OrderDetail({
+        medicine_id: item.medicine_id._id,
+        stock_id: stockId,
+        thumbnail: medicineData.thumbnail, // lấy từ medicine đã populate
+        name: medicineData.name, // lấy từ medicine đã populate
+        price: itemPrice, // locked price
+        quantity: itemQuantity,
+        totalAmount: totalAmountForItem,
+        note: "", // optionally add if needed
+      });
+      await orderDetail.save();
+      orderDetails.push(orderDetail);
+    }
+    // Step 3: Create order referencing orderDetails
+    const order = new Order({
+      user_id: userId,
+      status: "đang chờ xác nhận", // or your default status enum
+      totalAmount,
+      finalAmount: totalAmount, // could be modified for discounts, shipping etc
+      orderDetail: orderDetails.map((detail) => detail._id), // store orderDetail IDs
+    });
+    await order.save();
+    // Step 4: Clear user's cart after successful order
+    await Cart.deleteOne({ user_id: userId });
+    return {
+      message: "Đặt hàng thành công",
+      order,
+    };
+  }
   async checkStatus(userId: string) {
     const orders = await Order.find({ user_id: userId })
       .sort({ createdAt: -1 })
