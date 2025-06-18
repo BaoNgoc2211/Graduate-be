@@ -8,13 +8,8 @@ class OrderDetailRepository{
     }
     async findById(id: string){
         const orderDetail = await OrderDetail.findById(id)
-        .populate({
-            path: 'medicine.stock',
-            model: 'Medicine',
-            select: 'code name thumbnail'
-        });
         return orderDetail;
-    }
+    } 
 
     async createOrderDetail(orderdetail: IOrderDetail){
         const orderDetail =  await OrderDetail.create(orderdetail);
