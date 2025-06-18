@@ -7,5 +7,6 @@ router.get("/", stockController.getAll);
 router.put("/:id", stockController.update);
 router.delete("/:id", stockController.delete);
 router.get("/:id", stockController.getById);
+router.get("/medicine/:id", stockController.getStockByMedicineId);
 
 export default router;

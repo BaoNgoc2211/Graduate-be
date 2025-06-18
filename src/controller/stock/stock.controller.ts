@@ -29,5 +29,9 @@ class StockController {
     const result = await stockServices.deleteStock(req.params.id);
     returnRes(res, 200, "Deleted", result!);
   });
+  getStockByMedicineId = asyncError(async (req: Request, res: Response) => {
+    const result = await stockServices.getStockByMedicineId(req.params.id);
+    returnRes(res, 200, "Get Stock By Medicine ID", result!);
+  });
 }
 export default new StockController();

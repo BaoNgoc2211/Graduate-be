@@ -17,5 +17,9 @@ class StockService {
   async deleteStock(id: string) {
     return await stockRepository.deleteStock(id);
   }
+  async getStockByMedicineId(medicineId: string) {
+    return await stockRepository.findByMedicineId(medicineId);
+  }
+
 }
 export default new StockService();

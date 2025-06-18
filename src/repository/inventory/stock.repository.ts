@@ -21,5 +21,12 @@ class StockRepository{
         const stock = await Stock.findByIdAndDelete(id);
         return stock;
     }
+    async findByMedicineId(medicineId: string) {
+        const stock = await Stock.find({ medicine: medicineId });
+        if (!stock) {
+            throw new Error(`Stock not found for medicine ID: ${medicineId}`);
+        }
+        return stock;
+    }
 }
 export default new StockRepository;
