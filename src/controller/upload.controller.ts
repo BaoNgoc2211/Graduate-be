@@ -36,6 +36,41 @@ class UploadController {
       catchError(res, error);
     }
   }
+  async uploadPrescription(req: Request, res: Response) {
+  try {
+    if (!req.file) {
+      res.status(400).json({ message: "No file upload" });
+      return;
+    }
+
+    const medicines = await uploadService.uploadPrescription(req.file.path!);
+    console.log(medicines);
+    res.status(200).json({
+      message: "Upload prescription successful!",
+      data: medicines,
+    });
+  } catch (error) {
+    catchError(res, error);
+  }
+}
+  // async uploadPrescription(req: Request, res: Response) {
+  //   try {
+  //     if (!req.file) {
+  //       res.status(400).json({
+  //         message: "No file upload",
+  //       });
+  //       return;
+  //     }
+  //     const text = await uploadService.uploadPrescription(req.file.path!);
+  //     // const parsedData = await uploadService.parsePrescription(text);
+  //     res.status(200).json({
+  //       message: "Upload prescription successful!",
+  //       // data: parsedData,
+  //     });
+  //   } catch (error) {
+  //     catchError(res, error);
+  //   }
+  // }
 }
 
 const uploadController = new UploadController();

@@ -12,4 +12,6 @@ router.post(
   middleware.upload.array("image", 4),
   controller.uploadMultiple
 );
+router.post("/upload-precription",middleware.upload.single("image"),controller.uploadPrescription);
 export default router;
+
