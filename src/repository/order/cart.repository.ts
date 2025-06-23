@@ -1,3 +1,4 @@
+import { populate } from "dotenv";
 import { ICart } from "../../interface/order/cart.interface";
 import Cart from "../../model/order/cart.model";
 
@@ -12,9 +13,15 @@ class CartRepository {
     return await Cart.findByIdAndDelete(id);
   }
   async getAll(userId: string) {
-    return await Cart.find({ user_id: userId }).populate(
-      "medicine_item.medicine_id"
-    );
+    return await Cart.find({ user_id: userId })
+    .populate({ 
+      path :"medicine_item.medicine_id",
+      select: "code name thumbnail",
+      populate:{ 
+        path: "stock_id",
+        select: "sellingPrice"
+        }
+    });
   }
 }
 export default new CartRepository();

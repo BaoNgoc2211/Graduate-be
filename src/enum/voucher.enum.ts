@@ -4,6 +4,8 @@ export const disCountTypeEnum = {
 } as const;
 
 export const applyToEnum = {
+  ALL: "all",
+  CATEGORY: "category",
   PRODUCT: "product",
   SHIPPING: "shipping",
   ORDER: "order",

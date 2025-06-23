@@ -28,8 +28,14 @@ class OrderDetailController {
   // });
   checkOut = asyncError(async (req: Request, res: Response) => {
     // const { user_id } = req.body;
+    
     const userId = req.user;
-    const result = await orderServices.checkOut(String(userId!));
+    const selectItemIds = req.body.selectItemIds; // Assuming selectItemIds is passed in the request body
+    console.log("BODY RECEIVED:", req.body);
+    if (!Array.isArray(selectItemIds)) {
+      return res.status(400).json({ message: "selectedItemIds" });
+    }
+    const result = await orderServices.checkOut(String(userId!),selectItemIds);
     returnRes(res, 200, "Checkout Success", result);
   });
 

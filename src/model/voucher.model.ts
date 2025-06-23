@@ -8,6 +8,7 @@ const VoucherSchema = new Schema<IVoucher>(
     code: {
       type: String,
       required: true,
+      unique: true,
     },
     name: { type: String, required: true },
     description: { type: String, required: true },
@@ -25,7 +26,7 @@ const VoucherSchema = new Schema<IVoucher>(
     usageLimit: { type: Number },
     usedCount: { type: Number },
     applyTo: { type: String, enum: Object.values(applyToEnum), required: true },
-    applyToIds: [{ type: String }],
+    applyToIds: [{ type: mongoose.Schema.Types.Mixed }], 
   },
   { collection: "Voucher", timestamps: true }
 );

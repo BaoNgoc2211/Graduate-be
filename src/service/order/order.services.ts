@@ -24,9 +24,9 @@ class OrderService {
     return await orderRepository.findById(id);
   }
   //#region checkout: Quy
-  async checkOut(userId: string) {
+  async checkOut(userId: string, selectItemIds: string[]) {
     console.log("User ID:", userId);
-    const order = await orderRepository.checkOut(userId);
+    const order = await orderRepository.checkOut(userId,selectItemIds);
     if (!order) throw new Error("Không tìm thấy đơn hàng");
     return order;
   }

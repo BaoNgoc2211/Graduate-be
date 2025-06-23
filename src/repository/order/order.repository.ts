@@ -60,18 +60,28 @@ class OrderDetailRepository {
       });
     return order;
   }
-async checkOut(userId: string) {
+async checkOut(userId: string,selectItemIds: string[]) {
   const cart = await Cart.findOne({ user_id: userId }).populate(
-    "medicine_item.medicine_id"
+    "medicine_item.medicine_id",
+    "code name thumbnail stock_id"
+
   );
+  console.log("Cart:", cart);
   if (!cart || cart.medicine_item.length === 0) {
     throw new Error("Giỏ hàng trống hoặc không tìm thấy");
+  }
+ const selectItems = cart.medicine_item.filter((item: any) =>
+  item?.medicine_id?._id && selectItemIds.includes(item.medicine_id._id.toString())
+);
+console.log("Selected Items:", selectItems);
+  if (selectItems.length === 0) {
+    throw new Error("Không có sản phẩm nào được chọn để đặt hàng");
   }
 
   const orderItems = [];
   let totalAmount = 0;
 
-  for (const item of cart.medicine_item) {
+  for (const item of selectItems) {
     const medicineData = item.medicine_id as any;
     const stockId = medicineData.stock_id;
 
@@ -84,8 +94,8 @@ async checkOut(userId: string) {
       throw new Error(`Sản phẩm ${medicineData.name} chỉ còn ${stock.quantity} trong kho`);
     }
 
-    // stock.quantity -= item.quantity;
-    // await stock.save();
+    stock.quantity -= item.quantity;
+    await stock.save();
 
     const itemPrice = stock.sellingPrice;
     const itemQuantity = Number(item.quantity);
@@ -126,7 +136,16 @@ async checkOut(userId: string) {
   });
   await order.save();
 
-  // await Cart.deleteOne({ user_id: userId });
+  cart.medicine_item = cart.medicine_item.filter(
+  (item: any) => !selectItemIds.includes(item?.medicine_id?._id?.toString())
+  );
+  cart.quantity = cart.medicine_item.reduce(
+    (sum: number, item: any) => sum + item.quantity,
+    0
+  );
+  // Cập nhật giỏ hàng sau khi đặt hàng
+
+  await cart.save();
 
   return {
     message: "Đặt hàng thành công",
