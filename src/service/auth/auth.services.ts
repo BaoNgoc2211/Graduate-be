@@ -166,6 +166,69 @@ class AuthServices {
   //   await authRepository.updatePassword(email, await bcrypt.Hash(newPassword));
   //   await otpRepository.deleteOTP(email);
   // };
+  forgotPassword = async (email: string) => {
+    const user = await this.getUserByEmail(email);
+
+    if (user!.isOTPLocked()) {
+      const lockTime = user!.otpLockedUntil!;
+      const minutesLeft = Math.ceil(
+        (lockTime.getTime() - Date.now()) / (1000 * 60)
+      );
+      throwError(
+        403,
+        `Tài khoản bị khóa. Vui lòng thử lại sau ${minutesLeft} phút.`
+      );
+    }
+
+    const otp = user!.generateOTP();
+    await user!.save();
+
+    // EmailService.sendForgotPasswordEmail(email, otp);
+
+    return {
+      success: true,
+      message: "OTP đặt lại mật khẩu đã được gửi thành công.",
+    };
+  };
+
+  resetPassword = async (email: string, otp: string, newPassword: string) => {
+    const user = await this.getUserByEmail(email);
+
+    if (user!.isOTPLocked()) {
+      const lockTime = user!.otpLockedUntil!;
+      const minutesLeft = Math.ceil(
+        (lockTime.getTime() - Date.now()) / (1000 * 60)
+      );
+      throwError(
+        403,
+        `Tài khoản bị khóa. Vui lòng thử lại sau ${minutesLeft} phút.`
+      );
+    }
+
+    if (!user!.otp || user!.otp.code !== otp) {
+      user!.incrementOTPAttempts();
+      await user!.save();
+      throwError(400, "Mã OTP không đúng");
+    }
+
+    if (user!.otp!.expiresAt < new Date()) {
+      throwError(400, "Mã OTP đã hết hạn");
+    }
+
+    if (user!.otp!.expiresAt < new Date()) {
+      user!.password = await bcrypt.Hash(newPassword);
+      user!.otp = undefined;
+      user!.otpAttempts = 0;
+      user!.otpLockedUntil = undefined;
+      await user!.save();
+
+      return {
+        success: true,
+        message: "Mật khẩu đã được đặt lại thành công.",
+      };
+    }
+  };
+
   updateProfile = async (userId: string, data: any) => {
     const { name, phone, address, avatar, gender, birth } = data;
     const updateUser = await User.findByIdAndUpdate(

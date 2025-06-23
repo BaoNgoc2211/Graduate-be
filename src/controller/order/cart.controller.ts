@@ -3,20 +3,6 @@ import { Response, Request } from "express";
 import { returnRes } from "../../util/response";
 import cartService from "../../service/order/cart.services";
 class CartController {
-  create = asyncError(async (req: Request, res: Response) => {
-    const data = await cartService.create(req.body);
-    returnRes(res, 200, "Add Product On Cart Successful", data!);
-  });
-  update = asyncError(async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const data = await cartService.update(id, req.body);
-    returnRes(res, 200, "Edit Product successful", data!);
-  });
-  delete = asyncError(async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const data = await cartService.delete(id);
-    returnRes(res, 200, "Delete Product successful", data!);
-  });
   getAll = asyncError(async (req: Request, res: Response) => {
     const userId = req.user;
     const data = await cartService.getAll(String(userId!));
@@ -31,8 +17,29 @@ class CartController {
       medicine_id,
       quantity
     );
-    console.log(quantity)
+    console.log(quantity);
     returnRes(res, 200, "Add item to cart successful", data!);
+  });
+  update = asyncError(async (req: Request, res: Response) => {
+    const userId = req.user;
+    const { medicine_id, quantity } = req.body;
+    const data = await cartService.update(
+      String(userId!),
+      medicine_id,
+      quantity
+    );
+    returnRes(res, 200, "Update cart successful", data!);
+  });
+  remove = asyncError(async (req: Request, res: Response) => {
+    const userId = req.user;
+    const { medicine_id } = req.body;
+    const data = await cartService.removeItem(String(userId!), medicine_id);
+    returnRes(res, 200, "Remove item from cart successful", data!);
+  });
+  clear = asyncError(async (req: Request, res: Response) => {
+    const userId = req.user;
+    const data = await cartService.clearCart(String(userId!));
+    returnRes(res, 200, "Clear cart successful", data!);
   });
 }
 const cartController = new CartController();
