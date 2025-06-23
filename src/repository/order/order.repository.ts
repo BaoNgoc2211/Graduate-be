@@ -62,9 +62,7 @@ class OrderDetailRepository {
   }
 async checkOut(userId: string,selectItemIds: string[]) {
   const cart = await Cart.findOne({ user_id: userId }).populate(
-    "medicine_item.medicine_id",
-    "code name thumbnail stock_id"
-
+    "medicine_item.medicine_id"
   );
   console.log("Cart:", cart);
   if (!cart || cart.medicine_item.length === 0) {

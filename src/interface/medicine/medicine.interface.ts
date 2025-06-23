@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { DetailedDosageFormEnum } from "../../enum/medicine/medicine.enum";
 
 export interface IReview {
   user: mongoose.Types.ObjectId;
@@ -13,7 +12,7 @@ export interface IMedicine {
   thumbnail: string;
   image?: string[];
   packaging: string;
-  dosageForm: DetailedDosageFormEnum; // dạng điều chế
+  dosageForm: string; // dạng điều chế
   use: string; // cách dùng
   dosage?: string; // liều dùng
   indication?: string; // công dụng
