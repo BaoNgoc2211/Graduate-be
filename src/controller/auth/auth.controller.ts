@@ -15,13 +15,20 @@ class AuthController {
     await authServices.verifyEmail(email, otp);
     returnRes(res, 200, "Verify email successful");
   });
-  // signin
   signin = asyncError(async (req: Request, res: Response) => {
     const data = await authServices.signIn(req.body);
     const accessToken = jwtServices.generateJwt(res, data);
     returnRes(res, 200, "Đăng nhập thành công", accessToken);
   });
 
+  logout = asyncError(async (req: Request, res: Response) => {
+    jwtServices.clearJwt(res);
+    returnRes(res, 200, "Log out successful");
+  });
+  checkAuth = asyncError(async (req: Request, res: Response) => {
+    const user = req.user;
+    returnRes(res, 200, "Check authentication successful", user);
+  });
   loginSuccess(req: Request, res: Response) {
     if (!req.user) return res.redirect("/login");
     res.json({ message: "Đăng nhập thành công", user: req.user });
@@ -30,10 +37,6 @@ class AuthController {
   loginFailure(req: Request, res: Response) {
     res.status(401).json({ message: "Đăng nhập thất bại" });
   }
-  logout = asyncError(async (req: Request, res: Response) => {
-    jwtServices.clearJwt(res);
-    returnRes(res, 200, "Log out successful");
-  });
 
   findAll = asyncError(async (req: Request, res: Response) => {
     const admins = await authServices.findAll();
@@ -45,22 +48,18 @@ class AuthController {
   //   returnRes(res, 200, "Resend OTP successful");
   // });
 
-  // forgotPassword = asyncError(async (req: Request, res: Response) => {
-  //   const { email } = req.body;
-  //   await authServices.forgotPassword(email);
-  //   returnRes(res, 200, `OTP sent to ${email}`);
-  // });
-
-  // resetPassword = asyncError(async (req: Request, res: Response) => {
-  //   const { email, otp, newPassword } = req.body;
-  //   await authServices.resetPassword(email, otp, newPassword);
-  //   returnRes(res, 200, "Reset password successful");
-  // });
-
-  checkAuth = asyncError(async (req: Request, res: Response) => {
-    const user = req.user;
-    returnRes(res, 200, "Check authentication successful", user);
+  forgotPassword = asyncError(async (req: Request, res: Response) => {
+    const { email } = req.body;
+    const data = await authServices.forgotPassword(email);
+    returnRes(res, 200, `OTP sent to ${email}`);
   });
+
+  resetPassword = asyncError(async (req: Request, res: Response) => {
+    const { email, otp, newPassword } = req.body;
+    await authServices.resetPassword(email, otp, newPassword);
+    returnRes(res, 200, "Reset password successful");
+  });
+
   updateInfo = asyncError(async (req: Request, res: Response) => {
     const updateUser = await authServices.updateProfile(
       req.params.id,

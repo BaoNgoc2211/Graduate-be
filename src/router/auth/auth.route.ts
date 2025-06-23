@@ -1,20 +1,18 @@
 import authController from "../../controller/auth/auth.controller";
 import express from "express";
-import passport from "passport";
-
-// import authController from "../controller/auth.controller";
+import { protect } from "../../middleware/auth.middleware";
 
 const router = express.Router();
-// Đăng ký khách hàng
-router.post("/sign-up", authController.signUp);
-// Đăng nhập khách hàng
-// router.post("/sign-in", authController.signUp);
 
-router.post("/sign-in", authController.signin);
+router.post("/sign-up", authController.signUp);
 router.post("/verify-otp", authController.verifyEmail);
-router.post("/logout", authController.logout);
+router.post("/sign-in", authController.signin);
+router.post("/logout", protect, authController.logout);
+router.get("/check-auth", protect, authController.checkAuth);
 router.get("/profile", authController.findAll);
 router.put("/profile/:id", authController.updateInfo);
+router.put("/forgot-password/:id", authController.forgotPassword);
+router.put("/reset-password/:id", authController.resetPassword);
 
 //Đăng nhập bằng google
 // router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));

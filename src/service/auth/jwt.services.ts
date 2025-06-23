@@ -30,6 +30,12 @@ import { IJwt } from "../../interface/auth/jwt.interface";
 import jwt from "jsonwebtoken";
 
 class JwtServices implements IJwt {
+  /**
+   * Sinh accessToken và gắn vào cookie
+   * @param res Express Response object
+   * @param userId ID của user được mã hóa
+   * @returns accessToken (chỉ để debug, không trả về FE)
+   */
   generateJwt(res: Response, userId: string): string {
     const payload = {
       userId,
@@ -45,6 +51,10 @@ class JwtServices implements IJwt {
     });
     return accessToken;
   }
+   /**
+   * Xóa accessToken khỏi cookie
+   * @param res Express Response object
+   */
   clearJwt(res: Response): void {
     res.clearCookie("accessToken", {
       httpOnly: true,
