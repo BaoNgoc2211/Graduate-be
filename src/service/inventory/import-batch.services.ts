@@ -16,32 +16,25 @@ class ImportBatchServices {
     }
     return await importBatchRepository.create(importBatch);
   }
+  
+  async getAllImportBatches() {
+    return await importBatchRepository.findAll();
+  }
 
-  // async getImportBatch(id: string) {
-  //   await this.checkIdExist(id);
-  //   return await importBatchRepository.findId(id);
-  // }
+  async updateImportBatch(id: string, importBatch: IImportBatch) {
+    return await importBatchRepository.update(id, importBatch);
+  }
 
-  // async updateImportBatchStatus(id: string, status: string) {
-  //   await this.checkIdExist(id);
-  //   if (!Object.values(StatusEnum).includes(status as StatusEnum)) {
-  //     throwError(400, "Invalid status value");
-  //   }
-  //   return await importBatchRepository.updateStatus(id, status);
-  // }
-
-  // async deleteImportBatch(id: string) {
-  //   await this.checkIdExist(id);
-  //   return await importBatchRepository.delete(id);
-  // }
-
-  // async getAllImportBatches() {
-  //   return await importBatchRepository.findAll();
-  // }
-
-  // async getBatchesByMedicine(medicineId: string) {
-  //   return await importBatchRepository.findByMedicine(medicineId);
-  // }
+  async updateImportBatchStatus(id: string, status: StatusEnum) {
+    // if (!Object.values(StatusEnum).includes(status)) {
+    //   throwError(400, "Invalid status value");
+    // }
+    return await importBatchRepository.updateStatus(id, status);
+  }
+  
+  async deleteImportBatch(id: string) {
+    return await importBatchRepository.delete(id); 
+  }
 }
 
 const importBatchServices = new ImportBatchServices();
