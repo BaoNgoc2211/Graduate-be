@@ -4,7 +4,8 @@ import mongoose, { Types } from "mongoose";
 
 export interface IMedicineCategory {
   _id?: Types.ObjectId;
-  name: MedicineCategoryEnum;
+  // name: MedicineCategoryEnum;
+  name: string;
   icon: string;
   medicine: mongoose.Types.ObjectId[];
 }
