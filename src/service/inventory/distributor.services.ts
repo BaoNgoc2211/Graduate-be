@@ -12,9 +12,19 @@ class DistributorServices {
       throwError(404, "Distributor not found");
     }
   }
+  async getAllDistributors() {
+    return await distributorRepository.findAll();
+  }
   async addDistributor(distributor: IDistributor) {
     await this.checkNameCoExist(distributor.nameCo);
     return await distributorRepository.create(distributor);
+  }
+  async updateDistributor(id: string, distributor: IDistributor) {
+    await this.checkIdExist(id);
+    return await distributorRepository.update(id, distributor);
+  }
+  async deleteDistributor(id: string) {
+    return await distributorRepository.delete(id);
   }
 }
 const distributorServices = new DistributorServices();

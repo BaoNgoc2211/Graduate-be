@@ -5,8 +5,23 @@ import { Response, Request } from "express";
 class DistributorController {
   addDistributor = asyncError(async (req: Request, res: Response) => {
     const data = await distributorServices.addDistributor(req.body)
-    returnRes(res, 200, "Add Distributor Successful");
+    returnRes(res, 200, "Add Distributor Successful",data);
+  });
+  getAllDistributor = asyncError(async (req: Request, res: Response) => {
+    const distributors = await distributorServices.getAllDistributors();
+    returnRes(res, 200, "Get All Distributors Successful", distributors);
+  });
+  updateDistributor = asyncError(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const data = await distributorServices.updateDistributor(id, req.body);
+    returnRes(res, 200, "Update Distributor Successful", data!);
+  });
+  deleteDistributor = asyncError(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    await distributorServices.deleteDistributor(id);
+    returnRes(res, 200, "Delete Distributor Successful");
   });
 }
 const distributorController = new DistributorController();
 export default distributorController;
+                                                                   
