@@ -6,7 +6,7 @@ const MedicineCategorySchema = new Schema<IMedicineCategory>(
   {
     name: {
       type: String,
-      enum: Object.values(NameEnum),
+      // enum: Object.values(NameEnum),
       required: true,
       unique: true,
     },

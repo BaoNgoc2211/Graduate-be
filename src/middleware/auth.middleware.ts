@@ -4,7 +4,6 @@ import dotenv from "dotenv";
 dotenv.config();
 export const protect = (req: Request, res: Response, next: NextFunction) => {
   const token = req.cookies.accessToken;
-  console.log(token);
   if (!token) {
     res.status(401).json({ message: "No token, unauthorized" });
     return;
