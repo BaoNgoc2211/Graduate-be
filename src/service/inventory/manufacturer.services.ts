@@ -16,6 +16,15 @@ class ManufacturerServices {
     await this.checkNameCoExist(manufacturer.nameCo);
     return await manufactureRepository.create(manufacturer);
   }
-}
+  async getAllManufacturers() {
+    return await manufactureRepository.getAll();
+  }
+  async updateManufacturer(id: string, manufacturer: IManufacturer) {
+    return await manufactureRepository.update(id, manufacturer);
+  }
+  async deleteManufacturer(id: string) {
+    return await manufactureRepository.delete(id);
+  }
+} 
 const manufacturerServices = new ManufacturerServices();
 export default manufacturerServices;
