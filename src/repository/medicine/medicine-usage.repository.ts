@@ -4,10 +4,10 @@ import MedicineUsageGroup from "../../model/medicine/medicine-usage.model";
 
 class MedGroupRepository {
   async getAll() {
-   return await MedicineUsageGroup.find().populate("medicine");
+   return await MedicineUsageGroup.find();
   }
   async getById(id: string) {
-    return await MedicineUsageGroup.findById(id).populate("medicine");
+    return await MedicineUsageGroup.findById(id);
   }
   async findName(name: string) {
     return await MedicineUsageGroup.findOne({ name });
@@ -28,7 +28,7 @@ class MedGroupRepository {
   }
   async UsageToMedicine(medUsage: mongoose.Types.ObjectId,medId: mongoose.Types.ObjectId) {
     return await MedicineUsageGroup.findByIdAndUpdate(medUsage, {
-      $push: { medicine: medUsage },
+      $push: { medicine: medId },
     });
   }
 }

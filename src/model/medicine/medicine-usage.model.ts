@@ -14,7 +14,7 @@ const MedicineUsageGroupSchema = new Schema<IMedicineUsageGroup>(
       type: String,
     },
     medicine: [
-      { type: mongoose.Schema.Types.ObjectId, ref: "Medicine", required: true },
+      { type: mongoose.Schema.Types.ObjectId, ref: "Medicine" },
     ],
   },
   { collection: "MedicineUsageGroup", timestamps: true }

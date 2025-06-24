@@ -11,7 +11,7 @@ class MedicineUsageGroupServices {
     return await medUsageRepository.getAll();
   }
   async getById(id: string) {
-    const data = await medUsageRepository.getById(id);
+    return await medUsageRepository.getById(id);
   }
   private async checkNameExist(name: string) {
     if (await medUsageRepository.findName(name)) {

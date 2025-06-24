@@ -6,7 +6,7 @@ class MedUsageGroupController {
 
   getAll = asyncError(async (req: Request, res: Response) => {
     const usage = await medUsageGroupService.getAll();
-    returnRes(res, 200, "GetAll" );
+    returnRes(res, 200, "GetAll", usage);
   });
   getById = asyncError(async (req: Request, res: Response) => {
     const { id } = req.params;
