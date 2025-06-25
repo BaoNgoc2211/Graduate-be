@@ -3,6 +3,7 @@ import importBatchController from "../../controller/stock/import-batch.controlle
 const router = express.Router();
 
 router.get("/", importBatchController.getAllImportBatches);
+router.get("/:id", importBatchController.getImportBatchById);
 router.post("/add-import-batch", importBatchController.addDistributor);
 router.put("/update-import-batch/:id", importBatchController.updateImportBatch);
 router.put("/update-import-batch-status/:id", importBatchController.updateImportBatchStatus);

@@ -7,6 +7,11 @@ class ManufacturerController {
     const data = await manufacturerServices.addManufacturer(req.body);
     returnRes(res, 200, "Add Manufacturer Successful",data);
   });
+  getManufacturerById = asyncError(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const data = await manufacturerServices.getManufacturerById(id);
+    returnRes(res, 200, "Get Manufacturer By Id Successful", data!);
+  });
   getAllManufacturers = asyncError(async (req: Request, res: Response) => {
     const data = await manufacturerServices.getAllManufacturers();
     returnRes(res, 200, "Get All Manufacturers Successful", data);

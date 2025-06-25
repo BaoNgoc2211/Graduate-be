@@ -12,6 +12,10 @@ class DistributorServices {
       throwError(404, "Distributor not found");
     }
   }
+  getDistributorById = async (id: string) => {
+    await this.checkIdExist(id);
+    return await distributorRepository.findId(id);
+  }
   async getAllDistributors() {
     return await distributorRepository.findAll();
   }

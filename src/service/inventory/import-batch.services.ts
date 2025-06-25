@@ -16,7 +16,9 @@ class ImportBatchServices {
     }
     return await importBatchRepository.create(importBatch);
   }
-  
+  async getImportBatchById(id: string) {
+    return await importBatchRepository.findId(id);
+  }
   async getAllImportBatches() {
     return await importBatchRepository.findAll();
   }

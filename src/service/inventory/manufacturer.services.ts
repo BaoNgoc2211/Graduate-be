@@ -12,6 +12,10 @@ class ManufacturerServices {
       throwError(404, "Manufacturer not found");
     }
   }
+  async getManufacturerById(id: string) {
+    await this.checkIdExist(id);
+    return await manufactureRepository.findId(id);
+  }
   async addManufacturer(manufacturer: IManufacturer) {
     await this.checkNameCoExist(manufacturer.nameCo);
     return await manufactureRepository.create(manufacturer);

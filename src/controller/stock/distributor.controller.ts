@@ -7,6 +7,11 @@ class DistributorController {
     const data = await distributorServices.addDistributor(req.body)
     returnRes(res, 200, "Add Distributor Successful",data);
   });
+  getDistributorById = asyncError(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const data = await distributorServices.getDistributorById(id);
+    returnRes(res, 200, "Get Distributor By Id Successful", data!);
+  });
   getAllDistributor = asyncError(async (req: Request, res: Response) => {
     const distributors = await distributorServices.getAllDistributors();
     returnRes(res, 200, "Get All Distributors Successful", distributors);

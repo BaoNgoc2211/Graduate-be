@@ -7,6 +7,11 @@ class ImportBatchController {
     const data = await importBatchServices.addImportBatch(req.body);
     returnRes(res, 200, "Add Distributor Successful",data);
   });
+  getImportBatchById = asyncError(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const data = await importBatchServices.getImportBatchById(id);
+    returnRes(res, 200, "Get Import Batch By Id Successful", data!);
+  });
   getAllImportBatches = asyncError(async (req: Request, res: Response) => {
     const data = await importBatchServices.getAllImportBatches();
     returnRes(res, 200, "Get All Import Batches Successful", data);

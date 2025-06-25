@@ -3,6 +3,7 @@ import manufacturerController from "../../controller/stock/manufacturer.controll
 const router = express.Router();
 
 router.get("/", manufacturerController.getAllManufacturers);
+router.get("/:id", manufacturerController.getManufacturerById);
 router.post("/add-manufacture", manufacturerController.addManufacturer);
 router.put("/update-manufacture/:id", manufacturerController.updateManufacturer);
 router.delete("/delete-manufacture/:id", manufacturerController.deleteManufacturer);
