@@ -11,7 +11,7 @@ import mongoose, { Types } from "mongoose";
 // }
 export interface IStock {
   medicine: mongoose.Types.ObjectId; 
-  batch: mongoose.Types.ObjectId;
+  purchaseOrder: mongoose.Types.ObjectId;
   quantity: number;
   sellingPrice: number;
 }

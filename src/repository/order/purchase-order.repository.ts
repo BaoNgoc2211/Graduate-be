@@ -1,6 +1,8 @@
 import { IMedicineDetail, IPurchaseOrder } from "../../interface/order/purchase-order.interface";
 import PurchaseOrder from "../../model/purchase-order.model";
 import ImportBatch from "../../model/inventory/import-batch.model";
+import Stock from "../../model/inventory/stock.model";
+import stockRepository from "../inventory/stock.repository";
 
 class PurchaseOrderRepository {
     async findAll() {
@@ -9,6 +11,7 @@ class PurchaseOrderRepository {
     async findId(id: string) {
         return await PurchaseOrder.findById(id)
     }
+    
     async create(purchaseOrder: IPurchaseOrder) {
        let totalAmount = 0;
        const medicineDetails: IMedicineDetail[] = [];
@@ -48,8 +51,14 @@ class PurchaseOrderRepository {
             totalAmount,
             note: purchaseOrder.note || "",
         };
-        return await PurchaseOrder.create(newOrder);
+        const createdOrder = await PurchaseOrder.create(newOrder);
+
+        await stockRepository.createStocksFromPurchaseOrder(createdOrder._id);
+  
+
+        return createdOrder;
     }
+    
     async update(id: string, purchaseOrder: IPurchaseOrder) {
         return await PurchaseOrder.findByIdAndUpdate(id, purchaseOrder, { new: true });
     }

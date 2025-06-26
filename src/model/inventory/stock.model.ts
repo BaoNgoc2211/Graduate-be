@@ -8,9 +8,9 @@ const stockSchema = new Schema<IStock>(
       ref: "Medicine",
       required: true,
     },
-    batch: {
+    purchaseOrder: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "ImportBatch",
+      ref: "PurchaseOrder",
       required: true,
     },
     quantity: {
