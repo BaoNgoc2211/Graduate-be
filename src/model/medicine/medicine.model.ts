@@ -123,9 +123,13 @@ const medicineSchema = new Schema<IMedicine>(
     age_group: [
       {
         type: String,
-        // type: Schema.Types.ObjectId,
-        // ref: "AgeGroup",
-        // required: true,
+      },
+    ],
+    importBatch_id: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "ImportBatch",
+        required: true,
       },
     ],
     medCategory_id: [

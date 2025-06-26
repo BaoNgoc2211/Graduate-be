@@ -43,6 +43,11 @@ class medicineRepository {
 
   }
    async createMedicine(medicine: IMedicine) {
+    if (!medicine.code) {
+      const count = await Medicine.countDocuments();
+      const nextCode = `MED${(count + 1).toString().padStart(3, "0")}`;
+      medicine.code = nextCode;
+    }
     const newMedicine = await Medicine.create(medicine);
     for (const medicineCategoryId of medicine.medCategory_id) {
       await medicineCategoryRepository.updateMedCatetoMedicine(
@@ -56,7 +61,7 @@ class medicineRepository {
         newMedicine._id
       );
     }
-    return newMedicine;
+    return newMedicine; 
   }
 
   async deleteMedicine(id: mongoose.Types.ObjectId) {

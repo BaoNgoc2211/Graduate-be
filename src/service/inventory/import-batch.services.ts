@@ -11,9 +11,6 @@ class ImportBatchServices {
   // }
 
   async addImportBatch(importBatch: IImportBatch) {
-    if (importBatch.quantity <= 0) {
-      throwError(400, "Quantity must be greater than 0");
-    }
     return await importBatchRepository.create(importBatch);
   }
   async getImportBatchById(id: string) {

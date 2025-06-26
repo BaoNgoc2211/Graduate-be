@@ -27,6 +27,7 @@ export interface IMedicine {
   note: string;
   age_group: string; //mongoose.Types.ObjectId[]
   stock_id?: mongoose.Types.ObjectId;
+  importBatch_id?: mongoose.Types.ObjectId;
   medCategory_id: mongoose.Types.ObjectId[];
   medUsage_id: mongoose.Types.ObjectId[];
   manufacturer_id: mongoose.Types.ObjectId;

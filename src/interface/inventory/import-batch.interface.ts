@@ -5,10 +5,8 @@ export interface IImportBatch {
   batchNumber: string;
   importDate: Date;
   expiryDate: Date;
-  quantity: number;
   importPrice: number;
-  sellingPrice: number;
-  status: StatusEnum;
-  medicine_id: mongoose.Types.ObjectId;
+  // sellingPrice: number;
+  // medicine_id: mongoose.Types.ObjectId;
   distributor_id: mongoose.Types.ObjectId;
 }

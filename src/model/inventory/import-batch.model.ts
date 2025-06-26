@@ -8,8 +8,6 @@ const ImportBatchSchema = new Schema<IImportBatch>(
     importDate: { type: Date },
     expiryDate: { type: Date },
     importPrice: { type: Number },
-    status: {type: String, enum: StatusEnum},
-    medicine_id: { type: mongoose.Schema.Types.ObjectId, ref: "Medicine" },
     distributor_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Distributor",

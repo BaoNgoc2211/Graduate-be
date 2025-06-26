@@ -6,15 +6,15 @@ const purchaseOrder =  new Schema<IPurchaseOrder>({
         type: mongoose.Schema.Types.ObjectId,
         ref:"PurchaseOrderDetail"
     },
-    note:{
-        type:String,
-    },
     orderDate:{
         type: Date,
     },
     totalAmount:{
         type: Number,
-    }
+    },
+    note:{
+        type:String,
+    },
     },{
         collection:"PurchaseOrder",
         timestamps:true
