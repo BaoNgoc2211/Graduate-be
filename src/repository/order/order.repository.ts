@@ -11,6 +11,7 @@ import { StatusEnum } from "../../enum/medicine/import-batch.enum";
 import { OrderStatus } from "../../enum/order-status.enum";
 import Medicine from "../../model/medicine/medicine.model";
 import { userInfo } from "os";
+import Shipping from "../../model/shipping.model";
 
 class OrderDetailRepository {
   async findAll() {
@@ -61,7 +62,7 @@ class OrderDetailRepository {
       });
     return order;
   }
-  async checkOut(userId: string, selectItemIds: string[]) {
+  async checkOut(userId: string, selectItemIds: string[],shippingId: string) {
     // Lấy giỏ hàng và populate thông tin thuốc
     const cart = await Cart.findOne({ user_id: userId }).populate("medicine_item.medicine_id");
 
@@ -76,6 +77,10 @@ class OrderDetailRepository {
 
     if (selectedItems.length === 0) {
       throw new Error("Không có sản phẩm nào được chọn để đặt hàng");
+    }
+    const shipping = await Shipping.findById(shippingId);
+    if (!shipping) {  
+      throw new Error("Không tìm thấy thông tin vận chuyển");
     }
 
     const orderItems = [];
@@ -95,7 +100,8 @@ class OrderDetailRepository {
       }
 
       // Trừ số lượng tồn kho
-      stock.quantity -= item.quantity;
+      // stock.quantity -= item.quantity;
+       console.log("Stock", stock);
       await stock.save();
 
       const itemPrice = stock.sellingPrice;
@@ -104,6 +110,7 @@ class OrderDetailRepository {
 
       totalAmount += totalForItem;
 
+     
       orderItems.push({
         medicine_id: medicine._id,
         stock_id: stockId,
@@ -114,6 +121,7 @@ class OrderDetailRepository {
         totalAmount: totalForItem,
         note: "",
       });
+      
     }
 
     // ✅ Tạo chi tiết đơn hàng
@@ -126,8 +134,9 @@ class OrderDetailRepository {
     const order = await new Order({
       user_id: userId,
       status: "đang chờ xác nhận",
+      shipping_id: shippingId,
       totalAmount: totalAmount,
-      finalAmount: totalAmount,
+      finalAmount: totalAmount + shipping.price,
       orderDetail: orderDetail._id,
     }).save();
 
@@ -144,7 +153,7 @@ class OrderDetailRepository {
     };
   }
 
-  async reviewOrder(userId: string,selectItemIds: string[]) {
+  async reviewOrder(userId: string,selectItemIds: string[],shippingId: string) {
     const cart = await Cart.findOne({ user_id: userId }).populate("medicine_item.medicine_id");
     if (!cart || cart.medicine_item.length === 0) {
       throw new Error("Giỏ hàng trống hoặc không tìm thấy");
@@ -153,6 +162,10 @@ class OrderDetailRepository {
     const user = await User.findById(userId).select("info.name info.phone info.address");
     if (!user) {
       throw new Error("Người dùng không tồn tại");
+    }
+    const shipping = await Shipping.findById(shippingId);
+    if (!shipping) {
+      throw new Error("Không tìm thấy thông tin vận chuyển");
     }
 
     const selectedItems = cart.medicine_item.filter((item: any) =>
@@ -196,6 +209,7 @@ class OrderDetailRepository {
       });
     }
     console.log("User Info:", user.info);
+
     return {
       userInfo: {
         name: user.info.name,
@@ -203,24 +217,21 @@ class OrderDetailRepository {
         address: user.info.address,
       },
       orderItemsReview: orderItemsReview,
-      totalAmount,
+      shipping: shipping,
+      totalAmount: totalAmount + shipping.price,
     }
   }
   
   async checkStatus(userId: string) {
+    console.log("User ID:", userId);
     const orders = await Order.find({ user_id: userId })
       .sort({ createdAt: -1 })
-      .populate({
-        path: "orderDetail",
-        populate: {
-          path: "medicine_id",
-          model: "Medicine", // thay bằng tên model thật nếu khác
-        },
-      });
+      .populate("orderDetail.medicine_id");
 
     if (!orders || orders.length === 0) {
       throw new Error("Người dùng chưa có đơn hàng nào.");
     }
+    
 
     return orders.map((order) => ({
       orderId: order._id,
@@ -228,12 +239,12 @@ class OrderDetailRepository {
       totalAmount: order.totalAmount,
       finalAmount: order.finalAmount,
       items: order.orderDetail.map((detail: any) => ({
-        medicineId: detail.medicine_id.id,
-        medicineName: detail.name,
+        order_it: detail.medicine_id._id,
+        medicineName: detail.medicine_id.name,
         quantity: detail.quantity,
         price: detail.price,
         total: detail.totalAmount,
-        thumbnail: detail.thumbnail,
+        thumbnail: detail.medicine_id.thumbnail,
         // medicineInfo: detail.medicine_id // nếu muốn hiển thị thêm thông tin thuốc
       })),
     }));

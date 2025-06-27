@@ -24,16 +24,16 @@ class OrderService {
     return await orderRepository.findById(id);
   }
   //#region checkout: Quy
-  async checkOut(userId: string, selectItemIds: string[]) {
+  async checkOut(userId: string, selectItemIds: string[],shippingId: string) {
     console.log("User ID:", userId);
-    const order = await orderRepository.checkOut(userId,selectItemIds);
+    const order = await orderRepository.checkOut(userId,selectItemIds,shippingId);
     if (!order) throw new Error("Không tìm thấy đơn hàng");
     return order;
   }
   //#endregion
 
-  async reviewOrder(userId: string,selectItemIds: string[]) {
-    const review = await orderRepository.reviewOrder(userId,selectItemIds);
+  async reviewOrder(userId: string,selectItemIds: string[],shippingId: string) {
+    const review = await orderRepository.reviewOrder(userId,selectItemIds,shippingId);
     if (!review) throw new Error("Không tìm thấy đơn hàng");
     return review;
   }
@@ -144,6 +144,7 @@ class OrderService {
   }
 
   async checkStatusAllOrder(userId: string) {
+    console.log("User ID:", userId);
     const orders = await orderRepository.checkStatus(userId);
     if (!orders || orders.length === 0) {
       throw new Error("Không tìm thấy đơn hàng với trạng thái này");

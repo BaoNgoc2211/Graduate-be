@@ -22,11 +22,11 @@ const orderSchema = new Schema<IOrder>(
     //   ref: "Voucher",
     //   require: true,
     // },
-    // shipping_id: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: "Shipping",
-    //   require: true,
-    // },
+    shipping_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Shipping",
+      require: true,
+    },
     status: {
       type: String,
       enum: Object.values(OrderStatus),

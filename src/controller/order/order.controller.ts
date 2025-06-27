@@ -2,6 +2,7 @@ import asyncError from "../../middleware/error.middleware";
 import { returnRes } from "../../util/response";
 import { Request, Response } from "express";
 import orderServices from "../../service/order/order.services";
+import shippingController from "../shipping.controller";
 
 class OrderDetailController {
   getAll = asyncError(async (req: Request, res: Response) => {
@@ -31,22 +32,24 @@ class OrderDetailController {
     
     const userId = req.user;
     const selectItemIds = req.body.selectItemIds; // Assuming selectItemIds is passed in the request body
+    const shippingId = req.body.shippingId; // Assuming shippingId is passed in the request body
     console.log("BODY RECEIVED:", req.body);
     if (!Array.isArray(selectItemIds)) {
       return res.status(400).json({ message: "selectedItemIds" });
     }
-    const result = await orderServices.checkOut(String(userId!),selectItemIds);
+    const result = await orderServices.checkOut(String(userId!),selectItemIds,shippingId);
     returnRes(res, 200, "Checkout Success", result);
   });
 
   reviewOrder = asyncError(async (req: Request, res: Response) => {
     const userId = req.user;
     const selectItemIds = req.body.selectItemIds; // Assuming selectItemIds is passed in the request body
+    const shippingId = req.body.shippingId; // Assuming shippingId is passed in the request body
     console.log("BODY RECEIVED:", req.body);
     if (!Array.isArray(selectItemIds)) {
       return res.status(400).json({ message: "selectedItemIds" });
     }
-    const result = await orderServices.reviewOrder(String(userId!),selectItemIds);
+    const result = await orderServices.reviewOrder(String(userId!),selectItemIds,shippingId);
     returnRes(res, 200, "Review Order Success", result);
   });
 
@@ -59,7 +62,9 @@ class OrderDetailController {
   });
 
   checkStatusAll = asyncError(async (req: Request, res: Response) => {
-    const result = await orderServices.checkStatusAllOrder(req.params.userId);
+    console.log("User ID:", req.user);
+    const userId = req.user;
+    const result = await orderServices.checkStatusAllOrder(String(userId!));
     returnRes(res, 200, "Get Status Order", result!);
   });
 
