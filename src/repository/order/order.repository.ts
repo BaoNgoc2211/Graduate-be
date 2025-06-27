@@ -10,6 +10,7 @@ import { Status } from "cloudinary";
 import { StatusEnum } from "../../enum/medicine/import-batch.enum";
 import { OrderStatus } from "../../enum/order-status.enum";
 import Medicine from "../../model/medicine/medicine.model";
+import { userInfo } from "os";
 
 class OrderDetailRepository {
   async findAll() {
@@ -60,97 +61,151 @@ class OrderDetailRepository {
       });
     return order;
   }
-async checkOut(userId: string,selectItemIds: string[]) {
-  const cart = await Cart.findOne({ user_id: userId }).populate(
-    "medicine_item.medicine_id"
-  );
-  console.log("Cart:", cart);
-  if (!cart || cart.medicine_item.length === 0) {
-    throw new Error("Giỏ hàng trống hoặc không tìm thấy");
-  }
- const selectItems = cart.medicine_item.filter((item: any) =>
-  item?.medicine_id?._id && selectItemIds.includes(item.medicine_id._id.toString())
-);
-console.log("Selected Items:", selectItems);
-  if (selectItems.length === 0) {
-    throw new Error("Không có sản phẩm nào được chọn để đặt hàng");
-  }
+  async checkOut(userId: string, selectItemIds: string[]) {
+    // Lấy giỏ hàng và populate thông tin thuốc
+    const cart = await Cart.findOne({ user_id: userId }).populate("medicine_item.medicine_id");
 
-  const orderItems = [];
-  let totalAmount = 0;
-
-  for (const item of selectItems) {
-    const medicineData = item.medicine_id as any;
-    const stockId = medicineData.stock_id;
-
-    const stock = await Stock.findById(stockId);
-    if (!stock) {
-      throw new Error(`Không tìm thấy tồn kho cho thuốc ${medicineData.name}`);
+    if (!cart || cart.medicine_item.length === 0) {
+      throw new Error("Giỏ hàng trống hoặc không tìm thấy");
     }
 
-    if (stock.quantity < item.quantity) {
-      throw new Error(`Sản phẩm ${medicineData.name} chỉ còn ${stock.quantity} trong kho`);
+    // Lọc ra các sản phẩm được chọn để đặt hàng
+    const selectedItems = cart.medicine_item.filter((item: any) =>
+      item?.medicine_id?._id && selectItemIds.includes(item.medicine_id._id.toString())
+    );
+
+    if (selectedItems.length === 0) {
+      throw new Error("Không có sản phẩm nào được chọn để đặt hàng");
     }
 
-    stock.quantity -= item.quantity;
-    await stock.save();
+    const orderItems = [];
+    let totalAmount = 0;
 
-    const itemPrice = stock.sellingPrice;
-    const itemQuantity = Number(item.quantity);
+    for (const item of selectedItems) {
+      const medicine = item.medicine_id as any;
+      const stockId = medicine.stock_id;
 
-    if (isNaN(itemPrice) || isNaN(itemQuantity)) {
-      throw new Error("Giá hoặc số lượng không hợp lệ");
+      const stock = await Stock.findById(stockId);
+      if (!stock) {
+        throw new Error(`Không tìm thấy tồn kho cho thuốc ${medicine.name}`);
+      }
+
+      if (stock.quantity < item.quantity) {
+        throw new Error(`Sản phẩm ${medicine.name} chỉ còn ${stock.quantity} trong kho`);
+      }
+
+      // Trừ số lượng tồn kho
+      stock.quantity -= item.quantity;
+      await stock.save();
+
+      const itemPrice = stock.sellingPrice;
+      const itemQuantity = Number(item.quantity);
+      const totalForItem = itemPrice * itemQuantity;
+
+      totalAmount += totalForItem;
+
+      orderItems.push({
+        medicine_id: medicine._id,
+        stock_id: stockId,
+        thumbnail: medicine.thumbnail,
+        name: medicine.name,
+        price: itemPrice,
+        quantity: itemQuantity,
+        totalAmount: totalForItem,
+        note: "",
+      });
     }
 
-    const totalAmountForItem = itemPrice * itemQuantity;
-    totalAmount += totalAmountForItem;
+    // ✅ Tạo chi tiết đơn hàng
+    const orderDetail = await new OrderDetail({
+      order_items: orderItems,
+      totalOrder: totalAmount,
+    }).save();
 
-    orderItems.push({
-      medicine_id: item.medicine_id._id,
-      stock_id: stockId,
-      thumbnail: medicineData.thumbnail,
-      name: medicineData.name,
-      price: itemPrice,
-      quantity: itemQuantity,
-      totalAmount: totalAmountForItem,
-      note: "",
-    });
+    // ✅ Tạo đơn hàng chính
+    const order = await new Order({
+      user_id: userId,
+      status: "đang chờ xác nhận",
+      totalAmount: totalAmount,
+      finalAmount: totalAmount,
+      orderDetail: orderDetail._id,
+    }).save();
+
+    // ✅ Cập nhật giỏ hàng: loại bỏ item đã đặt hàng
+    cart.medicine_item = cart.medicine_item.filter(
+      (item: any) => !selectItemIds.includes(item?.medicine_id?._id?.toString())
+    );
+    cart.quantity = cart.medicine_item.reduce((sum: number, item: any) => sum + item.quantity, 0);
+    await cart.save();
+
+    return {
+      message: "Đặt hàng thành công",
+      order,
+    };
   }
 
-  // ✅ Tạo một OrderDetail chứa tất cả order_items
-  const orderDetail = new OrderDetail({
-    order_items: orderItems,
-    totalOrder: totalAmount,
-  });
-  await orderDetail.save();
+  async reviewOrder(userId: string,selectItemIds: string[]) {
+    const cart = await Cart.findOne({ user_id: userId }).populate("medicine_item.medicine_id");
+    if (!cart || cart.medicine_item.length === 0) {
+      throw new Error("Giỏ hàng trống hoặc không tìm thấy");
+    }
 
-  // ✅ Tạo Order gắn với 1 orderDetail duy nhất
-  const order = new Order({
-    user_id: userId,
-    status: "đang chờ xác nhận",
-    totalAmount: totalAmount,
-    finalAmount: totalAmount,
-    orderDetail: orderItems.map((detail) => detail.medicine_id) // lưu mảng, phòng sau này mở rộng
-  });
-  await order.save();
+    const user = await User.findById(userId).select("info.name info.phone info.address");
+    if (!user) {
+      throw new Error("Người dùng không tồn tại");
+    }
 
-  cart.medicine_item = cart.medicine_item.filter(
-  (item: any) => !selectItemIds.includes(item?.medicine_id?._id?.toString())
-  );
-  cart.quantity = cart.medicine_item.reduce(
-    (sum: number, item: any) => sum + item.quantity,
-    0
-  );
-  // Cập nhật giỏ hàng sau khi đặt hàng
+    const selectedItems = cart.medicine_item.filter((item: any) =>
+      item?.medicine_id?._id && selectItemIds.includes(item.medicine_id._id.toString())
+    );
 
-  await cart.save();
+    if (selectedItems.length === 0) {
+      throw new Error("Không có sản phẩm nào được chọn để đặt hàng");
+    }
 
-  return {
-    message: "Đặt hàng thành công",
-    order,
-  };
-}
+    const orderItemsReview = [];
+    let totalAmount = 0;  
+    for (const item of selectedItems) {
+      const medicine = item.medicine_id as any;
+      const stockId = medicine.stock_id;
 
+      const stock = await Stock.findById(stockId);
+      if (!stock) {
+        throw new Error(`Không tìm thấy tồn kho cho thuốc ${medicine.name}`);
+      }
+
+      if (stock.quantity < item.quantity) {
+        throw new Error(`Sản phẩm ${medicine.name} chỉ còn ${stock.quantity} trong kho`);
+      }
+
+      const itemPrice = stock.sellingPrice;
+      const itemQuantity = Number(item.quantity);
+      const totalForItem = itemPrice * itemQuantity;
+
+      totalAmount += totalForItem;
+
+      orderItemsReview.push({
+        medicine_id: medicine._id,
+        stock_id: stockId,
+        thumbnail: medicine.thumbnail,
+        name: medicine.name,
+        price: itemPrice,
+        quantity: itemQuantity,
+        totalAmount: totalForItem,
+        note: "",
+      });
+    }
+    console.log("User Info:", user.info);
+    return {
+      userInfo: {
+        name: user.info.name,
+        phone: user.info.phone,
+        address: user.info.address,
+      },
+      orderItemsReview: orderItemsReview,
+      totalAmount,
+    }
+  }
   
   async checkStatus(userId: string) {
     const orders = await Order.find({ user_id: userId })

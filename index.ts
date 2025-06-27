@@ -18,6 +18,7 @@ import stockRoutes from "./src/router/inventory/stock.route";
 
 import purchaseOrderRoutes from "./src/router/order/purchase-order.route";
 import vnpayRoutes from "./src/router/vnpay.route";
+import voucherRoutes from "./src/router/voucher.route";
 import cartRoutes from "./src/router/order/cart.route";
 import chatRoute from "./src/router/chat.route";
 import notFoundRoute from "./src/middleware/not-found-routes.middleware";
@@ -47,7 +48,7 @@ app.use("/api/disCategory", disCategory);
 app.use("/api/disUsage", disUsageRoutes);
 app.use("/api/symptom", symptomRoutes);
 
-// app.use("/api/voucher", disCategory);
+app.use("/api/voucher", voucherRoutes);
 //medicine
 app.use("/api/medicine", medicineRoutes);
 

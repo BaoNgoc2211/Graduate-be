@@ -27,5 +27,11 @@ class VoucherRepository {
     ]);
     return filter;
   }
+   async expireVouchersByDate(currentDate: Date) {
+    return Voucher.updateMany(
+      { endDate: { $lt: currentDate }, isActive: true },
+      { $set: { isActive: false } }
+    );
+  }
 }
 export default new VoucherRepository();

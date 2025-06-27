@@ -25,10 +25,11 @@ const VoucherSchema = new Schema<IVoucher>(
     maxDiscountValue: { type: Number },
     usageLimit: { type: Number },
     usedCount: { type: Number },
-    applyTo: { type: String, enum: Object.values(applyToEnum), required: true },
-    applyToIds: [{ type: mongoose.Schema.Types.Mixed }], 
+    // applyTo: { type: String, enum: Object.values(applyToEnum), required: true },
+    // applyToIds: [{ type: mongoose.Schema.Types.Mixed }], 
   },
   { collection: "Voucher", timestamps: true }
 );
+VoucherSchema.index({ endDate: 1 }); // Tối ưu cho cron
 const Voucher = mongoose.model("Voucher", VoucherSchema);
 export default Voucher;

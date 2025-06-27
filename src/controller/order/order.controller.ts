@@ -39,6 +39,17 @@ class OrderDetailController {
     returnRes(res, 200, "Checkout Success", result);
   });
 
+  reviewOrder = asyncError(async (req: Request, res: Response) => {
+    const userId = req.user;
+    const selectItemIds = req.body.selectItemIds; // Assuming selectItemIds is passed in the request body
+    console.log("BODY RECEIVED:", req.body);
+    if (!Array.isArray(selectItemIds)) {
+      return res.status(400).json({ message: "selectedItemIds" });
+    }
+    const result = await orderServices.reviewOrder(String(userId!),selectItemIds);
+    returnRes(res, 200, "Review Order Success", result);
+  });
+
   updateStatus = asyncError(async (req: Request, res: Response) => {
     const result = await orderServices.updateStatusOrder(
       req.params.id,

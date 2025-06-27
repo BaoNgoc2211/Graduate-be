@@ -32,6 +32,12 @@ class OrderService {
   }
   //#endregion
 
+  async reviewOrder(userId: string,selectItemIds: string[]) {
+    const review = await orderRepository.reviewOrder(userId,selectItemIds);
+    if (!review) throw new Error("Không tìm thấy đơn hàng");
+    return review;
+  }
+
   // async checkout(user_id: string, order: IOrder) {
   //   await this.getUserById(user_id);
 

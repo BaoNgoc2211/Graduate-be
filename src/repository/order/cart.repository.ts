@@ -1,6 +1,7 @@
 import { populate } from "dotenv";
 import { ICart } from "../../interface/order/cart.interface";
 import Cart from "../../model/order/cart.model";
+import User from "../../model/auth/user.model";
 
 class CartRepository {
   // async getCartFromCache(userId: string) {
@@ -46,6 +47,7 @@ class CartRepository {
         }
     });
   }
+ 
   // async remove(userId: string, medicineId: string) {
   //   let cart = await this.getCartFromCache(userId);
   //   if (!cart) {

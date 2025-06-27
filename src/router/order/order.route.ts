@@ -24,7 +24,8 @@ router.put("/:id", orderController.update);
 // router.post("/", orderController.create);
 router.get("/", orderController.getAll);
 router.get("/:id", orderController.getById);
-router.post("/checkout/",protect, orderController.checkOut);
+router.post("/review/", protect, orderController.reviewOrder);
+router.post("/review/checkout/",protect, orderController.checkOut);
 // router.get("/user/:userId", orderDetailController.getByUserId);
 
 router.delete("/:id", orderController.delete);

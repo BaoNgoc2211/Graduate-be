@@ -46,24 +46,22 @@ const userSchema = new mongoose.Schema<IUser>(
       phone: {
         type: String,
         trim: true,
-        default: null,
+       
       },
       address: {
         type: String,
         trim: true,
-        default: null,
+        
       },
       avatar: {
         type: String,
-        default: null,
+        
       },
       gender: {
         type: String,
-        default: null,
       },
       birth: {
         type: Date,
-        default: null,
       },
       point: {
         type: Number,
