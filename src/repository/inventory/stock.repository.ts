@@ -1,3 +1,4 @@
+import e from "cors";
 import { IStock } from "../../interface/inventory/stock.interface";
 import Stock from "../../model/inventory/stock.model";
 import PurchaseOrder from "../../model/purchase-order.model";
@@ -6,9 +7,10 @@ class StockRepository{
     async findAll(){
         return await Stock.find();
     }
-    async findById(id: string){
-        const stock = await Stock.findOne({medicine: id})
-        return stock;
+    async getLowStock(){
+        const stock = await Stock.find();
+        const lowStock = stock.filter(item => item.quantity <= 10);
+        return lowStock;
     }
     async createStock(data:IStock){
         // const purchaseOrder = PurchaseOrder.findById(data.purchaseOrder);
@@ -29,17 +31,37 @@ class StockRepository{
                 medicine: med.medicine_id,
                 purchaseOrder: purchaseOrderId,
                 quantity: med.quantity,
+                packaging: med.packaging,
                 sellingPrice: med.price,
             }).save();
             })
         );
-
         return stocks;
     }
    
-    async updateStock(id:string, data:Partial<IStock>){
-        const stock = await Stock.findByIdAndUpdate(id, data,{new:true});
-        return stock;
+    async updateStocksFromPurchaseOrder(purchaseOrderId: any) {
+        const order = await PurchaseOrder.findById(purchaseOrderId).lean();
+        if (!order) throw new Error("Không tìm thấy đơn nhập");
+        for (const med of order.medicines) {
+            const stock = await Stock.findOne({ medicine: med.medicine_id, purchaseOrder: purchaseOrderId });
+            if (stock) {    
+                // Cập nhật số lượng và giá bán
+                stock.quantity = med.quantity;
+                stock.sellingPrice = med.price;
+                await stock.save();
+            }
+            else {
+                // Nếu không tìm thấy stock, tạo mới
+                await new Stock({
+                    medicine: med.medicine_id,
+                    purchaseOrder: purchaseOrderId,
+                    quantity: med.quantity,
+                    packaging: med.packaging,
+                    sellingPrice: med.price,
+                }).save();
+            }
+        }
+        return await Stock.find({ purchaseOrder: purchaseOrderId });
     }
     async deleteStock(id:string){
         const stock = await Stock.findByIdAndDelete(id);

@@ -9,9 +9,8 @@ class StockController {
     returnRes(res, 200, "Get All", result);
   });
 
-  getById = asyncError(async (req: Request, res: Response) => {
-    const result = await stockServices.getById(req.params.id);
-    console.log(req.params.id);
+  getLowStock = asyncError(async (req: Request, res: Response) => {
+    const result = await stockServices.getLowStock();
     returnRes(res, 200, "Get Stock By ID", result!);
   });
 
@@ -20,10 +19,10 @@ class StockController {
     returnRes(res, 201, "Created", result);
   });
 
-  update = asyncError(async (req: Request, res: Response) => {
-    const result = await stockServices.updateStock(req.params.id, req.body);
-    returnRes(res, 200, "Updated", result!);
-  });
+  // update = asyncError(async (req: Request, res: Response) => {
+  //   const result = await stockServices.updateStock(req.params.id, req.body);
+  //   returnRes(res, 200, "Updated", result!);
+  // });
 
   delete = asyncError(async (req: Request, res: Response) => {
     const result = await stockServices.deleteStock(req.params.id);

@@ -16,6 +16,10 @@ const medicineItemSchema = new Schema<IMedicineDetail>({
         type: Number,
         required: true,
     },
+    packaging: {
+        type: String,
+        required: true, // Ví dụ đơn vị tính mặc định là "viên"
+    },
     VAT_Rate: {
         type: Number,
         default: 0,

@@ -5,6 +5,7 @@ export interface IMedicineDetail {
   batch_id: Types.ObjectId;
   quantity: number;
   price: number;
+  packaging: string; // Đơn vị tính của thuốc, ví dụ: "viên", "gói", "chai"
   VAT_Rate: number;
   CK_Rate: number;
   totalPrice: number;
