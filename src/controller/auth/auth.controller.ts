@@ -39,8 +39,17 @@ class AuthController {
   }
 
   findAll = asyncError(async (req: Request, res: Response) => {
-    const admins = await authServices.findAll();
-    returnRes(res, 200, "Find All", admins);
+    const user = await authServices.findAll();
+    returnRes(res, 200, "Find All", user);
+  });
+
+  getProfile = asyncError(async (req: Request, res: Response) => {
+    const userId = req.user;
+    const user = await authServices.getProfile(String(userId));
+    if (!user) {
+      return returnRes(res, 404, "User not found");
+    }
+    returnRes(res, 200, "Get profile successful", user);
   });
   // resendOTP = asyncError(async (req: Request, res: Response) => {
   //   const { email } = req.body;

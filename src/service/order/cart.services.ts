@@ -83,21 +83,28 @@ class CartServices {
   
   //#region update
   async update(userId: string, medicine_id: string, quantity: number) {
-    const cart = await Cart.findOne({ user_id: userId });
+    let cart = await Cart.findOne({ user_id: userId });
     if (!cart) throwError(404, "Giỏ hàng không tồn tại");
 
     const item = cart?.medicine_item.find(
       (item: ICartItem) => item.medicine_id.toString() === medicine_id
     );
     if (!item) throwError(404, "Thuốc không tồn tại trong giỏ");
+    
     item!.quantity = quantity;
+
+    cart!.quantity = cart!.medicine_item.reduce(
+    (sum: number, item: ICartItem) => sum + item.quantity,
+    0
+  );
+
     await cart!.save();
     return cart;
   }
   //#endregion
   //#region remove
   async removeItem(userId: string, medicine_id: string) {
-    const cart = await Cart.findOne({ user_id: userId });
+    let cart = await Cart.findOne({ user_id: userId });
 
     if (!cart || !cart.medicine_item) {
       throwError(404, "Giỏ hàng không tồn tại hoặc không có sản phẩm");
@@ -107,6 +114,9 @@ class CartServices {
       (item: ICartItem) => item.medicine_id.toString() !== medicine_id
     );
 
+    cart!.quantity = cart!.medicine_item.reduce(
+    (sum: number, item: ICartItem) => sum + item.quantity,
+    0);
     await cart!.save();
     return cart;
   }

@@ -40,6 +40,11 @@ class AuthServices {
   //   return await authRepository.createUser(user);
   // };
 
+  getProfile = async (userId: string) => {
+    
+    return await User.findById(userId).select("info")  ;
+  };
+
   findAll = async () => {
     return await User.find();
   };

@@ -4,12 +4,14 @@ import { protect } from "../../middleware/auth.middleware";
 
 const router = express.Router();
 
+// router.get("/:userId", authController.signUp);
 router.post("/sign-up", authController.signUp);
 router.post("/verify-otp", authController.verifyEmail);
 router.post("/sign-in", authController.signin);
 router.post("/logout", protect, authController.logout);
 router.get("/check-auth", protect, authController.checkAuth);
-router.get("/profile", authController.findAll);
+router.get("/find-all/", authController.findAll);
+router.get("/profile/",protect, authController.getProfile);
 router.put("/profile/:id", authController.updateInfo);
 router.put("/forgot-password/:id", authController.forgotPassword);
 router.put("/reset-password/:id", authController.resetPassword);
@@ -25,7 +27,7 @@ router.get("/failure", authController.loginFailure);
 // Cập nhật thông tin khách hàng
 // router.put("/update/:userId", authController.signUp);
 // Lấy thông tin khách hàng theo ID
-// router.get("/:userId", authController.signUp);
+
 // router.post('/logout',authController.logout);
 // router.post('/forgot-password',validateRequest(forgotPasswordSchema), authController.forgotPassword);
 // router.post('/reset-password',validateRequest(resetPasswordSchema), authController.resetPassword);
