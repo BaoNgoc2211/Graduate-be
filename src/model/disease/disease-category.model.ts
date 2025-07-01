@@ -1,4 +1,3 @@
-import { NameEnum } from "./../../enum/disease/disease-category.enum";
 import { IDiseaseCategory } from "../../interface/disease/disease-category.interface";
 import mongoose, { Schema } from "mongoose";
 
@@ -6,21 +5,29 @@ const DiseaseCategorySchema = new Schema<IDiseaseCategory>(
   {
     name: {
       type: String,
-      enum: Object.values(NameEnum),
       required: true,
+      unique: true,
     },
     icon: {
       type: String,
       required: true,
     },
-    // disUsage: [
-    //   {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: "DiseaseUsageGroup",
-    //   },
-    // ],
+    diseaseUsage: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "DiseaseUsageGroup",
+        required: true,
+      },
+    ],
+    disease: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Disease",
+        required: true,
+      },
+    ],
   },
-  { collection: "DiseaseCategory" }
+  { collection: "DiseaseCategory", timestamps: true }
 );
 
 const DiseaseCategory = mongoose.model(

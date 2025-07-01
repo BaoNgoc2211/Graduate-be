@@ -1,8 +1,9 @@
-import { DiseaseCategoryEnum } from './../../enum/disease/disease-category.enum';
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 
 export interface IDiseaseCategory {
-  name: DiseaseCategoryEnum;
+  _id?: Types.ObjectId;
+  name: string;
   icon: string;
-  // disUsage: mongoose.Types.ObjectId[];
+  diseaseUsage?: mongoose.Types.ObjectId[];
+  disease?: mongoose.Types.ObjectId[];
 }
