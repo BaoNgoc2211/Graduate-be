@@ -8,7 +8,7 @@ const router = Router();
 
 //status order
 router.get("/status/",protect, orderController.checkStatusAll);
-router.get("/status/:userId/:status", orderController.checkStatus);
+router.get("/status/:status/",protect, orderController.checkStatus);
 
 
 //orderdetail

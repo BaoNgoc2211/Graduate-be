@@ -2,16 +2,12 @@ import Order from "../../model/order/order.model";
 import { IOrder } from "../../interface/order/order.interface";
 import OrderDetail from "../../model/order/order.detail.model";
 import User from "../../model/auth/user.model";
-import throwError from "../../util/create-error";
 import Stock from "../../model/inventory/stock.model";
 import Cart from "../../model/order/cart.model";
-import { IOrderDetail, IOrderItem } from "../../interface/order/order-detail.interface";
-import { Status } from "cloudinary";
-import { StatusEnum } from "../../enum/medicine/import-batch.enum";
 import { OrderStatus } from "../../enum/order-status.enum";
-import Medicine from "../../model/medicine/medicine.model";
-import { userInfo } from "os";
 import Shipping from "../../model/shipping.model";
+import { IOrderItem } from "../../interface/order/order-detail.interface";
+import { stat } from "fs";
 
 class OrderDetailRepository {
   async findAll() {
@@ -62,22 +58,20 @@ class OrderDetailRepository {
       });
     return order;
   }
-  async checkOut(userId: string, selectItemIds: string[],shippingId: string) {
-    // Lấy giỏ hàng và populate thông tin thuốc
-    const cart = await Cart.findOne({ user_id: userId }).populate("medicine_item.medicine_id");
 
+  async checkOut(userId: string, selectItemIds: string[],shippingId: string) {
+    const cart = await Cart.findOne({ user_id: userId }).populate("medicine_item.medicine_id");
     if (!cart || cart.medicine_item.length === 0) {
       throw new Error("Giỏ hàng trống hoặc không tìm thấy");
     }
-
-    // Lọc ra các sản phẩm được chọn để đặt hàng
+    
     const selectedItems = cart.medicine_item.filter((item: any) =>
       item?.medicine_id?._id && selectItemIds.includes(item.medicine_id._id.toString())
     );
-
     if (selectedItems.length === 0) {
       throw new Error("Không có sản phẩm nào được chọn để đặt hàng");
     }
+
     const shipping = await Shipping.findById(shippingId);
     if (!shipping) {  
       throw new Error("Không tìm thấy thông tin vận chuyển");
@@ -99,8 +93,7 @@ class OrderDetailRepository {
         throw new Error(`Sản phẩm ${medicine.name} chỉ còn ${stock.quantity} trong kho`);
       }
 
-      // Trừ số lượng tồn kho
-      // stock.quantity -= item.quantity;
+      stock.quantity -= item.quantity;
        console.log("Stock", stock);
       await stock.save();
 
@@ -110,7 +103,6 @@ class OrderDetailRepository {
 
       totalAmount += totalForItem;
 
-     
       orderItems.push({
         medicine_id: medicine._id,
         stock_id: stockId,
@@ -124,13 +116,13 @@ class OrderDetailRepository {
       
     }
 
-    // ✅ Tạo chi tiết đơn hàng
+
     const orderDetail = await new OrderDetail({
       order_items: orderItems,
       totalOrder: totalAmount,
     }).save();
 
-    // ✅ Tạo đơn hàng chính
+
     const order = await new Order({
       user_id: userId,
       status: "đang chờ xác nhận",
@@ -140,7 +132,7 @@ class OrderDetailRepository {
       orderDetail: orderDetail._id,
     }).save();
 
-    // ✅ Cập nhật giỏ hàng: loại bỏ item đã đặt hàng
+
     cart.medicine_item = cart.medicine_item.filter(
       (item: any) => !selectItemIds.includes(item?.medicine_id?._id?.toString())
     );
@@ -208,7 +200,6 @@ class OrderDetailRepository {
         note: "",
       });
     }
-    console.log("User Info:", user.info);
 
     return {
       userInfo: {
@@ -224,50 +215,90 @@ class OrderDetailRepository {
   
   async checkStatus(userId: string) {
     console.log("User ID:", userId);
-    const orders = await Order.find({ user_id: userId })
-      .sort({ createdAt: -1 })
-      .populate("orderDetail.medicine_id");
+
+    const orders = await Order.find({ user_id: userId }).sort({ createdAt: -1 });
 
     if (!orders || orders.length === 0) {
       throw new Error("Người dùng chưa có đơn hàng nào.");
     }
-    
 
-    return orders.map((order) => ({
-      orderId: order._id,
-      status: order.status,
-      totalAmount: order.totalAmount,
-      finalAmount: order.finalAmount,
-      items: order.orderDetail.map((detail: any) => ({
-        order_it: detail.medicine_id._id,
-        medicineName: detail.medicine_id.name,
-        quantity: detail.quantity,
-        price: detail.price,
-        total: detail.totalAmount,
-        thumbnail: detail.medicine_id.thumbnail,
-        // medicineInfo: detail.medicine_id // nếu muốn hiển thị thêm thông tin thuốc
-      })),
-    }));
-  }
+    // Lấy danh sách các ID của orderDetail từ các đơn hàng
+    const orderDetailIds = orders.map(order => order.orderDetail); // <-- sửa theo đúng tên field trong Order
+
+    // Tìm tất cả OrderDetail tương ứng
+    const orderDetails = await OrderDetail.find({ _id: { $in: orderDetailIds } });
+
+    // Tạo Map để tra nhanh
+    const orderDetailMap = new Map();
+    orderDetails.forEach(detail => {
+      orderDetailMap.set(detail._id.toString(), detail);
+    });
+
+    // Trả về kết quả đã ghép nối
+    const result = orders.map(order => {
+      const detail = orderDetailMap.get(order.orderDetail.toString());
+
+      return {
+        orderId: order._id,
+        status: order.status,
+        totalAmount: order.totalAmount,
+        finalAmount: order.finalAmount,
+        items: detail?.order_items.map((item:IOrderItem) => ({
+          order_item: item.medicine_id,
+          medicineName: item.name,
+          quantity: item.quantity,
+          price: item.price,
+          total: item.totalAmount,
+          thumbnail: item.thumbnail,
+        })),
+      };
+    });
+
+  console.log("Formatted Result:", result);
+  return result;
+}
+
+
   async checkStatusOrder(userId: string, status: OrderStatus) {
-    const orders = await Order.find({ user_id: userId, status })
-      .sort({ createdAt: -1 })
-      .populate("orderDetail");
-    return orders.map((order) => ({
-      orderId: order._id,
-      status: order.status,
-      totalAmount: order.totalAmount,
-      finalAmount: order.finalAmount,
-      items: order.orderDetail.map((detail: any) => ({
-        medicicneId: detail.medicine_id,
-        medicineName: detail.name,
-        quantity: detail.quantity,
-        price: detail.price,
-        total: detail.totalAmount,
-        thumbnail: detail.thumbnail,
-        // medicineInfo: detail.medicine_id // nếu muốn hiển thị thêm thông tin thuốc
-      })),
-    }));
+    const orders = await Order.find({ user_id: userId,  status }).sort({ createdAt: -1 });
+
+    if (!orders || orders.length === 0) {
+      throw new Error("Người dùng chưa có đơn hàng nào.");
+    }
+
+    // Lấy danh sách các ID của orderDetail từ các đơn hàng
+    const orderDetailIds = orders.map(order => order.orderDetail); // <-- sửa theo đúng tên field trong Order
+
+    // Tìm tất cả OrderDetail tương ứng
+    const orderDetails = await OrderDetail.find({ _id: { $in: orderDetailIds } });
+
+    // Tạo Map để tra nhanh
+    const orderDetailMap = new Map();
+    orderDetails.forEach(detail => {
+      orderDetailMap.set(detail._id.toString(), detail);
+    });
+
+    // Trả về kết quả đã ghép nối
+    const result = orders.map(order => {
+      const detail = orderDetailMap.get(order.orderDetail.toString());
+
+      return {
+        orderId: order._id,
+        status: order.status,
+        totalAmount: order.totalAmount,
+        finalAmount: order.finalAmount,
+        items: detail?.order_items.map((item:IOrderItem) => ({
+          order_item: item.medicine_id,
+          medicineName: item.name,
+          quantity: item.quantity,
+          price: item.price,
+          total: item.totalAmount,
+          thumbnail: item.thumbnail,
+        })),
+      };
+    });
+
+  return result;
   }
 
   async updateOrder(id: string, data: Partial<IOrder>) {

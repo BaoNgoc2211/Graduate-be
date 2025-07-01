@@ -77,10 +77,9 @@ class OrderDetailController {
   });
 
   checkStatus = asyncError(async (req: Request, res: Response) => {
-    const result = await orderServices.checkStatusOrder(
-      req.params.userId,
-      req.params.status
-    );
+    const userId = req.user;
+    const status = req.params.status;
+    const result = await orderServices.checkStatusOrder(String(userId!), String(status!));
     returnRes(res, 200, "Get Status Order", result!);
   });
 
