@@ -9,7 +9,13 @@ class DisCategoryRepository {
   async findId(id: string) {
     return await DisCategory.findById(id);
   }
+  async findAll() {
+    return await DisCategory.find().populate("disease").exec();
+  }
 
+  async findById(id: string) {
+    return await DisCategory.findById(id).populate("disease").exec();
+  }
   async create(name: string, icon: string) {
     return await DisCategory.create({ name, icon });
   }
@@ -20,12 +26,6 @@ class DisCategoryRepository {
   }
   async delete(id: string) {
     return await DisCategory.findByIdAndDelete(id);
-  }
-
-  async getAll(categoryName?: string) {
-    return categoryName
-      ? await this.findName(categoryName)
-      : await DisCategory.find();
   }
 
   async updateDiseaseToCategory(

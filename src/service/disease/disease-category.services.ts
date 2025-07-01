@@ -13,6 +13,13 @@ class DisCategoryServices {
       throwError(404, " Disease Category name not found ");
     }
   }
+  async getAll() {
+    return disCategoryRepository.findAll();
+  }
+
+  async getById(id: string) {
+    return disCategoryRepository.findById(id);
+  }
   async create(name: string, icon: string) {
     await this.checkNameExist(name);
     return await disCategoryRepository.create(name, icon);
@@ -23,9 +30,6 @@ class DisCategoryServices {
   }
   async update(id: string, disCategory: IDiseaseCategory) {
     return await disCategoryRepository.update(id, disCategory);
-  }
-  async getAllCategory(categoryName?: string) {
-    return await disCategoryRepository.getAll(categoryName);
   }
 }
 const disCategoryService = new DisCategoryServices();
