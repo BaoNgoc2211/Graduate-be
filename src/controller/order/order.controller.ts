@@ -29,7 +29,7 @@ class OrderDetailController {
   // });
   checkOut = asyncError(async (req: Request, res: Response) => {
     // const { user_id } = req.body;
-    
+
     const userId = req.user;
     const selectItemIds = req.body.selectItemIds; // Assuming selectItemIds is passed in the request body
     const shippingId = req.body.shippingId; // Assuming shippingId is passed in the request body
@@ -37,7 +37,11 @@ class OrderDetailController {
     if (!Array.isArray(selectItemIds)) {
       return res.status(400).json({ message: "selectedItemIds" });
     }
-    const result = await orderServices.checkOut(String(userId!),selectItemIds,shippingId);
+    const result = await orderServices.checkOut(
+      String(userId!),
+      selectItemIds,
+      shippingId
+    );
     returnRes(res, 200, "Checkout Success", result);
   });
 
@@ -49,7 +53,11 @@ class OrderDetailController {
     if (!Array.isArray(selectItemIds)) {
       return res.status(400).json({ message: "selectedItemIds" });
     }
-    const result = await orderServices.reviewOrder(String(userId!),selectItemIds,shippingId);
+    const result = await orderServices.reviewOrder(
+      String(userId!),
+      selectItemIds,
+      shippingId
+    );
     returnRes(res, 200, "Review Order Success", result);
   });
 
