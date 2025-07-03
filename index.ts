@@ -16,9 +16,7 @@ import manufactureRoutes from "./src/router/inventory/manufacture.route";
 import importBatchRoutes from "./src/router/inventory/import-batch.route";
 import stockRoutes from "./src/router/inventory/stock.route";
 import shippingRoutes from "./src/router/shipping.route";
-
 import purchaseOrderRoutes from "./src/router/order/purchase-order.route";
-import vnpayRoutes from "./src/router/vnpay.route";
 import voucherRoutes from "./src/router/voucher.route";
 import cartRoutes from "./src/router/order/cart.route";
 import chatRoute from "./src/router/chat.route";
@@ -61,7 +59,6 @@ app.use("/api/purchase-order", purchaseOrderRoutes);
 
 app.use("/api/upload", uploadRoutes);
 
-app.use("/api/vnpay", vnpayRoutes);
 
 
 app.use("/api/chat", chatRoute);

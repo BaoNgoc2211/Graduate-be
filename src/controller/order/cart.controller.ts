@@ -17,7 +17,7 @@ class CartController {
       medicine_id,
       quantity
     );
-    console.log(quantity);
+
     returnRes(res, 200, "Add item to cart successful", data!);
   });
   update = asyncError(async (req: Request, res: Response) => {

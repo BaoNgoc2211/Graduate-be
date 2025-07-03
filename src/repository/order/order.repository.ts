@@ -8,6 +8,7 @@ import { OrderStatus } from "../../enum/order-status.enum";
 import Shipping from "../../model/shipping.model";
 import { IOrderItem } from "../../interface/order/order-detail.interface";
 import { stat } from "fs";
+import { PaymentStatus } from "../../enum/order/order.enum";
 
 class OrderDetailRepository {
   async findAll() {
@@ -59,7 +60,7 @@ class OrderDetailRepository {
     return order;
   }
 
-  async checkOut(userId: string, selectItemIds: string[],shippingId: string) {
+  async checkOut(userId: string, selectItemIds: string[],shippingId: string,paymentMethod: string) {
     const cart = await Cart.findOne({ user_id: userId }).populate("medicine_item.medicine_id");
     if (!cart || cart.medicine_item.length === 0) {
       throw new Error("Giỏ hàng trống hoặc không tìm thấy");
@@ -95,7 +96,7 @@ class OrderDetailRepository {
 
       stock.quantity -= item.quantity;
        console.log("Stock", stock);
-      await stock.save();
+      // await stock.save();
 
       const itemPrice = stock.sellingPrice;
       const itemQuantity = Number(item.quantity);
@@ -130,6 +131,8 @@ class OrderDetailRepository {
       totalAmount: totalAmount,
       finalAmount: totalAmount + shipping.price,
       orderDetail: orderDetail._id,
+      paymentMethod, // Thêm phương thức thanh toán
+      paymentStatus: paymentMethod === "COD" ? PaymentStatus.UNPAID : PaymentStatus.PAID, // Cập nhật trạng thái thanh toán
     }).save();
 
 
@@ -137,7 +140,7 @@ class OrderDetailRepository {
       (item: any) => !selectItemIds.includes(item?.medicine_id?._id?.toString())
     );
     cart.quantity = cart.medicine_item.reduce((sum: number, item: any) => sum + item.quantity, 0);
-    await cart.save();
+    // await cart.save();
 
     return {
       message: "Đặt hàng thành công",
@@ -145,7 +148,7 @@ class OrderDetailRepository {
     };
   }
 
-  async reviewOrder(userId: string,selectItemIds: string[],shippingId: string) {
+  async reviewOrder(userId: string,selectItemIds: string[],shippingId: string,paymentMethod: string) {
     const cart = await Cart.findOne({ user_id: userId }).populate("medicine_item.medicine_id");
     if (!cart || cart.medicine_item.length === 0) {
       throw new Error("Giỏ hàng trống hoặc không tìm thấy");
@@ -210,6 +213,7 @@ class OrderDetailRepository {
       orderItemsReview: orderItemsReview,
       shipping: shipping,
       totalAmount: totalAmount + shipping.price,
+      paymentMethod: paymentMethod, // Thêm phương thức thanh toán
     }
   }
   

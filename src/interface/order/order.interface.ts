@@ -14,8 +14,8 @@ export interface IOrder {
   status: OrderStatus;
   totalAmount: number;
   finalAmount?: number;
-  // paymentMethod: PaymentMethodEnum;
-  // paymentStatus: PaymentStatusEnum;
+  paymentMethod: PaymentMethodEnum;
+  paymentStatus: PaymentStatusEnum;
   orderDetail: IOrderDetail[];
 }
 export interface IInfo {

@@ -26,7 +26,7 @@ const orderSchema = new Schema<IOrder>(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Shipping",
       require: true,
-    },
+    },  
     status: {
       type: String,
       enum: Object.values(OrderStatus),
@@ -38,11 +38,14 @@ const orderSchema = new Schema<IOrder>(
     finalAmount: {
       type: Number,
     },
-    // paymentMethod: { type: String, enum: Object.values(PaymentMethod) },
-    // paymentStatus: {
-    //   type: String,
-    //   enum: Object.values(PaymentStatus),
-    // },
+    paymentMethod: { 
+      type: String, enum: Object.values(PaymentMethod), 
+      required: true,
+    },
+    paymentStatus: {
+      type: String,
+      enum: Object.values(PaymentStatus),
+    },
     orderDetail: [
       {
         type: mongoose.Schema.Types.ObjectId,

@@ -24,16 +24,15 @@ class OrderService {
     return await orderRepository.findById(id);
   }
   //#region checkout: Quy
-  async checkOut(userId: string, selectItemIds: string[],shippingId: string) {
-    console.log("User ID:", userId);
-    const order = await orderRepository.checkOut(userId,selectItemIds,shippingId);
+  async checkOut(userId: string, selectItemIds: string[],shippingId: string, paymentMethod: string) {
+    const order = await orderRepository.checkOut(userId,selectItemIds,shippingId, paymentMethod);
     if (!order) throw new Error("Không tìm thấy đơn hàng");
     return order;
   }
   //#endregion
 
-  async reviewOrder(userId: string,selectItemIds: string[],shippingId: string) {
-    const review = await orderRepository.reviewOrder(userId,selectItemIds,shippingId);
+  async reviewOrder(userId: string,selectItemIds: string[],shippingId: string, paymentMethod: string) {
+    const review = await orderRepository.reviewOrder(userId,selectItemIds,shippingId, paymentMethod);
     if (!review) throw new Error("Không tìm thấy đơn hàng");
     return review;
   }
