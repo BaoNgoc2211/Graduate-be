@@ -3,6 +3,15 @@ import { Response, Request } from "express";
 import { returnRes } from "../../util/response";
 import disCategoryService from "../../service/disease/disease-category.services";
 class DisCategoryController {
+  getAll = asyncError(async (req: Request, res: Response) => {
+    const categories = await disCategoryService.getAll();
+    return returnRes(res, 200, "Get all Disease Category", categories);
+  });
+
+  getById = asyncError(async (req: Request, res: Response) => {
+    const category = await disCategoryService.getById(req.params.id);
+    return returnRes(res, 200, "Get By Id Disease Category", category!);
+  });
   create = asyncError(async (req: Request, res: Response) => {
     const { name, icon } = req.body;
     await disCategoryService.create(name, icon);
@@ -17,13 +26,6 @@ class DisCategoryController {
     const { id } = req.params;
     const data = await disCategoryService.delete(id);
     returnRes(res, 200, "Delete disease category successful", data!);
-  });
-  getAllCategory = asyncError(async (req: Request, res: Response) => {
-    const { categoryName } = req.query;
-    const data = await disCategoryService.getAllCategory(
-      categoryName as string
-    );
-    returnRes(res, 200, "Get disease category successful", data!);
   });
 }
 const disCategoryController = new DisCategoryController();

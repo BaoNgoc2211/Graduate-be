@@ -1,10 +1,10 @@
 import { Router } from "express";
 import stockController from "../../controller/stock/stock.controller";
 const router = Router();
-router.post("/", stockController.create);
 router.get("/", stockController.getAll);
-router.put("/:id", stockController.update);
+router.get("/low-stock", stockController.getLowStock);
+router.get("/medicine/:medicine_id", stockController.getStockByMedicineId);
+router.post("/", stockController.create);
 router.delete("/:id", stockController.delete);
-router.get("/:id", stockController.getById);
 
 export default router;

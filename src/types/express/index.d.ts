@@ -22,6 +22,9 @@ declare global {
       user?: {
         userId: string;
       };
+      // admin?: {
+      //   adminId: string;
+      // };
     }
   }
 }

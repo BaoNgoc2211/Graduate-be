@@ -1,0 +1,183 @@
+[
+  {
+    "category": "KHÓ THỞ",
+    "symptoms": [
+      {
+        "id": "ID",
+        "name": "TÊN"
+      },
+      {
+        "id": "KT01",
+        "name": "khó thở"
+      },
+      {
+        "id": "KT02",
+        "name": "Khó thở khi gắng sức"
+      },
+      {
+        "id": "KT02",
+        "name": "Khó thở về đêm"
+      },
+      {
+        "id": "KT04",
+        "name": "Khó thở khi nằm"
+      },
+      {
+        "id": "KT05",
+        "name": "Khó thở phải ngồi mới thở được"
+      },
+      {
+        "id": "KT06",
+        "name": "Khó thở xảy ra thường xuyên (lúc đầu chỉ khó thở khi gắng sức)"
+      },
+      {
+        "id": "KT07",
+        "name": " khó thở đột ngột"
+      },
+      {
+        "id": "KT08",
+        "name": "Đau ngực dữ dội"
+      },
+      {
+        "id": "KT09",
+        "name": "đau ngực từng cơn sau đó tự khỏi"
+      }
+    ]
+  },
+  {
+    "category": "HỒI HỘP",
+    "symptoms": [
+      {
+        "id": "HH01",
+        "name": "Hồi hộp"
+      },
+      {
+        "id": "HH02",
+        "name": "Hồi hộp khi gắng sức"
+      },
+      {
+        "id": "HH03",
+        "name": "thường xuyên hồi hộp"
+      },
+      {
+        "id": "HH04",
+        "name": "hồi hộp về đêm"
+      },
+      {
+        "id": "HH05",
+        "name": "bồn chồn lo lắng"
+      },
+      {
+        "id": "HH06",
+        "name": "lo lắng"
+      }
+    ]
+  },
+  {
+    "category": "ĐAU NGỰC",
+    "symptoms": [
+      {
+        "id": "DN001",
+        "name": "Đau ngực cảm giác ngực bị thắt lại"
+      },
+      {
+        "id": "DN002",
+        "name": "Đau ngực sau xương ức"
+      },
+      {
+        "id": "DN003",
+        "name": "Cơn đau ngực lan ra cổ vai cánh tay"
+      },
+      {
+        "id": "DN004",
+        "name": "Đau ngực vào sáng sớm"
+      },
+      {
+        "id": "DN005",
+        "name": "Đau ngực khi vận động mạnh"
+      },
+      {
+        "id": "DN006",
+        "name": "Đau ngực tự khổi khoảng sau 15 phút"
+      },
+      {
+        "id": "DN007",
+        "name": "Đau ngực đột ngột bất cứ lúc nào ngay cả lúc đang nghỉ ngơi"
+      },
+      {
+        "id": "DN008",
+        "name": "Cơn đau ngực kéo dài hơn 30 phút không giảm"
+      },
+      {
+        "id": "DN009",
+        "name": "Đau ngực lan lên hàm hoặc xuống lưng"
+      },
+      {
+        "id": "DN010",
+        "name": "Đau ngực lan xuống cánh tay và bàn tay trái"
+      },
+      {
+        "id": "DN011",
+        "name": "Đau ngực vào sáng sớm hoặc chiều tối"
+      },
+      {
+        "id": "DN012",
+        "name": "Nặng ngực cảm giác như bị đè"
+      },
+      {
+        "id": "DN013",
+        "name": "Đau vùng vai gáy"
+      }
+    ]
+  },
+  {
+    "category": "HO",
+    "symptoms": [
+      {
+        "id": "H001",
+        "name": "Ho"
+      },
+      {
+        "id": "H002",
+        "name": "Ho khan"
+      },
+      {
+        "id": "H003",
+        "name": "Ho ra máu"
+      },
+      {
+        "id": "H004",
+        "name": "Ho ra đàm"
+      },
+      {
+        "id": "H005",
+        "name": "Ho vào ban đêm"
+      }
+    ]
+  },
+  {
+    "category": "nhịp tim",
+    "symptoms": [
+      {
+        "id": "ID",
+        "name": "TÊN"
+      },
+      {
+        "id": null,
+        "name": "Đánh trống ngực (cảm thấy tim đập mạnh)"
+      },
+      {
+        "id": null,
+        "name": "Tim đập nhanh khi gắng sức"
+      },
+      {
+        "id": null,
+        "name": "Nhịp tim nhanh (tiếng ngựa phi)"
+      },
+      {
+        "id": null,
+        "name": "Tim đập nhanh"
+      }
+    ]
+  }
+]

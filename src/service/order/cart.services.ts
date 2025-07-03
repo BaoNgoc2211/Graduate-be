@@ -5,7 +5,6 @@ import Medicine from "../../model/medicine/medicine.model";
 import Cart from "../../model/order/cart.model";
 import cartRepository from "../../repository/order/cart.repository";
 import throwError from "../../util/create-error";
-// import { redis } from "../../databases/redis";
 
 class CartServices {
   private async getUserByEmail(email: string) {
@@ -109,7 +108,6 @@ class CartServices {
     if (!cart || !cart.medicine_item) {
       throwError(404, "Giỏ hàng không tồn tại hoặc không có sản phẩm");
     }
-
     cart!.medicine_item = cart!.medicine_item.filter(
       (item: ICartItem) => item.medicine_id.toString() !== medicine_id
     );

@@ -20,10 +20,17 @@ export interface IUser extends Document {
   info: {
     name?: string;
     phone?: string;
-    address?: string;
     avatar?: string;
     gender?: genderType;
     point?: number;
+    birthday?: Date;
+    address?: {
+      provinceId: string;
+      provinceName: string;
+      wardId: string;
+      wardName: string;
+      street?: string;
+    };
   };
 }
 

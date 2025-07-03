@@ -1,0 +1,32 @@
+[
+  {
+    "code": "J45",
+    "description": "Asthma",
+    "vietnameseName": "Hen phế quản",
+    "chapter": "Diseases of the respiratory system"
+  },
+  {
+    "code": "E11",
+    "description": "Type 2 diabetes mellitus",
+    "vietnameseName": "Đái tháo đường týp 2",
+    "chapter": "Endocrine, nutritional and metabolic diseases"
+  },
+  {
+    "code": "I10",
+    "description": "Essential (primary) hypertension",
+    "vietnameseName": "Tăng huyết áp",
+    "chapter": "Diseases of the circulatory system"
+  },
+  {
+    "code": "A09",
+    "description": "Infectious gastroenteritis and colitis, unspecified",
+    "vietnameseName": "Viêm dạ dày ruột do nhiễm khuẩn",
+    "chapter": "Certain infectious and parasitic diseases"
+  },
+  {
+    "code": "F32",
+    "description": "Depressive episode",
+    "vietnameseName": "Rối loạn trầm cảm",
+    "chapter": "Mental and behavioural disorders"
+  }
+]
