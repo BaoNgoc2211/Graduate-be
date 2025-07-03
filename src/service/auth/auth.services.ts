@@ -228,24 +228,27 @@ class AuthServices {
       };
     }
   };
-
+  // auth.services.ts
   updateProfile = async (userId: string, data: any) => {
-    const { name, phone, address, avatar, gender, birth } = data;
-    const updateUser = await User.findByIdAndUpdate(
+    const { info } = data;
+    if (!info) return null;
+
+    const { name, phone, avatar, gender, birthday, address } = info;
+
+    return await User.findByIdAndUpdate(
       userId,
       {
         $set: {
           ...(name && { "info.name": name }),
           ...(phone && { "info.phone": phone }),
-          ...(address && { "info.address": address }),
           ...(avatar && { "info.avatar": avatar }),
           ...(gender && { "info.gender": gender }),
-          ...(birth && { "info.birth": birth }),
+          ...(birthday && { "info.birthday": new Date(birthday) }),
+          ...(address && { "info.address": address }),
         },
       },
       { new: true }
     );
-    return updateUser;
   };
 }
 const authServices = new AuthServices();

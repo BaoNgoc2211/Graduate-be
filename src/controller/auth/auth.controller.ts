@@ -59,16 +59,13 @@ class AuthController {
     await authServices.resetPassword(email, otp, newPassword);
     returnRes(res, 200, "Reset password successful");
   });
-
+  
   updateInfo = asyncError(async (req: Request, res: Response) => {
-    const updateUser = await authServices.updateProfile(
-      req.params.id,
-      req.body
-    );
-    if (!updateUser) {
-      return returnRes(res, 404, "Không tìm thấy admin");
-    }
-    returnRes(res, 200, "Cập nhật thành công", updateUser);
+    const userId = req.user!
+    const updated = await authServices.updateProfile(String(userId), req.body);
+
+    if (!updated) return returnRes(res, 404, "Không tìm thấy user");
+    returnRes(res, 200, "Cập nhật thành công", updated);
   });
 }
 export default new AuthController();

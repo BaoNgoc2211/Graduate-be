@@ -22,9 +22,9 @@ declare global {
       user?: {
         userId: string;
       };
-      admin?: {
-        adminId: string;
-      };
+      // admin?: {
+      //   adminId: string;
+      // };
     }
   }
 }

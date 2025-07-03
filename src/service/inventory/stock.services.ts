@@ -8,6 +8,9 @@ class StockService {
   async getLowStock() {
     return await stockRepository.getLowStock();
   }
+  async getStockByMedicineId(medicineId: string) {
+    return await stockRepository.findByMedicineId(medicineId);
+  }
   async createStock(data: IStock) {
     return await stockRepository.createStock(data);
   }
@@ -17,9 +20,5 @@ class StockService {
   async deleteStock(id: string) {
     return await stockRepository.deleteStock(id);
   }
-  async getStockByMedicineId(medicineId: string) {
-    return await stockRepository.findByMedicineId(medicineId);
-  }
-
 }
 export default new StockService();
