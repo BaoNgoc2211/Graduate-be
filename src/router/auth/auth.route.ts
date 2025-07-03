@@ -10,7 +10,7 @@ router.post("/sign-in", authController.signin);
 router.post("/logout", protect, authController.logout);
 router.get("/check-auth", protect, authController.checkAuth);
 router.get("/profile", authController.findAll);
-router.put("/profile/:id", authController.updateInfo);
+router.put("/profile", protect, authController.updateInfo);
 router.put("/forgot-password/:id", authController.forgotPassword);
 router.put("/reset-password/:id", authController.resetPassword);
 

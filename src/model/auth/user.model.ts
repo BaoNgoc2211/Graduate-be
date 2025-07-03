@@ -46,16 +46,26 @@ const userSchema = new mongoose.Schema<IUser>(
       phone: {
         type: String,
         trim: true,
-       
       },
       address: {
-        type: String,
-        trim: true,
-        
+        provinceId: {
+          type: String,
+        },
+        provinceName: {
+          type: String,
+        },
+        wardId: {
+          type: String,
+        },
+        wardName: {
+          type: String,
+        },
+        street: {
+          type: String,
+        },
       },
       avatar: {
         type: String,
-        
       },
       gender: {
         type: String,
