@@ -11,8 +11,8 @@ export const PaymentMethod = {
   MOMO: "MOMO",
 } as const;
 export const PaymentStatus = {
-  UNPAID: "Chưa thanh toán",
-  PAID: "Đã thanh toán",
+  UNPAID: "UNPAID",
+  PAID: "PAID",
 } as const;
 export type PaymentMethodEnum = keyof typeof PaymentMethod;
 export type PaymentStatusEnum = keyof typeof PaymentStatus;

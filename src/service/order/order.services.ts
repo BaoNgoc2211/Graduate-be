@@ -24,8 +24,14 @@ class OrderService {
     return await orderRepository.findById(id);
   }
   //#region checkout: Quy
+
   async checkOut(userId: string, selectItemIds: string[],shippingId: string, paymentMethod: string) {
     const order = await orderRepository.checkOut(userId,selectItemIds,shippingId, paymentMethod);
+    if (!order) throw new Error("Không tìm thấy đơn hàng");
+    return order;
+  }
+  async checkOutSuccess(orderId: string) {
+    const order = await orderRepository.checkOutSuccess(orderId);
     if (!order) throw new Error("Không tìm thấy đơn hàng");
     return order;
   }
@@ -150,6 +156,25 @@ class OrderService {
     }
     return orders;
   }
+
+  /**
+   * Tạo đơn hàng sau khi thanh toán VNPAY thành công
+  //  */
+  // async createOrderAfterVnpay(userId: string, selectItemIds: string[], shippingId: string, paymentMethod: string, paymentStatus: string) {
+  //   // Tạo đơn hàng với trạng thái PENDING và PAID
+  //   const order = await orderRepository.checkOut(
+  //     userId,
+  //     selectItemIds,
+  //     shippingId,
+  //     paymentMethod
+  //   );
+  //   // Sau khi tạo đơn hàng, cập nhật trạng thái thanh toán thành PAID
+  //   if (order && order.orderId) {
+  //     const { PAID } = require("../../enum/order/order.enum").PaymentStatus;
+  //     await orderRepository.updateOrder(order.orderId.toString(), { paymentStatus: PAID });
+  //   }
+  //   return order;
+  // }
 
   // async updateOrder(id: string, data: any) {
   //   return await orderRepository.updateOrder(id, data);

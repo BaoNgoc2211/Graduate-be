@@ -40,7 +40,7 @@ const orderSchema = new Schema<IOrder>(
     },
     paymentMethod: { 
       type: String, enum: Object.values(PaymentMethod), 
-      required: true,
+
     },
     paymentStatus: {
       type: String,

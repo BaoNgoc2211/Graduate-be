@@ -13,7 +13,7 @@ export interface IOrder {
   shipping_id: mongoose.Types.ObjectId;
   status: OrderStatus;
   totalAmount: number;
-  finalAmount?: number;
+  finalAmount: number;
   paymentMethod: PaymentMethodEnum;
   paymentStatus: PaymentStatusEnum;
   orderDetail: IOrderDetail[];

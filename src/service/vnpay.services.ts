@@ -4,6 +4,7 @@
   import { Request, Response } from "express";
   import Order from "../model/order/order.model";
   import { OrderStatus } from "../enum/order-status.enum";
+import orderServices from "./order/order.services";
 
   // dotenv.config();
 
@@ -31,7 +32,7 @@
     const tmnCode = process.env.VNP_TMNCODE || "";
     const secretKey = process.env.VNP_HASHSECRET || "";
     const vnpUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    const returnUrl = process.env.VNP_RETURNURL || "";
+    const returnUrl =  process.env.VNP_RETURNURL || "";
 
     const locale = "vn";
     const currCode = "VND";
@@ -45,7 +46,7 @@
       vnp_TxnRef: orderId.toString(),
       vnp_OrderInfo: `Payment for ${orderId}`,
       vnp_OrderType: "other",
-      vnp_Amount: order.totalAmount * 100,
+      vnp_Amount: order.finalAmount * 100,
       vnp_ReturnUrl: returnUrl,
       vnp_IpAddr: ipAddr,
       vnp_CreateDate: createDate,
@@ -79,32 +80,62 @@
       }, {});
   }
   export const handlePaymentResponse = async (req: Request, res: Response): Promise<void> => {
-    const { vnp_ResponseCode, vnp_TxnRef } = req.query;
+  // try {
+  //   const vnp_ResponseCode = req.query.vnp_ResponseCode as string;
+  
 
-    try {
-      if (!vnp_ResponseCode || !vnp_TxnRef) {
-        res.status(400).json({ success: false, message: "All fields are required" });
-        return;
-      }
+  //   if (!vnp_ResponseCode || !orderInfoRaw) {
+  //     res.status(400).json({ success: false, message: "Thiếu thông tin phản hồi" });
+  //     return;
+  //   }
 
-      const order = await Order.findById(vnp_TxnRef.toString());
-      if (!order) {
-        res.status(401).json({ success: false, message: "OrderId not found" });
-        return;
-      }
+  //   if (vnp_ResponseCode !== "00") {
+  //     // Thanh toán thất bại → redirect về trang thất bại
+  //     res.redirect("https://your-app.com/failed");
+  //     return;
+  //   }
 
-      let redirectUrl = "";
-      if (vnp_ResponseCode !== "00") {
-        await Order.findByIdAndDelete(vnp_TxnRef.toString());
-        redirectUrl = "https://your-app.com/failed";
-      } else {
-        order.status = OrderStatus.COMPLETED;
-        await order.save();
-        redirectUrl = "https://your-app.com/success";
-      }
+  //   // Parse dữ liệu được truyền từ lúc tạo paymentUrl
+  //   const { orderId } = JSON.parse();
 
-      res.redirect(redirectUrl);
-    } catch (error) {
-      res.status(500).json({ success: false, message: "Error server" });
+  //   // Tạo đơn hàng vì thanh toán đã thành công
+  //   const result = await orderServices.checkOutSuccess(orderId);
+  //   if (!result) {
+  //     res.status(500).json({ success: false, message: "Không thể tạo đơn hàng" });
+  //     return;
+  //   }
+  //    await orderServices.checkOutSuccess(orderId);
+
+  //    res.redirect(`https://your-app.com/checkout-success?orderId=${result.order._id}`);
+  //   // Cập nhật trạng thái đơn hàng
+
+  // } catch (error) {
+  //   console.error("Lỗi xử lý thanh toán:", error);
+  //   res.status(500).json({ success: false, message: "Lỗi server khi xử lý thanh toán" });
+  // }
+  try {
+    const vnp_ResponseCode = req.query.vnp_ResponseCode as string;
+    const vnp_TxnRef = req.query.vnp_TxnRef as string; // chính là orderId
+
+    console.log("vnp_ResponseCode:", vnp_ResponseCode);
+    console.log("vnp_TxnRef:", vnp_TxnRef);
+
+    if (vnp_ResponseCode !== "00") {
+      console.log("❌ Thanh toán thất bại:", vnp_ResponseCode);
+      res.redirect("http://localhost:8888/api/order/review/checkout/");
+      return;
     }
-  };
+    try {
+      console.log("✅ Thanh toán thành công:", vnp_TxnRef);
+      await orderServices.checkOutSuccess(vnp_TxnRef); // Cập nhật đơn hàng thành "Đã thanh toán"
+      return res.redirect("http://localhost:8888")
+  } catch (err) {
+    console.error("❌ Lỗi xử lý đơn hàng:", err);
+    return res.redirect("https://your-frontend.com/checkout-error");
+  }
+    
+  } catch (error) {
+    console.error("Lỗi xử lý thanh toán:", error);
+    res.status(500).json({ success: false, message: "Lỗi server khi xử lý thanh toán" });
+  }
+};
