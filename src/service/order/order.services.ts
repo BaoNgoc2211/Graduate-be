@@ -1,9 +1,5 @@
 import { OrderStatus } from "../../enum/order-status.enum";
-import { IOrder } from "../../interface/order/order.interface";
 import User from "../../model/auth/user.model";
-import Stock from "../../model/inventory/stock.model";
-import Medicine from "../../model/medicine/medicine.model";
-import Cart from "../../model/order/cart.model";
 import Order from "../../model/order/order.model";
 import orderRepository from "../../repository/order/order.repository";
 import throwError from "../../util/create-error";
@@ -25,8 +21,13 @@ class OrderService {
   }
   //#region checkout: Quy
 
-  async checkOut(userId: string, selectItemIds: string[],shippingId: string, paymentMethod: string) {
-    const order = await orderRepository.checkOut(userId,selectItemIds,shippingId, paymentMethod);
+  async checkOutVNPAY(userId: string, selectItemIds: string[],shippingId: string, paymentMethod: string) {
+    const order = await orderRepository.checkOutVNPAY(userId,selectItemIds,shippingId, paymentMethod);
+    if (!order) throw new Error("Không tìm thấy đơn hàng");
+    return order;
+  }
+  async checkOutCOD(userId: string, selectItemIds: string[],shippingId: string, paymentMethod: string) {
+    const order = await orderRepository.checkOutCOD(userId,selectItemIds,shippingId, paymentMethod);
     if (!order) throw new Error("Không tìm thấy đơn hàng");
     return order;
   }
@@ -43,75 +44,6 @@ class OrderService {
     return review;
   }
 
-  // async checkout(user_id: string, order: IOrder) {
-  //   await this.getUserById(user_id);
-
-  //   // S1:Tìm giỏ hàng của userId Nếu không có hoặc rỗng
-  //   const cart = await Cart.findOne({ user_id: user_id }).populate(
-  //     "medicine_item.medicine_id"
-  //   );
-  //   if (!cart || cart.medicine_item.length === 0) {
-  //     throwError(400, "Giỏ hàng trống hoặc không tìm thấy");
-  //   }
-  //   console.log("Cart:", cart);
-
-  //   // chuẩn bị:
-  //   let totalAmount = 0;
-  //   const orderDetail = [];
-  //   // S2: yệt từng medicine_item trong cart -> Kiểm tra tồn kho, nếu không đủ => throw Error
-  //   for (const item of cart!.medicine_item) {
-  //     const medicine = item.medicine_id as any; // đã populated
-  //     const stockId = medicine.stock_id;
-
-  //     if (!stockId) {
-  //       throwError(404, `Thuốc ${medicine.name} chưa có stock_id`);
-  //     }
-
-  //     const stock = await Stock.findById(stockId);
-  //     if (!stock) {
-  //       throwError(404, `Không tìm thấy tồn kho cho thuốc ${medicine.name}`);
-  //     }
-
-  //     if (stock!.quantity < item.quantity) {
-  //       throwError(
-  //         400,
-  //         `Sản phẩm ${medicine.name} chỉ còn ${stock!.quantity} trong kho`
-  //       );
-  //     }
-
-  //     stock!.quantity -= item.quantity;
-  //     await stock!.save();
-
-  //     const itemTotal = medicine.sellingPrice * item.quantity;
-  //     totalAmount += itemTotal;
-
-  //     order.orderDetail.push({
-  //       medicine_id: medicine._id,
-  //       stock_id: stockId,
-  //       thumbnail: medicine.thumbnail,
-  //       name: medicine.name,
-  //       price: medicine.sellingPrice,
-  //       quantity: item.quantity,
-  //       totalAmount: itemTotal,
-  //     });
-  //   }
-
-  //   // 4. Cập nhật tổng tiền vào đơn hàng
-  //   order.totalAmount = totalAmount;
-  //   order.finalAmount = totalAmount;
-  //   order.status = OrderStatus.PENDING;
-
-  //   // 5. Tạo order mới
-  //   const newOrder = await orderRepository.checkout(user_id, order);
-  //   if (!newOrder) {
-  //     throwError(500, "Không thể tạo đơn hàng");
-  //   }
-
-  //   // 6. Xóa giỏ hàng sau khi đặt hàng
-  //   await Cart.findOneAndDelete({ user_id: user_id });
-
-  //   return newOrder;
-  // }
   async updateStatusOrder(orderId: string, newStatus: OrderStatus) {
     const order = await Order.findById(orderId);
     if (!order) throw new Error("Order not found");

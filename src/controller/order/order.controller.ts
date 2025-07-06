@@ -4,6 +4,7 @@ import { Request, Response } from "express";
 import orderServices from "../../service/order/order.services";
 import shippingController from "../shipping.controller";
 import { generatePaymentUrl } from "../../service/vnpay.services";
+import { createMomoPayment } from "../../service/momo.services";
 
 class OrderDetailController {
   getAll = asyncError(async (req: Request, res: Response) => {
@@ -25,7 +26,7 @@ class OrderDetailController {
     if (!Array.isArray(selectItemIds)) {
       return res.status(400).json({ message: "selectedItemIds" });
     }
-    const order = await orderServices.checkOut(String(userId!),selectItemIds,shippingId,paymentMethod);
+    const order = await orderServices.checkOutVNPAY(String(userId!),selectItemIds,shippingId,paymentMethod);
     if (paymentMethod === "VNPAY") {
     // Redirect đến trang thanh toán VNPay
     const paymentReq = {
@@ -42,62 +43,22 @@ class OrderDetailController {
     } as Response;  
 
     await generatePaymentUrl(paymentReq, fakeRes);
-  } else {
-    // COD → Trả kết quả thành công
+  }else if (paymentMethod === "MOMO") {
+    const momoResponse = await createMomoPayment({
+      amount: order.finalAmount.toString(),
+      orderInfo: `Thanh toán đơn hàng #${order.orderId}`
+    });
+
+    if (momoResponse?.payUrl) {
+      return res.json({ success: true, paymentUrl: momoResponse.payUrl });
+    } else {
+      return res.status(500).json({ message: "Không thể tạo liên kết thanh toán MoMo." });
+    }
+  }else {
+    await orderServices.checkOutCOD(String(userId!),selectItemIds,shippingId,paymentMethod);
     returnRes(res, 200, "Đặt hàng thành công", { order });
-  }
-    // returnRes(res, 200, "Checkout Success", result);
-  });
-//   checkOut = asyncError(async (req: Request, res: Response) => {
-//     const userId = req.user;
-//     const selectItemIds = req.body.selectItemIds;
-//     const shippingId = req.body.shippingId;
-//     const paymentMethod = req.body.paymentMethod;
+  }});
 
-//     if (!Array.isArray(selectItemIds)) {
-//       return res.status(400).json({ message: "selectedItemIds phải là mảng" });
-//     }
-
-//     const order = await orderServices.checkOut(
-//       String(userId!),
-//       selectItemIds,
-//       shippingId,
-//       paymentMethod
-//     );
-
-//     if (paymentMethod === "VNPAY") {
-//       // Gọi generatePaymentUrl và trả về link thanh toán cùng với thông tin order
-//       const paymentReq = {
-//         body: {
-//           orderId: order.orderId.toString(), // hoặc order.id
-//         },
-//       } as Request;
-
-//       const fakeRes = {
-//         json: ({ paymentUrl }: any) => res.json({
-//           success: true,
-//           message: "Tạo đơn hàng thành công",
-//           paymentUrl,
-//           order,
-//         }),
-//         status: (code: number) => ({
-//           json: (data: any) => res.status(code).json(data),
-//         }),
-//       } as Response;
-
-//       await generatePaymentUrl(paymentReq, fakeRes);
-//     } else if (paymentMethod === "MOMO") {
-
-//     } else
-//     { 
-//       // Thanh toán COD
-//       return res.status(200).json({
-//         success: true,
-//         message: "Đặt hàng thành công",
-//         order,
-//       });
-//     }
-// });
 
   reviewOrder = asyncError(async (req: Request, res: Response) => {
     const userId = req.user;
