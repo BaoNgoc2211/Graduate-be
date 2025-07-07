@@ -144,7 +144,7 @@ class PurchaseOrderRepository {
         deletedStocks: relatedStocks.map((s) => ({
             medicine_id: s.medicine,
             quantity: s.quantity,
-            packaging: s.packaging,
+            // packaging: s.packaging,
             sellingPrice: s.sellingPrice
         })),
         totalQuantityDeleted,

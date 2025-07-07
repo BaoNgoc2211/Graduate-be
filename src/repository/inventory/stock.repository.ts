@@ -7,7 +7,7 @@ import path from "path";
 class StockRepository {
   async findAll() {
     return await Stock.find().
-    populate("medicine", "code name thumbnail dosageForm ")
+    populate("medicine", "code name thumbnail dosageForm packaging")
   }
 //   async getLowStock() {
 //     const stock = await Stock.find();
@@ -15,7 +15,7 @@ class StockRepository {
 //     return lowStock;
 //   }
   async getLowStock() {
-    return await Stock.find({ quantity: { $lte: 10 } }).populate("medicine", "code name thumbnail dosageForm ");
+    return await Stock.find({ quantity: { $lte: 10 } }).populate("medicine", "code name thumbnail dosageForm packaging ");
   }
   async createStock(data: IStock) {
     // const purchaseOrder = PurchaseOrder.findById(data.purchaseOrder);
@@ -63,7 +63,7 @@ class StockRepository {
           medicine: med.medicine_id,
           purchaseOrder: purchaseOrderId,
           quantity: med.quantity,
-          packaging: med.packaging,
+          // packaging: med.packaging,
           sellingPrice: med.price,
         }).save();
       }
@@ -78,7 +78,7 @@ class StockRepository {
     const stock = await Stock.find({ medicine: medicineId })
     .populate({
       path:"medicine", 
-      select:"code name thumbnail dosageForm",
+      select:"code name thumbnail dosageForm packaging",
       populate: {
         path: "manufacturer_id",
         select: "nameCo"
