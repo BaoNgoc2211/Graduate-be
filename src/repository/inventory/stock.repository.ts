@@ -15,7 +15,7 @@ class StockRepository {
 //     return lowStock;
 //   }
   async getLowStock() {
-    return await Stock.find({ quantity: { $lte: 10 } });
+    return await Stock.find({ quantity: { $lte: 10 } }).populate("medicine", "code name thumbnail dosageForm ");
   }
   async createStock(data: IStock) {
     // const purchaseOrder = PurchaseOrder.findById(data.purchaseOrder);
