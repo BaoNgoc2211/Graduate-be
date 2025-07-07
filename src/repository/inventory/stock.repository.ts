@@ -75,7 +75,15 @@ class StockRepository {
     return stock;
   }
   async findByMedicineId(medicineId: string) {
-    const stock = await Stock.find({ medicine: medicineId });
+    const stock = await Stock.find({ medicine: medicineId })
+    .populate({
+      path:"medicine", 
+      select:"code name thumbnail dosageForm",
+      populate: {
+        path: "manufacturer_id",
+        select: "nameCo"
+      }
+      });
     if (!stock) {
       throw new Error(`Stock not found for medicine ID: ${medicineId}`);
     }
