@@ -2,10 +2,12 @@ import e from "cors";
 import { IStock } from "../../interface/inventory/stock.interface";
 import Stock from "../../model/inventory/stock.model";
 import PurchaseOrder from "../../model/purchase-order.model";
+import path from "path";
 
 class StockRepository {
   async findAll() {
-    return await Stock.find();
+    return await Stock.find().
+    populate("medicine", "code name thumbnail dosageForm ")
   }
 //   async getLowStock() {
 //     const stock = await Stock.find();

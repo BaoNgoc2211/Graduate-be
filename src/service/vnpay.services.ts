@@ -80,39 +80,6 @@ import orderServices from "./order/order.services";
       }, {});
   }
   export const handlePaymentResponse = async (req: Request, res: Response): Promise<void> => {
-  // try {
-  //   const vnp_ResponseCode = req.query.vnp_ResponseCode as string;
-  
-
-  //   if (!vnp_ResponseCode || !orderInfoRaw) {
-  //     res.status(400).json({ success: false, message: "Thiếu thông tin phản hồi" });
-  //     return;
-  //   }
-
-  //   if (vnp_ResponseCode !== "00") {
-  //     // Thanh toán thất bại → redirect về trang thất bại
-  //     res.redirect("https://your-app.com/failed");
-  //     return;
-  //   }
-
-  //   // Parse dữ liệu được truyền từ lúc tạo paymentUrl
-  //   const { orderId } = JSON.parse();
-
-  //   // Tạo đơn hàng vì thanh toán đã thành công
-  //   const result = await orderServices.checkOutSuccess(orderId);
-  //   if (!result) {
-  //     res.status(500).json({ success: false, message: "Không thể tạo đơn hàng" });
-  //     return;
-  //   }
-  //    await orderServices.checkOutSuccess(orderId);
-
-  //    res.redirect(`https://your-app.com/checkout-success?orderId=${result.order._id}`);
-  //   // Cập nhật trạng thái đơn hàng
-
-  // } catch (error) {
-  //   console.error("Lỗi xử lý thanh toán:", error);
-  //   res.status(500).json({ success: false, message: "Lỗi server khi xử lý thanh toán" });
-  // }
   try {
     const vnp_ResponseCode = req.query.vnp_ResponseCode as string;
     const vnp_TxnRef = req.query.vnp_TxnRef as string; // chính là orderId
