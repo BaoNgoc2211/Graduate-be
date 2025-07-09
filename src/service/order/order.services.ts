@@ -21,8 +21,8 @@ class OrderService {
   }
   //#region checkout: Quy
 
-  async checkOutVNPAY(userId: string, selectItemIds: string[],shippingId: string, paymentMethod: string) {
-    const order = await orderRepository.checkOutVNPAY(userId,selectItemIds,shippingId, paymentMethod);
+  async checkOutVNPAY(userId: string, selectItemIds: string[],shippingId: string, paymentMethod: string,voucherCode:string) {
+    const order = await orderRepository.checkOutVNPAY(userId,selectItemIds,shippingId, paymentMethod,voucherCode);
     if (!order) throw new Error("Không tìm thấy đơn hàng");
     return order;
   }

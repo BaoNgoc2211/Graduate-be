@@ -1,13 +1,18 @@
 import cron from "node-cron";
-import voucherServices from "../service/voucher.services";
+import Voucher from "../model/voucher.model";
 
 //voucher
 // Cron chạy mỗi ngày lúc 00:00
 cron.schedule("0 0 * * *", async () => {
-  console.log("[Voucher Cron] Running...");
-  try {
-    await voucherServices.deactivateExpiredVouchers();
-  } catch (error) {
-    console.error("[Voucher Cron] Error:", error);
-  }
+  const now = new Date();
+
+  const result = await Voucher.updateMany(
+    {
+      endDate: { $lte: now },
+      isActive: true,
+    },
+    { $set: { isActive: false } }
+  );
+
+  console.log(`[CRON] Deactivated ${result.modifiedCount} expired vouchers`);
 });

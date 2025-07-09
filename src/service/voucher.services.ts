@@ -2,6 +2,14 @@ import { IVoucher } from "../interface/voucher.interface";
 import voucherRepository from "../repository/voucher.repository";
 
 class VoucherServices {
+  async getAllVoucher() {
+    return await voucherRepository.getAllVoucher();
+  }
+  
+  async getValidVoucher(){
+    return await voucherRepository.getValidateVoucher();
+  }
+
   async createVoucher(voucher: IVoucher) {
     return await voucherRepository.create(voucher);
   }

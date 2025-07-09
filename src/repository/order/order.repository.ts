@@ -61,7 +61,7 @@ class OrderDetailRepository {
     return order;
   }
 
-  async checkOutVNPAY(userId: string, selectItemIds: string[], shippingId: string, paymentMethod: string) {
+  async checkOutVNPAY(userId: string, selectItemIds: string[], shippingId: string, paymentMethod: string,voucherCode: string) {
     const cart = await Cart.findOne({ user_id: userId }).populate("medicine_item.medicine_id");
     if (!cart || cart.medicine_item.length === 0) {
       throw new Error("Giỏ hàng trống hoặc không tìm thấy");
@@ -109,7 +109,33 @@ class OrderDetailRepository {
         totalAmount: totalForItem ,
         note: "",
       });
+    }
+     let discountVoucher = 0;
+    if(voucherCode){
+      const voucher = await Voucher.findOne({_id: voucherCode});
+      const now = new Date();
+
+      if (!voucher || !voucher.isActive ||
+        now < new Date(voucher.startDate) || now > new Date(voucher.endDate) ||
+        voucher.usedCount >= voucher.usageLimit ||
+        totalAmount < voucher.minOrderValue) 
+      {
+        throw new Error("Voucher không hợp lệ hoặc đã hết hạn");
       }
+      if (voucher.discountType === "PERCENTAGE") {
+        discountVoucher = (totalAmount * voucher.discountValue) / 100;
+        console.log("Discount Voucher:", discountVoucher);
+        if (voucher.maxDiscountValue && discountVoucher > voucher.maxDiscountValue) {
+          discountVoucher = voucher.maxDiscountValue;
+        }
+      } else if (voucher.discountType === "FIXED") {
+        discountVoucher =  voucher.maxDiscountValue;
+        console.log("Discount Voucher:", discountVoucher);
+      }
+      voucher.usedCount += 1;
+      await voucher.save();
+    }
+    const finalAmount = totalAmount + shipping.price - discountVoucher;
 
     const orderDetail = await new OrderDetail({
       order_items: orderItems,
@@ -121,7 +147,7 @@ class OrderDetailRepository {
       status: "đang chờ xác nhận",
       shipping_id: shippingId,
       totalAmount,
-      finalAmount: totalAmount + shipping.price,
+      finalAmount: finalAmount,
       orderDetail: orderDetail._id,
       paymentMethod,
       paymentStatus: PaymentStatus.UNPAID, // Cập nhật trạng thái thanh toán
@@ -208,7 +234,8 @@ async checkOutCOD(userId: string, selectItemIds: string[],shippingId: string,pay
           discountVoucher = voucher.maxDiscountValue;
         }
       } else if (voucher.discountType === "FIXED") {
-        discountVoucher = voucher.discountValue;
+        discountVoucher =  voucher.maxDiscountValue;
+        console.log("Discount Voucher:", discountVoucher);
       }
       voucher.usedCount += 1;
       await voucher.save();
@@ -245,7 +272,7 @@ async checkOutCOD(userId: string, selectItemIds: string[],shippingId: string,pay
     // };
   }
   
-  async checkOutMOMO(userId: string, selectItemIds: string[], shippingId: string, paymentMethod: string) {
+  async checkOutMOMO(userId: string, selectItemIds: string[], shippingId: string, paymentMethod: string,voucherCode:string) {
     const cart = await Cart.findOne({ user_id: userId }).populate("medicine_item.medicine_id");
     if (!cart || cart.medicine_item.length === 0) {
       throw new Error("Giỏ hàng trống hoặc không tìm thấy");
@@ -293,7 +320,34 @@ async checkOutCOD(userId: string, selectItemIds: string[],shippingId: string,pay
         totalAmount: totalForItem ,
         note: "",
       });
+    }
+
+    let discountVoucher = 0;
+    if(voucherCode){
+      const voucher = await Voucher.findOne({_id: voucherCode});
+      const now = new Date();
+
+      if (!voucher || !voucher.isActive ||
+        now < new Date(voucher.startDate) || now > new Date(voucher.endDate) ||
+        voucher.usedCount >= voucher.usageLimit ||
+        totalAmount < voucher.minOrderValue) 
+      {
+        throw new Error("Voucher không hợp lệ hoặc đã hết hạn");
       }
+      if (voucher.discountType === "PERCENTAGE") {
+        discountVoucher = (totalAmount * voucher.discountValue) / 100;
+        console.log("Discount Voucher:", discountVoucher);
+        if (voucher.maxDiscountValue && discountVoucher > voucher.maxDiscountValue) {
+          discountVoucher = voucher.maxDiscountValue;
+        }
+      } else if (voucher.discountType === "FIXED") {
+        discountVoucher =  voucher.maxDiscountValue;
+        console.log("Discount Voucher:", discountVoucher);
+      }
+      voucher.usedCount += 1;
+      await voucher.save();
+    }
+    const finalAmount = totalAmount + shipping.price - discountVoucher;
 
     const orderDetail = await new OrderDetail({
       order_items: orderItems,
@@ -305,7 +359,7 @@ async checkOutCOD(userId: string, selectItemIds: string[],shippingId: string,pay
       status: "đang chờ xác nhận",
       shipping_id: shippingId,
       totalAmount,
-      finalAmount: totalAmount + shipping.price,
+      finalAmount: finalAmount,
       orderDetail: orderDetail._id,
       paymentMethod,
       paymentStatus: PaymentStatus.UNPAID, // Cập nhật trạng thái thanh toán

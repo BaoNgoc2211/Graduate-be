@@ -10,7 +10,7 @@ export interface IVoucher {
   discountType: DisCountTypeEnum;
   discountValue: number;
   minOrderValue: number;
-  maxDiscountValue?: number;
+  maxDiscountValue: number;
   usageLimit: number;
   usedCount: number;
   applyTo: ApplyToEnum;

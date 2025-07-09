@@ -30,7 +30,7 @@ class OrderDetailController {
     
     if (paymentMethod === "VNPAY") {
     // Redirect đến trang thanh toán VNPay
-    const order = await orderServices.checkOutVNPAY(String(userId!),selectItemIds,shippingId,paymentMethod);
+    const order = await orderServices.checkOutVNPAY(String(userId!),selectItemIds,shippingId,paymentMethod,voucherCode);
     const paymentReq = {
       body: {
         orderId: order.orderId.toString()
@@ -46,7 +46,7 @@ class OrderDetailController {
 
     await generatePaymentUrl(paymentReq, fakeRes);
   }else if (paymentMethod === "MOMO") {
-    const order = await orderServices.checkOutVNPAY(String(userId!),selectItemIds,shippingId,paymentMethod);
+    const order = await orderServices.checkOutVNPAY(String(userId!),selectItemIds,shippingId,paymentMethod,voucherCode);
     const momoResponse = await createMomoPayment({
       amount: order.finalAmount.toString(),
       orderInfo: `Thanh toán đơn hàng #${order.orderId}`
