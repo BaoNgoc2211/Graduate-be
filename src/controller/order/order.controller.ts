@@ -23,12 +23,14 @@ class OrderDetailController {
     const selectItemIds = req.body.selectItemIds; // Assuming selectItemIds is passed in the request body
     const shippingId = req.body.shippingId; // Assuming shippingId is passed in the request body
     const paymentMethod = req.body.paymentMethod; // Assuming paymentMethod is passed in the request body
+    const voucherCode = req.body.voucherCode; // Assuming voucherCode is passed in the request body
     if (!Array.isArray(selectItemIds)) {
       return res.status(400).json({ message: "selectedItemIds" });
     }
-    const order = await orderServices.checkOutVNPAY(String(userId!),selectItemIds,shippingId,paymentMethod);
+    
     if (paymentMethod === "VNPAY") {
     // Redirect đến trang thanh toán VNPay
+    const order = await orderServices.checkOutVNPAY(String(userId!),selectItemIds,shippingId,paymentMethod);
     const paymentReq = {
       body: {
         orderId: order.orderId.toString()
@@ -44,6 +46,7 @@ class OrderDetailController {
 
     await generatePaymentUrl(paymentReq, fakeRes);
   }else if (paymentMethod === "MOMO") {
+    const order = await orderServices.checkOutVNPAY(String(userId!),selectItemIds,shippingId,paymentMethod);
     const momoResponse = await createMomoPayment({
       amount: order.finalAmount.toString(),
       orderInfo: `Thanh toán đơn hàng #${order.orderId}`
@@ -55,8 +58,9 @@ class OrderDetailController {
       return res.status(500).json({ message: "Không thể tạo liên kết thanh toán MoMo." });
     }
   }else {
-    await orderServices.checkOutCOD(String(userId!),selectItemIds,shippingId,paymentMethod);
-    returnRes(res, 200, "Đặt hàng thành công", { order });
+    const order = await orderServices.checkOutCOD(String(userId!),selectItemIds,shippingId,paymentMethod,voucherCode);
+    console.log("Order in controller checkOut:", order);
+    returnRes(res, 200, "Đặt hàng thành công", order);
   }});
 
 

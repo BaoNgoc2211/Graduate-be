@@ -26,8 +26,8 @@ class OrderService {
     if (!order) throw new Error("Không tìm thấy đơn hàng");
     return order;
   }
-  async checkOutCOD(userId: string, selectItemIds: string[],shippingId: string, paymentMethod: string) {
-    const order = await orderRepository.checkOutCOD(userId,selectItemIds,shippingId, paymentMethod);
+  async checkOutCOD(userId: string, selectItemIds: string[],shippingId: string, paymentMethod: string,voucherCode :string) {
+    const order = await orderRepository.checkOutCOD(userId,selectItemIds,shippingId, paymentMethod,voucherCode);
     if (!order) throw new Error("Không tìm thấy đơn hàng");
     return order;
   }

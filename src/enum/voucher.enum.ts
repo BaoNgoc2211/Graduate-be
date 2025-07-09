@@ -1,6 +1,6 @@
 export const disCountTypeEnum = {
-  PERCENTAGE: "percentage",
-  FIXED: "fixed",
+  PERCENTAGE: "PERCENTAGE",
+  FIXED: "FIXED",
 } as const;
 
 export const applyToEnum = {

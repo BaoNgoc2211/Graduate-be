@@ -9,7 +9,7 @@ import { IOrderDetail } from "./order-detail.interface";
 export interface IOrder {
   user_id: mongoose.Types.ObjectId;
   // IInfo: IInfo;
-  // voucher_id: mongoose.Types.ObjectId;
+  voucher_id: mongoose.Types.ObjectId;
   shipping_id: mongoose.Types.ObjectId;
   status: OrderStatus;
   totalAmount: number;

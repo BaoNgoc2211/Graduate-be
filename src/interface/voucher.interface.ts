@@ -9,12 +9,12 @@ export interface IVoucher {
   isActive: boolean;
   discountType: DisCountTypeEnum;
   discountValue: number;
-  minOrderValue?: number;
+  minOrderValue: number;
   maxDiscountValue?: number;
-  usageLimit?: number;
-  usedCount?: number;
+  usageLimit: number;
+  usedCount: number;
   applyTo: ApplyToEnum;
-  applyToIds?: string[];
+  applyToIds: string[];
 }
 export interface IVoucherValidator {
   validate(orderValue: number, productIds?: string[]): boolean;

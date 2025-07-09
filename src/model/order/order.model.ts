@@ -17,11 +17,11 @@ const orderSchema = new Schema<IOrder>(
     // IInfo: {
     //   InfoSchema,
     // },
-    // voucher_id: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: "Voucher",
-    //   require: true,
-    // },
+    voucher_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Voucher",
+      require: true,
+    },
     shipping_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Shipping",

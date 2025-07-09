@@ -9,6 +9,7 @@ import Shipping from "../../model/shipping.model";
 import { IOrderItem } from "../../interface/order/order-detail.interface";
 import { stat } from "fs";
 import { PaymentStatus } from "../../enum/order/order.enum";
+import Voucher from "../../model/voucher.model";
 
 class OrderDetailRepository {
   async findAll() {
@@ -61,124 +62,79 @@ class OrderDetailRepository {
   }
 
   async checkOutVNPAY(userId: string, selectItemIds: string[], shippingId: string, paymentMethod: string) {
-  const cart = await Cart.findOne({ user_id: userId }).populate("medicine_item.medicine_id");
-  if (!cart || cart.medicine_item.length === 0) {
-    throw new Error("Giỏ hàng trống hoặc không tìm thấy");
-  }
-
-  const selectedItems = cart.medicine_item.filter((item: any) =>
-    item?.medicine_id?._id && selectItemIds.includes(item.medicine_id._id.toString())
-  );
-  if (selectedItems.length === 0) {
-    throw new Error("Không có sản phẩm nào được chọn để đặt hàng");
-  }
-
-  const shipping = await Shipping.findById(shippingId);
-  if (!shipping) {
-    throw new Error("Không tìm thấy thông tin vận chuyển");
-  }
-
-  const orderItems = [];
-  let totalAmount = 0;
-
-  for (const item of selectedItems) {
-    const medicine = item.medicine_id as any;
-    const stock = await Stock.findById(medicine.stock_id);
-    if (!stock) {
-      throw new Error(`Không tìm thấy tồn kho cho thuốc ${medicine.name}`);
+    const cart = await Cart.findOne({ user_id: userId }).populate("medicine_item.medicine_id");
+    if (!cart || cart.medicine_item.length === 0) {
+      throw new Error("Giỏ hàng trống hoặc không tìm thấy");
     }
 
-    if (stock.quantity < item.quantity) {
-      throw new Error(`Sản phẩm ${medicine.name} chỉ còn ${stock.quantity} trong kho`);
+    const selectedItems = cart.medicine_item.filter((item: any) =>
+      item?.medicine_id?._id && selectItemIds.includes(item.medicine_id._id.toString())
+    );
+    if (selectedItems.length === 0) {
+      throw new Error("Không có sản phẩm nào được chọn để đặt hàng");
     }
 
-    const itemPrice = stock.sellingPrice;
-    const itemQuantity = Number(item.quantity);
-    const totalForItem = itemPrice * itemQuantity;
-
-    totalAmount += totalForItem;
-
-    orderItems.push({
-      medicine_id: medicine._id,
-      stock_id: medicine.stock_id,
-      thumbnail: medicine.thumbnail,
-      name: medicine.name,
-      price: itemPrice,
-      quantity: itemQuantity,
-      totalAmount: totalForItem ,
-      note: "",
-    });
+    const shipping = await Shipping.findById(shippingId);
+    if (!shipping) {
+      throw new Error("Không tìm thấy thông tin vận chuyển");
     }
 
-  const orderDetail = await new OrderDetail({
-    order_items: orderItems,
-    totalOrder: totalAmount,
-  }).save();
+    const orderItems = [];
+    let totalAmount = 0;
 
-  const order = await new Order({
-    user_id: userId,
-    status: "đang chờ xác nhận",
-    shipping_id: shippingId,
-    totalAmount,
-    finalAmount: totalAmount + shipping.price,
-    orderDetail: orderDetail._id,
-    paymentMethod,
-    paymentStatus: PaymentStatus.UNPAID, // Cập nhật trạng thái thanh toán
-  }).save();
- 
-  return {
-    orderId: order._id,
-    orderItems: orderItems,
-    finalAmount: order.finalAmount, // Tổng số tiền bao gồm vận chuyển
-    paymentMethod: order.paymentMethod,
-  };
-}
-
-async checkOutSuccess(orderId: string) {
-  const order = await Order.findById(orderId).populate("orderDetail");
-  console.log("Order:", order);
-  if (!order) {
-    throw new Error("Không tìm thấy đơn hàng");
-  }
-
-   const orderDetails = order.orderDetail as any[];
-
-  for (const detail of orderDetails) {
-    for (const item of detail.order_items) {
-      const stock = await Stock.findById(item.stock_id);
+    for (const item of selectedItems) {
+      const medicine = item.medicine_id as any;
+      const stock = await Stock.findById(medicine.stock_id);
       if (!stock) {
-        throw new Error(`Không tìm thấy tồn kho cho thuốc ${item.name}`);
+        throw new Error(`Không tìm thấy tồn kho cho thuốc ${medicine.name}`);
       }
-      stock.quantity -= item.quantity;
-      await stock.save();
-    }
-  }
 
-  const cart = await Cart.findOne({ user_id: order.user_id }).populate("medicine_item.medicine_id");
+      if (stock.quantity < item.quantity) {
+        throw new Error(`Sản phẩm ${medicine.name} chỉ còn ${stock.quantity} trong kho`);
+      }
 
-  if (cart) {
-    for (const detail of orderDetails) {
-      cart.medicine_item = cart.medicine_item.filter(
-        (item: any) =>
-          !detail.order_items.find(
-            (oi: any) => oi.medicine_id.toString() === item.medicine_id._id.toString()
-          )
-      );
-    }
+      const itemPrice = stock.sellingPrice;
+      const itemQuantity = Number(item.quantity);
+      const totalForItem = itemPrice * itemQuantity;
 
-    cart.quantity = cart.medicine_item.reduce((sum: number, item: any) => sum + item.quantity, 0);
-    await cart.save();
-  }
+      totalAmount += totalForItem;
 
-  order.paymentStatus = PaymentStatus.PAID;
-  await order.save();
+      orderItems.push({
+        medicine_id: medicine._id,
+        stock_id: medicine.stock_id,
+        thumbnail: medicine.thumbnail,
+        name: medicine.name,
+        price: itemPrice,
+        quantity: itemQuantity,
+        totalAmount: totalForItem ,
+        note: "",
+      });
+      }
 
-  return {
-    message: "Thanh toán thành công và cập nhật đơn hàng",
-    order,
-  };
+    const orderDetail = await new OrderDetail({
+      order_items: orderItems,
+      totalOrder: totalAmount,
+    }).save();
+
+    const order = await new Order({
+      user_id: userId,
+      status: "đang chờ xác nhận",
+      shipping_id: shippingId,
+      totalAmount,
+      finalAmount: totalAmount + shipping.price,
+      orderDetail: orderDetail._id,
+      paymentMethod,
+      paymentStatus: PaymentStatus.UNPAID, // Cập nhật trạng thái thanh toán
+    }).save();
+  
+    return {
+      orderId: order._id,
+      orderItems: orderItems,
+      finalAmount: order.finalAmount, // Tổng số tiền bao gồm vận chuyển
+      paymentMethod: order.paymentMethod,
+    };
 }
-  async checkOutCOD(userId: string, selectItemIds: string[],shippingId: string,paymentMethod: string) {
+async checkOutCOD(userId: string, selectItemIds: string[],shippingId: string,paymentMethod: string, voucherCode: string) {
     const cart = await Cart.findOne({ user_id: userId }).populate("medicine_item.medicine_id");
     if (!cart || cart.medicine_item.length === 0) {
       throw new Error("Giỏ hàng trống hoặc không tìm thấy");
@@ -231,39 +187,182 @@ async checkOutSuccess(orderId: string) {
         totalAmount: totalForItem,
         note: "",
       });
-      
     }
 
+    let discountVoucher = 0;
+    if(voucherCode){
+      const voucher = await Voucher.findOne({_id: voucherCode});
+      const now = new Date();
+
+      if (!voucher || !voucher.isActive ||
+        now < new Date(voucher.startDate) || now > new Date(voucher.endDate) ||
+        voucher.usedCount >= voucher.usageLimit ||
+        totalAmount < voucher.minOrderValue) 
+      {
+        throw new Error("Voucher không hợp lệ hoặc đã hết hạn");
+      }
+      if (voucher.discountType === "PERCENTAGE") {
+        discountVoucher = (totalAmount * voucher.discountValue) / 100;
+        console.log("Discount Voucher:", discountVoucher);
+        if (voucher.maxDiscountValue && discountVoucher > voucher.maxDiscountValue) {
+          discountVoucher = voucher.maxDiscountValue;
+        }
+      } else if (voucher.discountType === "FIXED") {
+        discountVoucher = voucher.discountValue;
+      }
+      voucher.usedCount += 1;
+      await voucher.save();
+    }
+    const finalAmount = totalAmount + shipping.price - discountVoucher;
 
     const orderDetail = await new OrderDetail({
       order_items: orderItems,
       totalOrder: totalAmount,
     }).save();
 
-
     const order = await new Order({
       user_id: userId,
       status: "đang chờ xác nhận",
       shipping_id: shippingId,
       totalAmount: totalAmount,
-      finalAmount: totalAmount + shipping.price,
+      finalAmount: finalAmount, // Tổng số tiền bao gồm vận chuyển và giảm giá
       orderDetail: orderDetail._id,
       paymentMethod, // Thêm phương thức thanh toán
-      paymentStatus: PaymentStatus.PAID, // Cập nhật trạng thái thanh toán
+      paymentStatus: PaymentStatus.UNPAID, // Cập nhật trạng thái thanh toán
     }).save();
-
 
     cart.medicine_item = cart.medicine_item.filter(
       (item: any) => !selectItemIds.includes(item?.medicine_id?._id?.toString())
     );
     cart.quantity = cart.medicine_item.reduce((sum: number, item: any) => sum + item.quantity, 0);
-    await cart.save();
-
+    // await cart.save();
     return {
-      message: "Đặt hàng thành công",
-      order,
-    };
+      order
+    }
+    // return {
+    //   message: "Đặt hàng thành công",
+    //   order,
+    // };
   }
+  
+  async checkOutMOMO(userId: string, selectItemIds: string[], shippingId: string, paymentMethod: string) {
+    const cart = await Cart.findOne({ user_id: userId }).populate("medicine_item.medicine_id");
+    if (!cart || cart.medicine_item.length === 0) {
+      throw new Error("Giỏ hàng trống hoặc không tìm thấy");
+    }
+
+    const selectedItems = cart.medicine_item.filter((item: any) =>
+      item?.medicine_id?._id && selectItemIds.includes(item.medicine_id._id.toString())
+    );
+    if (selectedItems.length === 0) {
+      throw new Error("Không có sản phẩm nào được chọn để đặt hàng");
+    }
+
+    const shipping = await Shipping.findById(shippingId);
+    if (!shipping) {
+      throw new Error("Không tìm thấy thông tin vận chuyển");
+    }
+
+    const orderItems = [];
+    let totalAmount = 0;
+
+    for (const item of selectedItems) {
+      const medicine = item.medicine_id as any;
+      const stock = await Stock.findById(medicine.stock_id);
+      if (!stock) {
+        throw new Error(`Không tìm thấy tồn kho cho thuốc ${medicine.name}`);
+      }
+
+      if (stock.quantity < item.quantity) {
+        throw new Error(`Sản phẩm ${medicine.name} chỉ còn ${stock.quantity} trong kho`);
+      }
+
+      const itemPrice = stock.sellingPrice;
+      const itemQuantity = Number(item.quantity);
+      const totalForItem = itemPrice * itemQuantity;
+
+      totalAmount += totalForItem;
+
+      orderItems.push({
+        medicine_id: medicine._id,
+        stock_id: medicine.stock_id,
+        thumbnail: medicine.thumbnail,
+        name: medicine.name,
+        price: itemPrice,
+        quantity: itemQuantity,
+        totalAmount: totalForItem ,
+        note: "",
+      });
+      }
+
+    const orderDetail = await new OrderDetail({
+      order_items: orderItems,
+      totalOrder: totalAmount,
+    }).save();
+
+    const order = await new Order({
+      user_id: userId,
+      status: "đang chờ xác nhận",
+      shipping_id: shippingId,
+      totalAmount,
+      finalAmount: totalAmount + shipping.price,
+      orderDetail: orderDetail._id,
+      paymentMethod,
+      paymentStatus: PaymentStatus.UNPAID, // Cập nhật trạng thái thanh toán
+    }).save();
+  
+    return {
+      orderId: order._id,
+      orderItems: orderItems,
+      finalAmount: order.finalAmount, // Tổng số tiền bao gồm vận chuyển
+      paymentMethod: order.paymentMethod,
+    };
+}
+
+async checkOutSuccess(orderId: string) {
+  const order = await Order.findById(orderId).populate("orderDetail");
+  if (!order) {
+    throw new Error("Không tìm thấy đơn hàng");
+  }
+
+   const orderDetails = order.orderDetail as any[];
+
+  for (const detail of orderDetails) {
+    for (const item of detail.order_items) {
+      const stock = await Stock.findById(item.stock_id);
+      if (!stock) {
+        throw new Error(`Không tìm thấy tồn kho cho thuốc ${item.name}`);
+      }
+      stock.quantity -= item.quantity;
+      await stock.save();
+    }
+  }
+
+  const cart = await Cart.findOne({ user_id: order.user_id }).populate("medicine_item.medicine_id");
+
+  if (cart) {
+    for (const detail of orderDetails) {
+      cart.medicine_item = cart.medicine_item.filter(
+        (item: any) =>
+          !detail.order_items.find(
+            (oi: any) => oi.medicine_id.toString() === item.medicine_id._id.toString()
+          )
+      );
+    }
+
+    cart.quantity = cart.medicine_item.reduce((sum: number, item: any) => sum + item.quantity, 0);
+    await cart.save();
+  }
+
+  order.paymentStatus = PaymentStatus.PAID;
+  await order.save();
+
+  return {
+    message: "Thanh toán thành công và cập nhật đơn hàng",
+    order,
+  };
+}
+  
 
   async reviewOrder(userId: string,selectItemIds: string[],shippingId: string,paymentMethod: string) {
     const cart = await Cart.findOne({ user_id: userId }).populate("medicine_item.medicine_id");
