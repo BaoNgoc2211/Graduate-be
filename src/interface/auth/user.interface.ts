@@ -4,7 +4,6 @@ import { genderType } from "../../enum/user.enum";
 export interface IUser extends Document {
   googleId?: string;
   email: string;
-  name?: string;
   password: string;
   isEmailVerified: boolean;
   otp?: {

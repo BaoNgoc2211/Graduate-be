@@ -65,6 +65,8 @@ class AuthServices {
       data.password,
       checkUser?.password!
     );
+    console.log(checkUser)
+    console.log(checkPassword)
     if (!checkPassword) {
       throwError(400, "Email hoặc mật khẩu không đúng");
     }
@@ -145,7 +147,7 @@ class AuthServices {
 
     const newUser = await authRepository.createGoogleUser({
       googleId: profile.id,
-      name: profile.displayName,
+      // name: profile.displayName,
       email: profile.emails?.[0]?.value,
     });
 

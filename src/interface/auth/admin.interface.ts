@@ -4,10 +4,12 @@ import { genderType } from "../../enum/user.enum";
 export interface IAdmin extends Document {
   email: string;
   isEmailVerified: boolean;
+  password:string;
   otp?: {
     code: string;
     expiresAt: Date;
   };
+  role:string,
   otpAttempts: number;
   otpLockedUntil?: Date;
   generateAuthToken(): string;

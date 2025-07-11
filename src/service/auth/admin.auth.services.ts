@@ -2,51 +2,60 @@ import Admin from "../../model/auth/admin.model";
 import { EmailService } from "../auth/email.services";
 import throwError from "../../util/create-error";
 import authRepository from "../../repository/auth.repository";
+import { IAdmin } from "../../interface/auth/admin.interface";
+import bcrypt from "../../util/bcrypt";
 
 class AdminAuthServices {
+  async findEmail(email: string) {
+    return await Admin.findOne({ email });
+  }
   private async checkEmail(email: string) {
-    if (await authRepository.findEmail(email)) {
+    if (await adminAuthServices.findEmail(email)) {
       throwError(404, "Email is already exists");
     }
   }
   private async checkVerifyEmail(email: string) {
     const user = await Admin.findOne({ email });
     if (!user) {
-      throwError(404, "User not found");
+      throwError(404, "Admin not found");
     }
     return user?.isEmailVerified;
   }
-  private async getUserByEmail(email: string) {
+  private async getAdminByEmail(email: string) {
     const admin = await Admin.findOne({ email });
     if (!admin) {
-      throw new Error("User not found");
+      throw new Error("Admin not found");
     }
     return admin;
   };
-  signIn = async (email: string) => {
-    let admin = await Admin.findOne({ email });
-    
-    if (!admin) {
-      admin = await Admin.create({ email });
-    }
-  
-    if (admin.isOTPLocked()) {
-      const lockTime = admin.otpLockedUntil!;
-      const minutesLeft = Math.ceil((lockTime.getTime() - Date.now()) / (1000 * 60));
-      throwError(403, `Tài khoản bị khóa. Vui lòng thử lại sau ${minutesLeft} phút.`);
-    }
-  
-    const otp = admin.generateOTP();
-    await admin.save();
-  
-    await EmailService.sendOTP(email, otp); // Gửi email
-  
-    return {
-      success: true,
-      message: "OTP đã được gửi đến email của bạn",
-      email,
-    };
+
+  signUp = async (admin: IAdmin) => {
+    await this.checkEmail(admin.email);
+    admin.password = await bcrypt.Hash(admin.password!);
+    const newAdmin = await Admin.create(admin);
+    const otp = newAdmin.generateOTP();
+    await newAdmin.save();
+    EmailService.sendOTP(newAdmin.email, otp);
+    return newAdmin;
   };
+  signIn = async (data: { email: string; password: string }) => {
+    console.log(data);
+    const checkAdmin = await this.getAdminByEmail(data.email);
+    console.log(checkAdmin)
+    const checkPassword = await bcrypt.Compare(
+      data.password,
+      checkAdmin.password
+    );
+    
+    
+    console.log(checkAdmin)
+    console.log(checkPassword)
+    if (!checkPassword) {
+      throwError(400, "Email hoặc mật khẩu không đúng");
+    }
+    return checkAdmin!.id;
+  };
+  
   
   verifyEmail = async (email: string, otp: string) => {
     const admin = await Admin.findOne({ email });

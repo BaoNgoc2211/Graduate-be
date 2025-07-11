@@ -29,6 +29,14 @@ const adminSchema = new mongoose.Schema<IAdmin>(
       type: Date,
       default: null,
     },
+    password:{
+      type:String,
+      required:true
+    },
+    role:{
+      type: String,
+      default:"STAFF"
+    },
     info: {
       name: {
         type: String,
