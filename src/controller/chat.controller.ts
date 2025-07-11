@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import chatService from "../service/chat.services";
 
 class ChatController {
+    
     userSendMassage = async (req: Request, res: Response) => {
         const { userId, message } = req.body;
         const result = await chatService.sendUserMessage(userId, message);

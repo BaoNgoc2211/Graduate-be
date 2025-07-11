@@ -21,6 +21,14 @@ class VoucherServices {
       `[VoucherService] ${result.modifiedCount} vouchers expired and deactivated.`
     );
   }
+
+  async updateVoucher(id:string, voucher:any){
+    return await voucherRepository.edit(id,voucher);
+  }
+
+  async deleteVoucher(id:string){
+    return await voucherRepository.delete(id);
+  }
 }
 const voucherServices = new VoucherServices();
 export default voucherServices;

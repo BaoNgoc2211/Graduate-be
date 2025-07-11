@@ -31,13 +31,13 @@ class UploadServices implements IUpload {
 
     // Xử lý ảnh bằng Sharp
     await sharp(imagePath)
-      .resize(1000) // resize cho đồng đều
-      .grayscale() // chuyển ảnh sang đen trắng
-      .sharpen()   // làm nét
-      .normalize() // tăng độ tương phản
+      .resize({ width: 1000 })            // resize ảnh về kích thước tiêu chuẩn
+      .grayscale()                         // chuyển sang ảnh đen trắng
+      .normalize()                         // tăng tương phản, làm rõ nét         
+      .threshold(150)                      // nhị phân hóa ảnh (giảm nhiễu)
       .toFile(processedImagePath);
-
     // OCR bằng Tesseract
+    console.log('Processed image saved to:', processedImagePath);
     const ocrResult = await Tesseract.recognize(processedImagePath, 'eng+vie');
     const rawText = ocrResult.data.text;
 
@@ -47,47 +47,90 @@ class UploadServices implements IUpload {
     // Trích xuất thuốc
     return this.extractMedicines(rawText);
   }
+  private extractMedicines(text: string): IMedicienPrescription[] {
+    const lines = text.split('\n').filter(line => line.trim() !== '');
+    const result: IMedicienPrescription[] = [];
+
+    // Từ điển sửa lỗi chính tả OCR
+    const unitMap: Record<string, string> = {
+      'vien': 'viên',
+      'vién': 'viên',
+      'viem': 'viên',
+      'gói': 'gói',
+      'goi': 'gói',
+      'chai': 'chai',
+      'chal': 'chai',
+      'ống': 'ống',
+      'ong': 'ống',
+      'ông': 'ống',
+      'tuyp': 'tuýp',
+      'tuýp': 'tuýp'
+    };
+
+    for (let line of lines) {
+    // Bước 1: Làm sạch dòng
+    line = line.replace(/(\d)([^\d\s]+)/g, '$1 $2'); // thêm khoảng cách giữa số & chữ
+    line = line.replace(/^\s*\d+[.:]?\s*/, '');       // loại bỏ số thứ tự đầu dòng
+
+    const match = line.match(/^(.+?)\s+(\d+)\s*(\S+)?$/i);
+
+    if (match) {
+      let medicineName = match[1].trim().replace(/^\.?\s*/, ''); // xóa dấu chấm đầu dòng
+      medicineName = medicineName.replace(/([a-zA-Z])(\d)/g, '$1 $2'); // chèn khoảng trắng tên và số
+
+      const quantity = Number(match[2]);
+      const rawUnit = match[3].toLowerCase()||"";
+      console.log(rawUnit)
+      const unit = unitMap[rawUnit] ||"";
+      console.log(unit)
+
+      result.push({ medicineName, quantity, unit });
+    }
+  }
+
+    return result;
+  }
     // async uploadPrescription(image: string): Promise<IMedicienPrescription[]> {
     //   const ocrResult = await Tesseract.recognize(image, 'eng+vie', );
     //   const rawText = ocrResult.data.text;
     //   return this.extractMedicines(rawText);
     // }
 
-    private extractMedicines(text: string): IMedicienPrescription[] {
-      // const lines = text.split('\n').filter(line => line.trim() !== '');
-      const lines = text.split('\n').filter(line => line.trim() !== '');
-      const result: IMedicienPrescription[] = [];
-      console.log('Extracted lines:', lines);
-      console.log('Raw text:', text);
+    // private extractMedicines(text: string): IMedicienPrescription[] {
+    //   // const lines = text.split('\n').filter(line => line.trim() !== '');
+    //   const lines = text.split('\n').filter(line => line.trim() !== '');
+    //   const result: IMedicienPrescription[] = [];
+    //   console.log('Extracted lines:', lines);
+    //   console.log('Raw text:', text);
 
-      for (const line of lines) {
-      const match = line.match(/^\s*[\w']*\s*(\d+)[.:]?\s*(.+?)\s+(\d+)\s*(viên|gói|chai|ống|ông)?\b/i);
-        if (match) {
-          const medicineName = match[2].trim().replace(/\s{2,}/g, ' ');
-          result.push({
-            medicineName,
-            quantity: Number(match[3]),
-            unit: match[4]?.toLowerCase() || '',
-          });
-        }
-      }
+    //   for (const line of lines) {
+    //   const match = line.match(/^\s*[\w']*\s*(\d+)[.:]?\s*(.+?)\s+(\d+)\s*(viên|gói|chai|ống|ông)?\b/i);
+    //     if (match) {
+    //       const medicineName = match[2].trim().replace(/\s{2,}/g, ' ');
+    //       result.push({
+    //         medicineName,
+    //         quantity: Number(match[3]),
+    //         unit: match[4]?.toLowerCase() || '',
+    //       });
+    //     }
+    //   }
     
-      // for (const line of lines) {
-      //   // console.log('Line:', line);
-      //   const match = line.match(/(.+?)\s*[xX]\s*(\d+)\s*(viên|gói|chai|ống|tuýp)?/i);
-      //   // const match = line.match(/^(?:\d+\.\s*)?(.+?)\s+(\d+)\s*(viên|gói|chai|ống)?/i);
-      //   if (match) {
-      //     result.push({
-      //       medicineName: match[1].trim(),
-      //       quantity: Number(match[2]),
-      //       unit: match[3]?.toLowerCase() || '',
-      //     });
-      //   }
-      //   // console.log(medicineName, quantity, unit);,
-      // }
+    //   // for (const line of lines) {
+    //   //   // console.log('Line:', line);
+    //   //   const match = line.match(/(.+?)\s*[xX]\s*(\d+)\s*(viên|gói|chai|ống|tuýp)?/i);
+    //   //   // const match = line.match(/^(?:\d+\.\s*)?(.+?)\s+(\d+)\s*(viên|gói|chai|ống)?/i);
+    //   //   if (match) {
+    //   //     result.push({
+    //   //       medicineName: match[1].trim(),
+    //   //       quantity: Number(match[2]),
+    //   //       unit: match[3]?.toLowerCase() || '',
+    //   //     });
+    //   //   }
+    //   //   // console.log(medicineName, quantity, unit);,
+    //   // }
       
-      return result;
-    }
+    //   return result;
+    // }
 }
 const uploadService = new UploadServices();
 export default uploadService;
