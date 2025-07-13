@@ -9,7 +9,7 @@ const chatRoom = new Schema<IChatRoom>({
     status: { type: String, enum: ["open", "closed"], default: "open" },
     lastMessage: { type: String },
   },
-  { timestamps: true }
+  {collection:"Room", timestamps: true }
 );
 
 const ChatRoom = mongoose.model<IChatRoom>("Room",chatRoom);
