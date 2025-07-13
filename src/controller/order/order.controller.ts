@@ -92,10 +92,10 @@ class OrderDetailController {
     returnRes(res, 200, "Get Status Order", result!);
   });
 
-  checkStatus = asyncError(async (req: Request, res: Response) => {
+  checkStatusUser = asyncError(async (req: Request, res: Response) => {
     const userId = req.user;
     const status = req.params.status;
-    const result = await orderServices.checkStatusOrder(String(userId!), String(status!));
+    const result = await orderServices.checkStatusOrderUser(String(userId!), String(status!));
     returnRes(res, 200, "Get Status Order", result!);
   });
 
@@ -112,6 +112,12 @@ class OrderDetailController {
     returnRes(res, 200, "Deleted", result!);
   });
 
+
+  checkOrderStatus = asyncError(async (req: Request, res: Response) => {
+    const status = req.params.status;
+    const result = await orderServices.checkStatusOrder(String(status!));
+    returnRes(res, 200, "Get Status Order", result!);
+  });
   // getByUserId = asyncError(async (req: Request, res: Response) => {
   //   const result = await cartDetailServices.getCartDetailsByUserId(
   //     req.params.userId

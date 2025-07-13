@@ -14,26 +14,8 @@ import Voucher from "../../model/voucher.model";
 class OrderDetailRepository {
   async findAll() {
     return await Order.find()
-      .populate({
-        path: "user_Id",
-        model: "User",
-        select: "info.name", // <-- Thêm email vào đây
-      })
-      .populate({
-        path: "orderDetail",
-        populate: [
-          {
-            path: "medicine.code",
-            model: "Medicine",
-            select: "code name thumbnail",
-          },
-          {
-            path: "medicine.price",
-            model: "ImportBatch",
-            select: "sellingPrice medicine_id",
-          },
-        ],
-      });
+      // .populate("id status finalAmount")
+        
   }
 
   async findById(id: string) {
@@ -533,7 +515,7 @@ async checkOutSuccess(orderId: string) {
 }
 
 
-  async checkStatusOrder(userId: string, status: OrderStatus) {
+  async checkStatusOrderUser(userId: string, status: OrderStatus) {
     const orders = await Order.find({ user_id: userId,  status }).sort({ createdAt: -1 });
 
     if (!orders || orders.length === 0) {
@@ -582,6 +564,48 @@ async checkOutSuccess(orderId: string) {
   async deleteOrder(id: string) {
     const order = await Order.findByIdAndDelete(id);
     return order;
+  }
+
+  async checkStatusOrder( status: OrderStatus) {
+    const orders = await Order.find({status }).sort({ createdAt: -1 });
+
+    if (!orders || orders.length === 0) {
+      throw new Error("Người dùng chưa có đơn hàng nào.");
+    }
+
+    // Lấy danh sách các ID của orderDetail từ các đơn hàng
+    const orderDetailIds = orders.map(order => order.orderDetail); // <-- sửa theo đúng tên field trong Order
+
+    // Tìm tất cả OrderDetail tương ứng
+    const orderDetails = await OrderDetail.find({ _id: { $in: orderDetailIds } });
+
+    // Tạo Map để tra nhanh
+    const orderDetailMap = new Map();
+    orderDetails.forEach(detail => {
+      orderDetailMap.set(detail._id.toString(), detail);
+    });
+
+    // Trả về kết quả đã ghép nối
+    const result = orders.map(order => {
+      const detail = orderDetailMap.get(order.orderDetail.toString());
+
+      return {
+        orderId: order._id,
+        status: order.status,
+        totalAmount: order.totalAmount,
+        finalAmount: order.finalAmount,
+        items: detail?.order_items.map((item:IOrderItem) => ({
+          order_item: item.medicine_id,
+          medicineName: item.name,
+          quantity: item.quantity,
+          price: item.price,
+          total: item.totalAmount,
+          thumbnail: item.thumbnail,
+        })),
+      };
+    });
+
+  return result;
   }
 }
 export default new OrderDetailRepository();

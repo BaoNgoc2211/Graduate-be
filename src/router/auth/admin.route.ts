@@ -2,6 +2,7 @@ import adminController from "../../controller/auth/admin.controller";
 import express from "express";
 import { adminProtect,requireAdminRole } from "../../middleware/admin.middleware";
 import authController from "../../controller/auth/auth.controller";
+import orderController from "../../controller/order/order.controller";
 
 
 const router = express.Router();
@@ -18,6 +19,11 @@ router.post("/logout", adminProtect,adminController.logout);
 router.get("/profile",adminProtect,adminController.findAdmin)
 // router.put("/profile/:id",controller.);
 router.put("/profile",adminProtect, adminController.updateProfile);
+
+
+router.get("/order/status/", orderController.getAll);
+//lấy đơn hàng theo trạng thái của user
+router.get("/order/status/:status/", orderController.checkOrderStatus);
 
 
 // router.get("/getuser",requireAdminRole,authController.findAll)

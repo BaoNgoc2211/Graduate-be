@@ -63,7 +63,7 @@ class OrderService {
     return await orderRepository.updateOrder(orderId, { status: newStatus });
   }
 
-  async checkStatusOrder(userId: string, statusParam: string) {
+  async checkStatusOrderUser(userId: string, statusParam: string) {
     const statusMap: Record<string, OrderStatus> = {
       pending: OrderStatus.PENDING,
       confirmed: OrderStatus.CONFIRMED,
@@ -77,40 +77,16 @@ class OrderService {
       throw new Error("Trạng thái đơn hàng không hợp lệ.");
     }
 
-    return await orderRepository.checkStatusOrder(userId, status);
+    return await orderRepository.checkStatusOrderUser(userId, status);
   }
 
   async checkStatusAllOrder(userId: string) {
-    console.log("User ID:", userId);
     const orders = await orderRepository.checkStatus(userId);
     if (!orders || orders.length === 0) {
       throw new Error("Không tìm thấy đơn hàng với trạng thái này");
     }
     return orders;
   }
-
-  /**
-   * Tạo đơn hàng sau khi thanh toán VNPAY thành công
-  //  */
-  // async createOrderAfterVnpay(userId: string, selectItemIds: string[], shippingId: string, paymentMethod: string, paymentStatus: string) {
-  //   // Tạo đơn hàng với trạng thái PENDING và PAID
-  //   const order = await orderRepository.checkOut(
-  //     userId,
-  //     selectItemIds,
-  //     shippingId,
-  //     paymentMethod
-  //   );
-  //   // Sau khi tạo đơn hàng, cập nhật trạng thái thanh toán thành PAID
-  //   if (order && order.orderId) {
-  //     const { PAID } = require("../../enum/order/order.enum").PaymentStatus;
-  //     await orderRepository.updateOrder(order.orderId.toString(), { paymentStatus: PAID });
-  //   }
-  //   return order;
-  // }
-
-  // async updateOrder(id: string, data: any) {
-  //   return await orderRepository.updateOrder(id, data);
-  // }
 
   async deleteOrder(id: string) {
     return await orderRepository.deleteOrder(id);
@@ -119,6 +95,29 @@ class OrderService {
   async getAllOrders() {
     return await orderRepository.findAll();
   }
+
+  // admin 
+
+  //lấy tất cả đơn hàng
+
+
+  async checkStatusOrder(statusParam: string) {
+    const statusMap: Record<string, OrderStatus> = {
+      pending: OrderStatus.PENDING,
+      confirmed: OrderStatus.CONFIRMED,
+      delivering: OrderStatus.DELIVERING,
+      completed: OrderStatus.COMPLETED,
+      cancelled: OrderStatus.CANCELLED,
+    };
+
+    const status = statusMap[statusParam.toLowerCase()];
+    if (!status) {
+      throw new Error("Trạng thái đơn hàng không hợp lệ.");
+    }
+
+    return await orderRepository.checkStatusOrder(status);
+  }
+
 }
 
 export default new OrderService();

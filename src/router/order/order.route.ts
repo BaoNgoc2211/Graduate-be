@@ -12,7 +12,9 @@ const router = Router();
 //lấy tất cả đơn hàng theo trang thai của user
 router.get("/status/",protect, orderController.checkStatusAll);
 //lấy đơn hàng theo trạng thái của user
-router.get("/status/:status/",protect, orderController.checkStatus);
+router.get("/status/:status/",protect, orderController.checkStatusUser);
+//chỉnh sửa trạng thái
+// router.put("/update/",orderController.updateStatus);
 
 
 //orderdetail
@@ -27,14 +29,17 @@ router.get("/orderdetail/:id", orderDetailController.getById);
 router.put("/orderdetail/:id", orderDetailController.update);
 router.delete("orderdetail/:id", orderDetailController.delete);
 
-router.put("/:id", orderController.update);
 //order
 // router.post("/", orderController.create);
 
 //lấy tất cả đơn hàng của admin
 router.get("/", orderController.getAll);
+//lấy tất cả đơn hàng theo trạng thái admin
+router.get("/status/:status/", orderController.checkOrderStatus);
 //lấy đơn hàng theo id này chỉ là đơn hàng thôi trg đơn hàng có chi tiết đơn hàng
 router.get("/:id", orderController.getById);
+//chỉnh sửa trạng thái admin
+router.put("/update",orderController.updateStatus);
 //xem lại sản phẩm đã chọn thanh toán
 router.post("/review/", protect, orderController.reviewOrder);
 //thanh toán đơn hàng
