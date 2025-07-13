@@ -3,17 +3,19 @@ import asyncError from "../../middleware/error.middleware";
 import { returnRes } from "../../util/response";
 import jwtServices from "../../service/auth/jwt.services";
 import adminAuthServices from "../../service/auth/admin.auth.services";
+import { IAdmin } from "../../interface/auth/admin.interface";
+import { IAdminRequest } from "../../types/express";
 
 class AdminAuthController {
 
   signUp = asyncError(async (req: Request, res: Response) => {
     const data = await adminAuthServices.signUp(req.body);
-    const accessToken = jwtServices.generateJwt(res, data.id);
+    const accessToken = jwtServices.generateAdminJwt(res, data.id);
     returnRes(res, 201, "Sign up successful", accessToken);
   });
    signin = asyncError(async (req: Request, res: Response) => {
     const data = await adminAuthServices.signIn(req.body);
-    const accessToken = jwtServices.generateJwt(res, data);
+    const accessToken = jwtServices.generateAdminJwt(res, data);
     returnRes(res, 200, "Đăng nhập thành công", accessToken);
   });
   // signin = asyncError(async (req: Request, res: Response) => {
@@ -36,8 +38,8 @@ class AdminAuthController {
   //   const user = req.admin;
   //   returnRes(res, 200, "Check authentication successful", user);
   // });
-  updateProfile = asyncError(async (req: Request, res: Response) => {
-    const adminId = req.user!;
+  updateProfile = asyncError(async (req: IAdminRequest, res: Response) => {
+    const adminId = req.admin;
     const updated = await adminAuthServices.updateProfile(String(adminId), req.body);
     if (!updated) {
       // Trả lỗi tại đây và return để kết thúc
@@ -46,9 +48,14 @@ class AdminAuthController {
     returnRes(res, 200, "Cập nhật thông tin thành công", updated);
   });
 
-  findAdmin = asyncError(async (req: Request, res: Response) => {
-    const adminId = req.user!;
+  findAdmin = asyncError(async (req: IAdminRequest, res: Response) => {
+    const adminId = req.admin;
+    console.log(adminId)
     const admins = await adminAuthServices.findById(String(adminId));
+    console.log(admins)
+    if (!admins) {
+          return returnRes(res, 404, "User not found");
+        }
     returnRes(res, 200, "Find All", admins!);
   });
 

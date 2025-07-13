@@ -39,17 +39,11 @@ class AdminAuthServices {
     return newAdmin;
   };
   signIn = async (data: { email: string; password: string }) => {
-    console.log(data);
     const checkAdmin = await this.getAdminByEmail(data.email);
-    console.log(checkAdmin)
     const checkPassword = await bcrypt.Compare(
       data.password,
       checkAdmin.password
     );
-    
-    
-    console.log(checkAdmin)
-    console.log(checkPassword)
     if (!checkPassword) {
       throwError(400, "Email hoặc mật khẩu không đúng");
     }

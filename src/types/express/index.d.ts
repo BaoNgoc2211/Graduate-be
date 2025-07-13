@@ -22,9 +22,15 @@ declare global {
       user?: {
         userId: string;
       };
-      // admin?: {
-      //   adminId: string;
-      // };
     }
   }
+  
 }
+export interface IAdminRequest extends Request{
+      admin?: {
+        userId: string;
+      };
+}
+
+
+export {};

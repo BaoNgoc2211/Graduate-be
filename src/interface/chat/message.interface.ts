@@ -1,9 +1,6 @@
-import { Types } from "mongoose";
-
 export interface IMessage {
-  threadId: Types.ObjectId;
+  threadId?: string; // Có thể undefined nếu là user mới gửi lần đầu
   senderId: string;
-  message: string;
-  timestamp: Date;
-  isRead: boolean;
+  content: string;
+
 }
