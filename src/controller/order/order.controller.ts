@@ -78,9 +78,10 @@ class OrderDetailController {
   });
 
   updateStatus = asyncError(async (req: Request, res: Response) => {
+    const {status} =req.body;
     const result = await orderServices.updateStatusOrder(
       req.params.id,
-      req.body
+      status
     );
     returnRes(res, 200, "Updated", result!);
   });
@@ -99,13 +100,13 @@ class OrderDetailController {
     returnRes(res, 200, "Get Status Order", result!);
   });
 
-  update = asyncError(async (req: Request, res: Response) => {
-    const result = await orderServices.updateStatusOrder(
-      req.params.id,
-      req.body.status
-    );
-    returnRes(res, 200, "Updated", result!);
-  });
+  // update = asyncError(async (req: Request, res: Response) => {
+  //   const result = await orderServices.updateStatusOrder(
+  //     req.params.id,
+  //     req.body.status
+  //   );
+  //   returnRes(res, 200, "Updated", result!);
+  // });
 
   delete = asyncError(async (req: Request, res: Response) => {
     const result = await orderServices.deleteOrder(req.params.id);

@@ -557,17 +557,16 @@ async checkOutSuccess(orderId: string) {
   return result;
   }
 
-  async updateOrder(id: string, data: Partial<IOrder>) {
-    const order = await Order.findByIdAndUpdate(id, data, { new: true });
-    return order;
-  }
+  async updateOrder(id: string, status: string) {
+  return await Order.findByIdAndUpdate(id, { status }, { new: true }); 
+}
   async deleteOrder(id: string) {
     const order = await Order.findByIdAndDelete(id);
     return order;
   }
 
-  async checkStatusOrder( status: OrderStatus) {
-    const orders = await Order.find({status }).sort({ createdAt: -1 });
+  async checkStatusOrder(status: OrderStatus) {
+    const orders = await Order.find({status}).sort({ createdAt: -1 });
 
     if (!orders || orders.length === 0) {
       throw new Error("Người dùng chưa có đơn hàng nào.");

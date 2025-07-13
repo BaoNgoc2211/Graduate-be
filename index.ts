@@ -97,7 +97,7 @@ import http from "http";
 import { Server } from "socket.io";
 import appConfig from "./src/config/app.config";
 import connectDB from "./database/connect-database";
-// import chatRoute from "./src/router/chat.route";
+import chatRoutes from "./src/router/chat.route"
 import authRoutes from "./src/router/auth/auth.route";
 import adminRoutes from "./src/router/auth/admin.route";
 import medicineRoutes from "./src/router/medicine.route";
@@ -122,7 +122,7 @@ import passport from "passport";
 import "./src/config/passport";
 import connectCloudinary from "./src/util/cloudinary";
 import cookieParser from "cookie-parser";
-// import { ChatSocketHandler } from "./src/util/chat.socket";
+import chatSocket from "./src/util/chat.socket";
 
 const app = express();
 const server = http.createServer(app);
@@ -160,7 +160,9 @@ app.use("/api/distributor", distributorRoutes);
 app.use("/api/manufacture", manufactureRoutes);
 app.use("/api/import-batch", importBatchRoutes);
 app.use("/api/stock", stockRoutes);
-// app.use("/api/chat", chatRoute);
+app.use("/api/chat", chatRoutes);
+
+chatSocket(io);
 
 // Google Login Sessions
 app.use(session({ secret: "your_secret", resave: false, saveUninitialized: true }));

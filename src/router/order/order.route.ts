@@ -27,6 +27,7 @@ router.get("/orderdetail/:id", orderDetailController.getById);
 // router.get("/user/:userId", orderDetailController.getByUserId);
 
 router.put("/orderdetail/:id", orderDetailController.update);
+
 router.delete("orderdetail/:id", orderDetailController.delete);
 
 //order
@@ -39,7 +40,7 @@ router.get("/status/:status/", orderController.checkOrderStatus);
 //lấy đơn hàng theo id này chỉ là đơn hàng thôi trg đơn hàng có chi tiết đơn hàng
 router.get("/:id", orderController.getById);
 //chỉnh sửa trạng thái admin
-router.put("/update",orderController.updateStatus);
+router.put("/updatestatus/:id",orderController.updateStatus);
 //xem lại sản phẩm đã chọn thanh toán
 router.post("/review/", protect, orderController.reviewOrder);
 //thanh toán đơn hàng

@@ -60,7 +60,7 @@ class OrderService {
         );
       }
     }
-    return await orderRepository.updateOrder(orderId, { status: newStatus });
+    return await orderRepository.updateOrder(orderId, newStatus );
   }
 
   async checkStatusOrderUser(userId: string, statusParam: string) {
