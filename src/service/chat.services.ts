@@ -57,7 +57,11 @@ class ChatSevices{
         return await Message.find({room:roomId}).sort("createdAt");
     };
     async getUnassignedRooms(){
-        return await ChatRoom.find({isHandled: false, status: "open" }).populate("user");
+        return await ChatRoom.find({isHandled: false, status: "open" })
+        .populate({
+            path:"user",
+            select:"info.name"
+        });
     };
 }
 export default new ChatSevices();
