@@ -8,6 +8,7 @@ const router = Router();
 router.post("/start",protect, chatController.startChat);
 router.post("/send",protect, adminProtect, chatController.sendMessage);
 router.get("/messages/:roomId",protect,adminProtect, chatController.getMessages);
+router.get("/staff/messages",adminProtect,chatController.getStaffMessage)
 router.get("/unassigned",adminProtect, chatController.getUnassignedRooms);
 
 export default router;

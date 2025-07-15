@@ -2,6 +2,7 @@ import asyncError from "../middleware/error.middleware";
 import { returnRes } from "../util/response";
 import chatServices from "../service/chat.services";
 import { Request, Response } from "express";
+import { IAdminRequest } from "../types/express";
 
 class ChatController {
   startChat = asyncError(async (req: Request, res: Response) => {
@@ -25,7 +26,15 @@ class ChatController {
     returnRes(res, 200, "Messages fetched", data);
   });
 
-  getUnassignedRooms = asyncError(async (_req: Request, res: Response) => {
+  getStaffMessage = asyncError(async (req: IAdminRequest, res: Response) => {
+    const userId =req.admin
+    console.log(userId)
+    // const { roomId } = req.params;
+    const data = await chatServices.getStaffMessage(String(userId));
+    returnRes(res, 200, "Messages fetched", data);
+  });
+
+  getUnassignedRooms = asyncError(async (req: IAdminRequest, res: Response) => {
     const data = await chatServices.getUnassignedRooms();
     returnRes(res, 200, "Unassigned rooms fetched", data);
   });

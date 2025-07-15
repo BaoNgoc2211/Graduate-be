@@ -56,6 +56,17 @@ class ChatSevices{
     async getMessage(roomId:string){
         return await Message.find({room:roomId}).sort("createdAt");
     };
+    async getStaffMessage(userId:string){
+        const staff = await ChatRoom.find({staff: userId, status:"open"})
+        .populate({
+            path: "user",
+            select: "info.name"
+        });
+        if (!staff) throw new Error("Room not found");
+        console.log(staff)
+        return staff;
+
+    }
     async getUnassignedRooms(){
         return await ChatRoom.find({isHandled: false, status: "open" })
         .populate({
