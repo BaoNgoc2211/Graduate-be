@@ -1,4 +1,4 @@
-import { StatusEnum } from "../../enum/medicine/import-batch.enum";
+import { ImportBatchStatus } from "../../enum/medicine/import-batch.enum";
 import { IImportBatch } from "../../interface/inventory/import-batch.interface";
 import importBatchRepository from "../../repository/inventory/import-batch.repository";
 import throwError from "../../util/create-error";
@@ -24,7 +24,7 @@ class ImportBatchServices {
     return await importBatchRepository.update(id, importBatch);
   }
 
-  async updateImportBatchStatus(id: string, status: StatusEnum) {
+  async updateImportBatchStatus(id: string, status: ImportBatchStatus) {
     // if (!Object.values(StatusEnum).includes(status)) {
     //   throwError(400, "Invalid status value");
     // }
