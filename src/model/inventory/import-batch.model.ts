@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import { IImportBatch } from "../../interface/inventory/import-batch.interface";
-import { StatusEnum } from "../../enum/medicine/import-batch.enum";
+import { ImportBatchStatus } from "../../enum/medicine/import-batch.enum";
 
 const ImportBatchSchema = new Schema<IImportBatch>(
   {
@@ -8,6 +8,7 @@ const ImportBatchSchema = new Schema<IImportBatch>(
     importDate: { type: Date },
     expiryDate: { type: Date },
     importPrice: { type: Number },
+    status: { type: String },
     distributor_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Distributor",

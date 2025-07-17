@@ -123,6 +123,7 @@ import "./src/config/passport";
 import connectCloudinary from "./src/util/cloudinary";
 import cookieParser from "cookie-parser";
 import chatSocket from "./src/util/chat.socket";
+import "./src/util/cron.ulti"
 
 const app = express();
 const server = http.createServer(app);
@@ -141,6 +142,7 @@ app.use(cookieParser());
 app.use(cors({ origin: ["http://localhost:3000", "http://localhost:3001"], credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 
 // Routes
 app.use("/api/auth", authRoutes);
