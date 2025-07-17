@@ -33,7 +33,7 @@ class DisCategoryRepository {
     diseaseId: mongoose.Types.ObjectId
   ) {
     return await DisCategory.findByIdAndUpdate(diseaseCategoryId, {
-      $push: { disease: diseaseId },
+      $push: {disease: diseaseId },
     });
   }
 }

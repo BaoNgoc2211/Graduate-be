@@ -1,5 +1,8 @@
+import mongoose from "mongoose";
 import { IDiseaseUsageGroup } from "../../interface/disease/disease-usage.interface";
 import DisUsageGroup from "../../model/disease/disease-usage.model";
+import Disease from "../../model/disease/disease.model";
+import DiseaseUsageGroup from "../../model/disease/disease-usage.model";
 
 class DisUsageGroupRepository {
   async findName(name: string) {
@@ -16,6 +19,13 @@ class DisUsageGroupRepository {
   }
   async delete(id: string) {
     return await DisUsageGroup.findByIdAndDelete(id);
+  }
+  async updateUsageToDisease(
+    idUsageDisease:mongoose.Types.ObjectId,
+    idDisease:mongoose.Types.ObjectId){
+    return await DiseaseUsageGroup.findByIdAndUpdate(idUsageDisease,{
+       $push: {disease: idDisease },    
+    });
   }
 }
 export default new DisUsageGroupRepository();

@@ -19,7 +19,7 @@ import Voucher from "../model/voucher.model";
 // Chạy mỗi phút
 
 cron.schedule("* * * * *", async () => {
-  console.log(`[CRON TEST] Run at ${new Date().toISOString()}`);
+  // console.log(`[CRON TEST] Run at ${new Date().toISOString()}`);
   const result = await Voucher.updateMany(
     {
       endDate: { $lte: new Date() },
@@ -27,5 +27,5 @@ cron.schedule("* * * * *", async () => {
     },
     { $set: { isActive: false } }
   );
-  console.log(`[CRON TEST] Modified ${result.modifiedCount} vouchers`);
+  // console.log(`[CRON TEST] Modified ${result.modifiedCount} vouchers`);
 });

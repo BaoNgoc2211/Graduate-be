@@ -18,11 +18,17 @@ class DiseaseController {
     const data = await diseaseServices.delete(new mongoose.Types.ObjectId(id));
     returnRes(res, 200, "Delete disease successful", data!);
   });
-
-  // getAllDiseases = asyncError(async (_req: Request, res: Response) => {
-  //   const data = await diseaseServices.getAllDisease();
-  //   returnRes(res, 200, "Get all diseases successful", data);
-  // });
+  getDetail = asyncError(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const data = await diseaseServices.getById(id);
+    returnRes(res, 200, "Get disease detail successful", data!);
+  });
+  getAllDiseases = asyncError(async (req: Request, res: Response) => {
+     const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const data = await diseaseServices.getAll(page,limit);
+    returnRes(res, 200, "Get all diseases successful", data);
+  });
 }
 const diseaseController = new DiseaseController();
 export default diseaseController;
