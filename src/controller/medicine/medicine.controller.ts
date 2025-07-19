@@ -5,7 +5,9 @@ import { returnRes } from "../../util/response";
 
 class MedicineController {
   getAll = asyncError(async (req: Request, res: Response) => {
-    const medicines = await medicineServices.getAllMedicines();
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const medicines = await medicineServices.getAllMedicines(page,limit);
     returnRes(res, 200, "Fetch successfully", medicines);
   });
   getCreateAdd = asyncError(async (req: Request, res: Response) => {

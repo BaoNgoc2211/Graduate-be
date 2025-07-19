@@ -1,3 +1,4 @@
+import Medicine from "../../model/medicine/medicine.model";
 import medicineRepository from "../../repository/medicine/medicine.repository";
 
 import mongoose from "mongoose";
@@ -10,8 +11,8 @@ interface FilterParams {
   indications?: string;
 }
 class MedicineService {
-  async getAllMedicines() {
-    return await medicineRepository.findAll();
+  async getAllMedicines(page :number, limit : number) {
+    return await medicineRepository.findAll(page,limit)
   }
   async getMedByCreatedDate() {
     return await medicineRepository.findCreateAddWithin30Days();

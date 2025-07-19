@@ -50,6 +50,7 @@ class DiseaseRepository {
       currentPage: page,
       totalPages: Math.ceil(totalItems / limit),
       totalItems,
+      limit,
       data: items,
     }
   }
