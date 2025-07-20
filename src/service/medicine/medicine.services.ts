@@ -11,8 +11,11 @@ interface FilterParams {
   indications?: string;
 }
 class MedicineService {
-  async getAllMedicines(page :number, limit : number) {
-    return await medicineRepository.findAll(page,limit)
+  async getMedicineUser(page :number, limit : number) {
+    return await medicineRepository.findMedicneUser(page,limit)
+  }
+  async getMedicineAdmin(page :number, limit : number) {
+    return await medicineRepository.findMedicineAdmin(page,limit)
   }
   async getMedByCreatedDate() {
     return await medicineRepository.findCreateAddWithin30Days();

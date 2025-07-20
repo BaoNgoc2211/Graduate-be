@@ -4,11 +4,17 @@ import asyncError from "../../middleware/error.middleware";
 import { returnRes } from "../../util/response";
 
 class MedicineController {
-  getAll = asyncError(async (req: Request, res: Response) => {
+  getMedicineAdmin = asyncError(async (req: Request, res: Response) => {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
-    const medicines = await medicineServices.getAllMedicines(page,limit);
-    returnRes(res, 200, "Fetch successfully", medicines);
+    const medicines = await medicineServices.getMedicineAdmin(page,limit);
+    returnRes(res, 200, "Medicine", medicines);
+  });
+  getMedicineUser = asyncError(async (req: Request, res: Response) => {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const medicines = await medicineServices.getMedicineUser(page,limit);
+    returnRes(res, 200, "Medicine:", medicines);
   });
   getCreateAdd = asyncError(async (req: Request, res: Response) => {
     try {

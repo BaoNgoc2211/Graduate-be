@@ -9,44 +9,13 @@ import medUsageRepository from "./medicine-usage.repository";
 class medicineRepository {
   //list danh sach thuoc
 
-  // async findAll(page = 1, limit = 10) {
-  //   const skip = (page - 1 ) * limit;
-  //   const totalItems = await Medicine.countDocuments();
-  //   const items = await Medicine.find()
-  //   .skip(skip)
-  //   .limit(limit)
-  //   .sort({ createdAt: -1 });
-  //   return {
-  //     currentPage: page,
-  //     totalPages: Math.ceil(totalItems / limit),
-  //     totalItems,
-  //     limit,
-  //     data: items,
-  //   }
-  // }
-  async findAll(page:number, limit:number) {
+  async findMedicineAdmin(page:number, limit:number) {
     const skip = (page - 1 ) * limit;
     const totalItems = await Medicine.countDocuments();
     const items = await Medicine.find()
     .skip(skip)
     .limit(limit)
     .sort({ createdAt: -1 })
-    // .populate({
-    //   path: "stock_id",
-    //   select: "sellingPrice quantity", 
-    // }).populate({
-    //   path: "manufacturer_id",
-    //   select: "nameCo country", 
-    // });
-    return {
-      currentPage: page,
-      totalPages: Math.ceil(totalItems / limit),
-      totalItems,
-      limit,
-      data: items,
-
-    }
-    return await Medicine.find() // Lấy tất cả thuốc và thông tin kho liên quan;
     .populate({
       path: "stock_id",
       select: "sellingPrice quantity", 
@@ -54,6 +23,34 @@ class medicineRepository {
       path: "manufacturer_id",
       select: "nameCo country", 
     });
+    return {
+      currentPage: page,
+      totalPages: Math.ceil(totalItems / limit),
+      totalItems,
+      limit,
+      data: items,
+    }
+  }
+  async findMedicneUser(page:number, limit:number)
+  {
+    const skip = (page - 1) * limit;
+    const totalItems = await Medicine.countDocuments();
+    const items = await Medicine.find()
+    .skip(skip)
+    .limit(limit)
+    .sort({ createdAt: -1 })
+    .select("name thumbnail")
+    .populate({
+      path: "stock_id",
+      select: "sellingPrice quantity", 
+    })
+    return {
+      currentPage: page,
+      totalPages: Math.ceil(totalItems / limit),
+      totalItems,
+      limit,
+      data: items,
+    }
   }
   //  5 sản phẩm mới nhất trong vòng 30 ngày 
   async findCreateAddWithin30Days() {

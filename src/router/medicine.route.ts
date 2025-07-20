@@ -16,7 +16,7 @@ router.post("/usage/add", medicineUsageGroup.addMedUsage);
 router.put("/usage/edit/:id", medicineUsageGroup.editMedUsage);
 router.delete("/usage/remove/:id", medicineUsageGroup.deleteMedUsage);
 
-router.get("/", medicineController.getAll);
+router.get("/",medicineController.getMedicineUser)
 router.get("/search", medicineController.searchMed);
 router.get("/filter", medicineController.filterMedicine);
 router.get("/createdAdd", medicineController.getCreateAdd);
@@ -24,6 +24,10 @@ router.get("/:id", medicineController.getById);
 router.post("/", medicineController.create);
 router.put("/:id", medicineController.update);
 router.delete("/:id", medicineController.delete);
+
+router.get("/admin", medicineController.getMedicineAdmin);
+
+
 
 
 
