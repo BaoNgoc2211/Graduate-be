@@ -6,6 +6,24 @@ import { IAdmin } from "../../interface/auth/admin.interface";
 import bcrypt from "../../util/bcrypt";
 
 class AdminAuthServices {
+
+  async getAllAdmin(page:number,limit:number)
+  {
+    const skip = (page - 1) * limit;
+    const totalItems = await Admin.countDocuments();
+    const items = await Admin.find()
+    .skip(skip)
+    .limit(limit)
+    .sort({createdAt: -1})
+    return {
+      currentPage: page,
+      totalPages: Math.ceil(totalItems / limit),
+      totalItems,
+      limit,
+      data: items,
+    }
+  }
+  
   async findEmail(email: string) {
     return await Admin.findOne({ email });
   }
@@ -88,9 +106,7 @@ class AdminAuthServices {
     };
   };
 
-  findAll = async()=> {
-    return await Admin.find();
-  }
+  
   findById = async(id:string)=> {
     return await Admin.findById(id);
   };

@@ -5,6 +5,15 @@ import jwtServices from "../../service/auth/jwt.services";
 import authServices from "../../service/auth/auth.services";
 
 class AuthController {
+  //
+  findAll = asyncError(async (req: Request, res: Response) => {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const user = await authServices.getAllUser(page,limit);
+    returnRes(res, 200, "Find All", user);
+  });
+
+
   signUp = asyncError(async (req: Request, res: Response) => {
     const data = await authServices.signUp(req.body);
     const accessToken = jwtServices.generateJwt(res, data.id);
@@ -38,10 +47,7 @@ class AuthController {
     res.status(401).json({ message: "Đăng nhập thất bại" });
   }
 
-  findAll = asyncError(async (req: Request, res: Response) => {
-    const user = await authServices.findAll();
-    returnRes(res, 200, "Find All", user);
-  });
+  
 
   getProfile = asyncError(async (req: Request, res: Response) => {
     const userId = req.user;

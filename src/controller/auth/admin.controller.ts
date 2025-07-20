@@ -7,7 +7,12 @@ import { IAdmin } from "../../interface/auth/admin.interface";
 import { IAdminRequest } from "../../types/express";
 
 class AdminAuthController {
-
+  findAll = asyncError(async (req: Request, res: Response) => {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const admins = await adminAuthServices.getAllAdmin(page,limit);
+    returnRes(res, 200, "Find All", admins);
+  });
   signUp = asyncError(async (req: Request, res: Response) => {
     const data = await adminAuthServices.signUp(req.body);
     const accessToken = jwtServices.generateAdminJwt(res, data.id);
@@ -59,10 +64,7 @@ class AdminAuthController {
     returnRes(res, 200, "Find All", admins!);
   });
 
-  findAll = asyncError(async (req: Request, res: Response) => {
-    const admins = await adminAuthServices.findAll();
-    returnRes(res, 200, "Find All", admins);
-  });
+  
 }
 
 export default new AdminAuthController();

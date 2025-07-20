@@ -7,6 +7,25 @@ import bcrypt from "../../util/bcrypt";
 import { use } from "passport";
 
 class AuthServices {
+
+  async getAllUser(page:number, limit:number)
+  {
+    const skip = (page - 1) * limit;
+    const totalItems = await User.countDocuments();
+    const items = await User.find()
+    .skip(skip)
+    .limit(limit)
+    .sort({createdAt:-1})
+    .select("name email");
+    return {
+      currentPage: page,
+      totalPages: Math.ceil(totalItems / limit),
+      totalItems,
+      limit,
+      data: items,
+    }
+  }
+
   private async checkEmail(email: string) {
     if (await authRepository.findEmail(email)) {
       throwError(404, "Email is already exists");
@@ -45,9 +64,7 @@ class AuthServices {
     return await User.findById(userId).select("info")  ;
   };
 
-  findAll = async () => {
-    return await User.find();
-  };
+ 
 
   signUp = async (user: IUser) => {
     await this.checkEmail(user.email);

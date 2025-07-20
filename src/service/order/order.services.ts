@@ -92,7 +92,7 @@ class OrderService {
     return await orderRepository.deleteOrder(id);
   }
 
-  async getAllOrders() {
+  async getAllOrders(page:number, limit:number) {
     return await orderRepository.findAll();
   }
 

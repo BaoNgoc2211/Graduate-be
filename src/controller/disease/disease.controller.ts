@@ -24,7 +24,7 @@ class DiseaseController {
     returnRes(res, 200, "Get disease detail successful", data!);
   });
   getAllDiseases = asyncError(async (req: Request, res: Response) => {
-     const page = parseInt(req.query.page as string) || 1;
+    const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
     const data = await diseaseServices.getAll(page,limit);
     returnRes(res, 200, "Get all diseases successful", data);
