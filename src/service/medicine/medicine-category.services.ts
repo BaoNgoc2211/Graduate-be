@@ -1,7 +1,7 @@
 import medicineCategoryRepository from "../../repository/medicine/medicine-category.repository";
 export class MedicineCategoryService {
-  static async getAll() {
-    return medicineCategoryRepository.findAll();
+  static async getAll(page:number, limit:number) {
+    return medicineCategoryRepository.findAll(page,limit);
   }
 
   static async getById(id: string) {

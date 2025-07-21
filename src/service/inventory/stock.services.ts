@@ -2,8 +2,8 @@ import { IStock } from "../../interface/inventory/stock.interface";
 import stockRepository from "../../repository/inventory/stock.repository";
 
 class StockService {
-  async getAllStock() {
-    return await stockRepository.findAll();
+  async getAllStock(page:number, limit:number) {
+    return await stockRepository.findAll(page, limit);
   }
   async getLowStock() {
     return await stockRepository.getLowStock();

@@ -13,7 +13,9 @@ class ManufacturerController {
     returnRes(res, 200, "Get Manufacturer By Id Successful", data!);
   });
   getAllManufacturers = asyncError(async (req: Request, res: Response) => {
-    const data = await manufacturerServices.getAllManufacturers();
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string )||10;
+    const data = await manufacturerServices.getAllManufacturers(page, limit);
     returnRes(res, 200, "Get All Manufacturers Successful", data);
   });
   updateManufacturer = asyncError(async (req: Request, res: Response) => {

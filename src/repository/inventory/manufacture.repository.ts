@@ -4,8 +4,20 @@ class ManufactureRepository {
   async findName(nameCo: string) {
     return await Manufacturer.findOne({ nameCo });
   }
-  async getAll(){
-    return await Manufacturer.find();
+  async getAll(page:number, limit:number){
+    const skip = (page - 1) * limit;
+    const totalItems = await Manufacturer.countDocuments();
+    const items = await Manufacturer.find()
+    .skip(skip)
+    .limit(limit)
+    .sort({createdAt : -1})
+    return {
+      currentPage: page,
+      totalPages: Math.ceil(totalItems / limit),
+      totalItems,
+      limit,
+      data: items,
+    }
   }
   async findId(id: string) {
     return await Manufacturer.findById(id);

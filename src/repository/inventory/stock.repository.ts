@@ -1,19 +1,24 @@
-import e from "cors";
 import { IStock } from "../../interface/inventory/stock.interface";
 import Stock from "../../model/inventory/stock.model";
 import PurchaseOrder from "../../model/purchase-order.model";
-import path from "path";
 
 class StockRepository {
-  async findAll() {
-    return await Stock.find().
-    populate("medicine", "code name thumbnail dosageForm packaging")
+  async findAll(page:number, limit:number) {
+    const skip = (page - 1) * limit;
+    const totalItems = await Stock.countDocuments();
+    const items = await Stock.find()
+    .skip(skip)
+    .limit(limit)
+    .sort({createdAt: -1})
+    .populate("medicine", "code name thumbnail dosageForm packaging")
+    return {
+      currentPage: page,
+      totalPages: Math.ceil(totalItems / limit),
+      totalItems,
+      limit,
+      data: items,
+    }
   }
-//   async getLowStock() {
-//     const stock = await Stock.find();
-//     const lowStock = stock.filter((item) => item.quantity <= 10);
-//     return lowStock;
-//   }
   async getLowStock() {
     return await Stock.find({ quantity: { $lte: 10 } }).populate("medicine", "code name thumbnail dosageForm packaging ");
   }

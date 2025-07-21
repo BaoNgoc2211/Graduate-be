@@ -9,8 +9,21 @@ class DisCategoryRepository {
   async findId(id: string) {
     return await DisCategory.findById(id);
   }
-  async findAll() {
-    return await DisCategory.find().populate("disease").exec();
+  async findAll(page:number, limit:number) {
+    const skip = (page - 1) * limit;
+    const totalItems = await DisCategory.countDocuments();
+    const items = await DisCategory.find()
+    .skip(skip)
+    .limit(limit)
+    .sort({createdAt : -1})
+    .populate("disease")
+    return {
+      currentPage: page,
+      totalPages: Math.ceil(totalItems / limit),
+      totalItems,
+      limit,
+      data: items,
+    }
   }
 
   async findById(id: string) {

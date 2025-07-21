@@ -2,8 +2,8 @@ import { IVoucher } from "../interface/voucher.interface";
 import voucherRepository from "../repository/voucher.repository";
 
 class VoucherServices {
-  async getAllVoucher() {
-    return await voucherRepository.getAllVoucher();
+  async getAllVoucher(page:number, limit:number) {
+    return await voucherRepository.getAllVoucher(page, limit);
   }
   async getValidVoucher(){
     return await voucherRepository.getValidateVoucher();

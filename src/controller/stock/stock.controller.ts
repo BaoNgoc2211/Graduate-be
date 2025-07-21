@@ -5,7 +5,9 @@ import { returnRes } from "../../util/response";
 
 class StockController {
   getAll = asyncError(async (req: Request, res: Response) => {
-    const result = await stockServices.getAllStock();
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const result = await stockServices.getAllStock(page, limit);
     returnRes(res, 200, "Get All", result);
   });
   getLowStock = asyncError(async (req: Request, res: Response) => {

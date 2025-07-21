@@ -13,9 +13,22 @@ class importBatchRepository {
   async create(importBatch: IImportBatch) {
     return await ImportBatch.create(importBatch);
   }
-  async findAll() {
+  async findAll(page:number,limit:number) {
     // .populate("medicine_id","code name")
-    return await ImportBatch.find().populate("distributor_id", "nameCo");
+    const skip = (page - 1) * limit;
+    const totalItems = await ImportBatch.countDocuments();
+    const items = await ImportBatch.find()
+    .skip(skip)
+    .limit(limit)
+    .sort({createdAt : -1})
+    .populate("distributor_id", "nameCo");
+    return {
+      currentPage: page,
+      totalPages: Math.ceil(totalItems / limit),
+      totalItems,
+      limit,
+      data: items,
+    }
   }
 
   async update(id: string, importBatch: IImportBatch) {

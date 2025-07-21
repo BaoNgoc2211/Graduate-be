@@ -2,8 +2,20 @@ import { IVoucher } from "../interface/voucher.interface";
 import Voucher from "../model/voucher.model";
 
 class VoucherRepository {
-  async getAllVoucher() {
-    return await Voucher.find();
+  async getAllVoucher(page:number, limit:number) {
+    const skip = (page - 1) * limit;
+    const totalItems = await Voucher.countDocuments();
+    const items = await Voucher.find()
+    .skip(skip)
+    .limit(limit)
+    .sort({createdAt : -1})
+    return {
+      currentPage: page,
+      totalPages: Math.ceil(totalItems / limit),
+      totalItems,
+      limit,
+      data: items,
+    }
   }
 
   async getValidateVoucher() {

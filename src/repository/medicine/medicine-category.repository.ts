@@ -4,11 +4,22 @@ import mongoose from "mongoose";
 
 class MedicineCategoryRepository {
   // Lấy tất cả danh mục
-  async findAll() {
-    return await MedicineCategory.find()
-      .populate("medicine")
-      // .populate("usageGroups")
-      .exec();
+  async findAll(page:number, limit:number) {
+    const skip = (page - 1) * limit;
+    const totalItems = await MedicineCategory.countDocuments();
+    const items = await MedicineCategory.find()
+    .skip(skip)
+    .limit(limit)
+    .sort({createdAt : -1})
+    .populate("medicine name")
+    return {
+      currentPage:page,
+      totalPage: Math.ceil(totalItems/limit),
+      totalItems,
+      limit,
+      data:items,
+    }
+
   }
 
   async findById(id: string) {

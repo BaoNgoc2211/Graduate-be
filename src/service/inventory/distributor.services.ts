@@ -16,8 +16,8 @@ class DistributorServices {
     await this.checkIdExist(id);
     return await distributorRepository.findId(id);
   }
-  async getAllDistributors() {
-    return await distributorRepository.findAll();
+  async getAllDistributors(page:number, limit:number) {
+    return await distributorRepository.findAll(page,limit);
   }
   async addDistributor(distributor: IDistributor) {
     await this.checkNameCoExist(distributor.nameCo);

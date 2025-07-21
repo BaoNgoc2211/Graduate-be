@@ -4,7 +4,9 @@ import voucherServices from "../service/voucher.services";
 import { returnRes } from "../util/response";
 class VoucherController {
   getAll = asyncError(async(req:Request,res:Response) =>{
-    const voucher = await voucherServices.getAllVoucher();
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string )||10;
+    const voucher = await voucherServices.getAllVoucher(page, limit);
     returnRes(res,200,"Get All Voucher",voucher)
   });
   getValidVoucher = asyncError(async(req:Request,res:Response) =>{

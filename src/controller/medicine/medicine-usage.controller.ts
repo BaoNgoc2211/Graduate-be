@@ -5,7 +5,9 @@ import { Response, Request } from "express";
 class MedUsageGroupController {
 
   getAll = asyncError(async (req: Request, res: Response) => {
-    const usage = await medUsageGroupService.getAll();
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const usage = await medUsageGroupService.getAll(page,limit);
     returnRes(res, 200, "GetAll", usage);
   });
   getById = asyncError(async (req: Request, res: Response) => {

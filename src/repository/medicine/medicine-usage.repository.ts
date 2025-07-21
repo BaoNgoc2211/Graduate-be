@@ -1,10 +1,25 @@
 import mongoose from "mongoose";
 import { IMedicineUsageGroup } from "../../interface/medicine/medicine-usage.interface";
 import MedicineUsageGroup from "../../model/medicine/medicine-usage.model";
+import Medicine from "../../model/medicine/medicine.model";
+import { toASCII } from "punycode";
 
 class MedGroupRepository {
-  async getAll() {
-   return await MedicineUsageGroup.find();
+  async getAll(page:number, limit:number) {
+    const skip = (page - 1) * limit;
+    const totalItems = await MedicineUsageGroup.countDocuments();
+    const items = await MedicineUsageGroup.find()
+    .skip(skip)
+    .limit(limit)
+    .sort({createdAt:-1})
+
+    return {
+      currentPage:page,
+      totalPage : Math.ceil(totalItems/limit),
+      totalItems,
+      limit,
+      data:items,
+    }
   }
   async getById(id: string) {
     return await MedicineUsageGroup.findById(id);

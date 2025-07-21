@@ -1,6 +1,4 @@
 import Shipping from "../model/shipping.model";
-
-
 class ShippingRepository {
   async getAll() {
     return Shipping.find();

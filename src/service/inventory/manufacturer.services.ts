@@ -20,8 +20,8 @@ class ManufacturerServices {
     await this.checkNameCoExist(manufacturer.nameCo);
     return await manufactureRepository.create(manufacturer);
   }
-  async getAllManufacturers() {
-    return await manufactureRepository.getAll();
+  async getAllManufacturers(page:number, limit:number) {
+    return await manufactureRepository.getAll(page, limit);
   }
   async updateManufacturer(id: string, manufacturer: IManufacturer) {
     return await manufactureRepository.update(id, manufacturer);

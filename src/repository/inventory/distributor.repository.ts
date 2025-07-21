@@ -4,8 +4,20 @@ class DistributorRepository {
   async findName(nameCo: string) {
     return await Distributor.findOne({ nameCo });
   }
-  async findAll() {
-    return await Distributor.find();
+  async findAll(page:number, limit:number) {
+    const skip = (page - 1) * limit;
+    const totalItems = await Distributor.countDocuments();
+    const items = await Distributor.find()
+    .skip(skip)
+    .limit(limit)
+    .sort({createdAt : -1})
+    return {
+      currentPage: page,
+      totalPages: Math.ceil(totalItems / limit),
+      totalItems,
+      limit,
+      data: items,
+    }
   }
   async findId(id: string) {
     return await Distributor.findById(id);

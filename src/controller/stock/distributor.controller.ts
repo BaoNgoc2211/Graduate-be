@@ -13,7 +13,9 @@ class DistributorController {
     returnRes(res, 200, "Get Distributor By Id Successful", data!);
   });
   getAllDistributor = asyncError(async (req: Request, res: Response) => {
-    const distributors = await distributorServices.getAllDistributors();
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string )||10;
+    const distributors = await distributorServices.getAllDistributors(page,limit);
     returnRes(res, 200, "Get All Distributors Successful", distributors);
   });
   updateDistributor = asyncError(async (req: Request, res: Response) => {

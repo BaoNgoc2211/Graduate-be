@@ -34,7 +34,7 @@ router.delete("orderdetail/:id", orderDetailController.delete);
 // router.post("/", orderController.create);
 
 //lấy tất cả đơn hàng của admin
-router.get("/", orderController.getAll);
+router.get("/", orderController.getAllOrder);
 //lấy tất cả đơn hàng theo trạng thái admin
 router.get("/status/:status/", orderController.checkOrderStatus);
 //lấy đơn hàng theo id này chỉ là đơn hàng thôi trg đơn hàng có chi tiết đơn hàng

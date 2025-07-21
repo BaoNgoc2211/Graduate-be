@@ -57,8 +57,6 @@ class MedicineController {
       indications: indications as string,
     });
 
-    console.log("a"); // Sẽ chạy nếu không lỗi
-
     return res.status(200).json({ success: true, data: medicines });
   });
 

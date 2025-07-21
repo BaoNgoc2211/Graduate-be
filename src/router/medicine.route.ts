@@ -25,6 +25,8 @@ router.post("/", medicineController.create);
 router.put("/:id", medicineController.update);
 router.delete("/:id", medicineController.delete);
 
+
+
 router.get("/admin", medicineController.getMedicineAdmin);
 
 

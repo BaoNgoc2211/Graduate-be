@@ -13,8 +13,8 @@ class DisCategoryServices {
       throwError(404, " Disease Category name not found ");
     }
   }
-  async getAll() {
-    return disCategoryRepository.findAll();
+  async getAll(page:number, limit:number) {
+    return disCategoryRepository.findAll(page,limit);
   }
 
   async getById(id: string) {

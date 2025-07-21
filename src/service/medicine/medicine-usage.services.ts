@@ -7,8 +7,8 @@ import medUsageRepository from "../../repository/medicine/medicine-usage.reposit
 import throwError from "../../util/create-error";
 
 class MedicineUsageGroupServices {
-  async getAll() {
-    return await medUsageRepository.getAll();
+  async getAll(page:number, limit:number) {
+    return await medUsageRepository.getAll(page, limit);
   }
   async getById(id: string) {
     return await medUsageRepository.getById(id);
