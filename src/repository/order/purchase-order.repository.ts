@@ -14,48 +14,63 @@ class PurchaseOrderRepository {
     }
     
     async create(purchaseOrder: IPurchaseOrder) {
-       let totalAmount = 0;
+       let totalPrice = 0;
        const medicineDetails: IMedicineDetail[] = [];
 
         for (const medicine of purchaseOrder.medicines) {
             // Lấy thông tin batch nếu có
-            let importPrice = medicine.price;
-            if (!importPrice && medicine.batch_id) {
-                const batch = await ImportBatch.findById(medicine.batch_id);
+            let importPriceBatch = medicine.price;
+            const batch = await ImportBatch.findById(medicine.batch_id);
+            if (!importPriceBatch && medicine.batch_id) {
+               
                 if (!batch) {
                     throw new Error(`Không tìm thấy lô hàng với ID ${medicine.batch_id}`);
                 }
-                importPrice = batch.importPrice;
+                importPriceBatch = batch.importPrice;
+                
             }
+            
+            if (!batch) {
+                throw new Error(`Không tìm thấy lô hàng với ID ${medicine.batch_id}`);
+            }
+            const distributor = batch.distributor_id;
+
             const medicinePackaging = await Medicine.findById(medicine.medicine_id, 'packaging');
             if (!medicinePackaging) {
                 throw new Error(`Không tìm thấy thông tin đóng gói cho thuốc với ID ${medicine.medicine_id}`);
             }
 
-            const price = importPrice ;
+            const importPrice = importPriceBatch ;
             const packaging = medicinePackaging?.packaging
             const VAT = medicine.VAT_Rate || 0;
             const CK = medicine.CK_Rate || 0;
-            const totalPrice = price * medicine.quantity * (1 + VAT / 100 - CK / 100);
+            const price =  Math.round(importPrice * (1 + VAT / 100 - CK / 100));
+            
+            const totalAmount = Math.round(price * medicine.quantity * (1 + VAT / 100 - CK / 100));
 
-            totalAmount += totalPrice;
-
+            totalPrice += totalAmount;
+            console.log(importPrice)
+            console.log(medicine)
+            console.log(distributor)
+            console.log(medicine.distributor_id)
             medicineDetails.push({
                 medicine_id: medicine.medicine_id,
                 quantity: medicine.quantity,
-                price,
+                importPrice,
                 packaging,
                 VAT_Rate: VAT,
                 CK_Rate: CK,
-                totalPrice,
-                batch_id: medicine.batch_id
+                price,
+                totalAmount,
+                batch_id: medicine.batch_id,
+                distributor_id: distributor,
             });
            
         }
         const newOrder: IPurchaseOrder = {
             medicines: medicineDetails,
             date_in: new Date(),
-            totalAmount,
+            totalPrice,
             note: purchaseOrder.note || "",
         };
         const createdOrder = await PurchaseOrder.create(newOrder);
@@ -68,50 +83,54 @@ class PurchaseOrderRepository {
     
    async update(purchaseOrderId: string, updatedData: IPurchaseOrder) {
     
-    let totalAmount = 0;
+    let totalPrice = 0;
     const medicineDetails: IMedicineDetail[] = [];
 
     for (const medicine of updatedData.medicines) {
-        // Lấy giá nhập nếu có lô hàng
-        let importPrice = medicine.price;
-        if (!importPrice && medicine.batch_id) {
+        // Lấy thông tin batch nếu có
+        let importPriceBatch = medicine.price;
+        if (!importPriceBatch && medicine.batch_id) {
             const batch = await ImportBatch.findById(medicine.batch_id);
             if (!batch) {
                 throw new Error(`Không tìm thấy lô hàng với ID ${medicine.batch_id}`);
             }
-            importPrice = batch.importPrice;
+            importPriceBatch = batch.importPrice;
         }
         const medicinePackaging = await Medicine.findById(medicine.medicine_id, 'packaging');
         if (!medicinePackaging) {
             throw new Error(`Không tìm thấy thông tin đóng gói cho thuốc với ID ${medicine.medicine_id}`);
         }
 
-        const price = importPrice;
-        const packaging = medicinePackaging?.packaging;
+        const importPrice = importPriceBatch ;
+        const packaging = medicinePackaging?.packaging
         const VAT = medicine.VAT_Rate || 0;
         const CK = medicine.CK_Rate || 0;
+        const price =  importPrice * (1 + VAT / 100 - CK / 100);
+        
+        const totalAmount = price * medicine.quantity * (1 + VAT / 100 - CK / 100);
 
-        const totalPrice = price * medicine.quantity * (1 + VAT / 100 - CK / 100);
-        totalAmount += totalPrice;
+        totalPrice += totalAmount;
 
         medicineDetails.push({
             medicine_id: medicine.medicine_id,
             quantity: medicine.quantity,
-            price,
+            importPrice,
             packaging,
             VAT_Rate: VAT,
             CK_Rate: CK,
-            totalPrice,
-            batch_id: medicine.batch_id
+            price,
+            totalAmount,
+            batch_id: medicine.batch_id,
+            distributor_id: medicine.distributor_id,
         });
+        
     }
-
     // Cập nhật lại đơn nhập
     const updatedOrder = await PurchaseOrder.findByIdAndUpdate(
         purchaseOrderId,
         {
             medicines: medicineDetails,
-            totalAmount,
+            totalPrice,
             note: updatedData.note || "",
         },
         { new: true }

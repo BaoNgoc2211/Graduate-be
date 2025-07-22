@@ -51,7 +51,9 @@ class OrderDetailController {
     const order = await orderServices.checkOutVNPAY(String(userId!),selectItemIds,shippingId,paymentMethod,voucherCode);
     const momoResponse = await createMomoPayment({
       amount: order.finalAmount.toString(),
-      orderInfo: `Thanh toán đơn hàng #${order.orderId}`
+      orderInfo: `Thanh toán đơn hàng #${order.orderId}`,
+      // redirectUrl: `https://yourfrontend.com/checkoutSuccess?orderId=${order.orderId}`,  // <-- Quan trọng
+      // notifyUrl: `https://yourbackend.com/api/payment/momo/notify`
     });
 
     if (momoResponse?.payUrl) {

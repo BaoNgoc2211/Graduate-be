@@ -12,7 +12,7 @@ const medicineItemSchema = new Schema<IMedicineDetail>({
         type: Number,
         required: true,
     },
-    price: {
+    importPrice: {
         type: Number,
         required: true,
     },
@@ -28,7 +28,11 @@ const medicineItemSchema = new Schema<IMedicineDetail>({
         type: Number,
         default: 0,
     },
-    totalPrice: {
+    price: {
+        type: Number,
+        required: true,
+    },
+    totalAmount: {
         type: Number,
         required: true,
     },
@@ -36,14 +40,19 @@ const medicineItemSchema = new Schema<IMedicineDetail>({
         type:  mongoose.Schema.Types.ObjectId,
         ref:"ImportBatch",
     },
-});
+    distributor_id:{
+        type:  mongoose.Schema.Types.ObjectId,
+        ref:"Distributor",
+    }
+},{_id:false}
+);
 const purchaseOrder = new Schema<IPurchaseOrder>({
     medicines:[medicineItemSchema],
     
     date_in:{
         type: Date,
     },
-    totalAmount:{
+    totalPrice:{
         type: Number
     },
     note:{

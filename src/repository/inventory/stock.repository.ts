@@ -1,6 +1,8 @@
 import { IStock } from "../../interface/inventory/stock.interface";
+import ImportBatch from "../../model/inventory/import-batch.model";
 import Stock from "../../model/inventory/stock.model";
 import PurchaseOrder from "../../model/purchase-order.model";
+import { addMonths, isBefore } from 'date-fns';
 
 class StockRepository {
   async findAll(page:number, limit:number) {
@@ -34,19 +36,51 @@ class StockRepository {
   async createStocksFromPurchaseOrder(purchaseOrderId: any) {
     const order = await PurchaseOrder.findById(purchaseOrderId).lean();
     if (!order) throw new Error("Không tìm thấy đơn nhập");
+    const currentDate = new Date();
 
-    const stocks = await Promise.all(
-      order.medicines.map((med) => {
-        return new Stock({
-          medicine: med.medicine_id,
-          purchaseOrder: purchaseOrderId,
-          quantity: med.quantity,
-          packaging: med.packaging,
-          sellingPrice: med.price,
-        }).save();
-      })
-    );
-    return stocks;
+  const stocks = await Promise.all(
+    order.medicines.map(async (med) => {
+      const basePrice = med.price;
+      let sellingPrice = basePrice * 1.4; // +40% lợi nhuận
+
+      // Tìm thông tin lô nhập của thuốc (giả định có trường importBatch)
+      const importBatch = await ImportBatch.findOne({
+        medicine: med.medicine_id,
+        packaging: med.packaging,
+      }).lean();
+
+      if (importBatch && importBatch.expiryDate) {
+        const expiryDate = new Date(importBatch.expiryDate);
+        const thresholdDate = addMonths(currentDate, 3); // 3 tháng tới
+
+        // Nếu thuốc sắp hết hạn thì giảm giá 20%
+        if (isBefore(expiryDate, thresholdDate)) {
+          sellingPrice *= 0.8;
+        }
+      }
+
+      return new Stock({
+        medicine: med.medicine_id,
+        purchaseOrder: purchaseOrderId,
+        quantity: med.quantity,
+        packaging: med.packaging,
+        sellingPrice: Math.round(sellingPrice), // làm tròn nếu cần
+      }).save();
+    })
+  );
+
+    // const stocks = await Promise.all(
+    //   order.medicines.map((med) => {
+    //     return new Stock({
+    //       medicine: med.medicine_id,
+    //       purchaseOrder: purchaseOrderId,
+    //       quantity: med.quantity,
+    //       packaging: med.packaging,
+    //       sellingPrice: med.price,
+    //     }).save();
+    //   })
+    // );
+    // return stocks;
   }
 
   async updateStocksFromPurchaseOrder(purchaseOrderId: any) {
