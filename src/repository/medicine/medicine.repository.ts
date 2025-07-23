@@ -16,12 +16,10 @@ class medicineRepository {
     .skip(skip)
     .limit(limit)
     .sort({ createdAt: -1 })
+    .select("_id code name thumbnail dosageForm ")
     .populate({
       path: "stock_id",
       select: "sellingPrice quantity", 
-    }).populate({
-      path: "manufacturer_id",
-      select: "nameCo country", 
     });
     return {
       currentPage: page,

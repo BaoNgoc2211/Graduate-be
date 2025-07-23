@@ -20,14 +20,16 @@ router.get("/",medicineController.getMedicineUser)
 router.get("/search", medicineController.searchMed);
 router.get("/filter", medicineController.filterMedicine);
 router.get("/createdAdd", medicineController.getCreateAdd);
-router.get("/:id", medicineController.getById);
+router.get("/admin", medicineController.getMedicineAdmin);
 router.post("/", medicineController.create);
+router.get("/:id", medicineController.getById);
+
 router.put("/:id", medicineController.update);
 router.delete("/:id", medicineController.delete);
 
 
 
-router.get("/admin", medicineController.getMedicineAdmin);
+
 
 
 
