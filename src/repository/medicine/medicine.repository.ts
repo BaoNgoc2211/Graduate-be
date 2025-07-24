@@ -20,6 +20,10 @@ class medicineRepository {
     .populate({
       path: "stock_id",
       select: "sellingPrice quantity", 
+    })
+    .populate({
+      path: "manufacturer_id",
+      select: "nameCo", 
     });
     return {
       currentPage: page,
