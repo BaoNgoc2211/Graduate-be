@@ -34,13 +34,13 @@ router.delete("orderdetail/:id", orderDetailController.delete);
 // router.post("/", orderController.create);
 
 //lấy tất cả đơn hàng của admin
-router.get("/", orderController.getAllOrder);
+router.get("/admin", orderController.getAllOrder);
 //lấy tất cả đơn hàng theo trạng thái admin
-router.get("/status/:status/", orderController.checkOrderStatus);
+router.get("/admin/status/:status/", orderController.checkOrderStatus);
 //lấy đơn hàng theo id này chỉ là đơn hàng thôi trg đơn hàng có chi tiết đơn hàng
-router.get("/:id", orderController.getById);
+router.get("/admin/:id", orderController.getById);
 //chỉnh sửa trạng thái admin
-router.put("/updatestatus/:id",orderController.updateStatus);
+router.put("/admin/updatestatus/:id",orderController.updateStatus);
 //xem lại sản phẩm đã chọn thanh toán
 router.post("/review/", protect, orderController.reviewOrder);
 //thanh toán đơn hàng

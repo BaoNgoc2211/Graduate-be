@@ -91,7 +91,6 @@ class OrderDetailController {
   });
 
   checkStatusAll = asyncError(async (req: Request, res: Response) => {
-    console.log("User ID:", req.user);
     const userId = req.user;
     const result = await orderServices.checkStatusAllOrder(String(userId!));
     returnRes(res, 200, "Get Status Order", result!);

@@ -49,10 +49,6 @@ class PurchaseOrderRepository {
             const totalAmount = Math.round(price * medicine.quantity * (1 + VAT / 100 - CK / 100));
 
             totalPrice += totalAmount;
-            console.log(importPrice)
-            console.log(medicine)
-            console.log(distributor)
-            console.log(medicine.distributor_id)
             medicineDetails.push({
                 medicine_id: medicine.medicine_id,
                 quantity: medicine.quantity,
