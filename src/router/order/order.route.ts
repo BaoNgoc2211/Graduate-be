@@ -15,6 +15,12 @@ router.get("/status/",protect, orderController.checkStatusAll);
 router.get("/status/:status/",protect, orderController.checkStatusUser);
 //chỉnh sửa trạng thái
 // router.put("/update/",orderController.updateStatus);
+router.post("/review/", protect, orderController.reviewOrder);
+//thanh toán đơn hàng
+router.post("/review/checkout/",protect, orderController.checkOut);
+//thanh toán đơn hàng htnafh cong
+router.get("/checkout/success",handlePaymentResponse );
+
 
 
 //orderdetail
@@ -42,11 +48,6 @@ router.get("/admin/:id", orderController.getById);
 //chỉnh sửa trạng thái admin
 router.put("/admin/updatestatus/:id",orderController.updateStatus);
 //xem lại sản phẩm đã chọn thanh toán
-router.post("/review/", protect, orderController.reviewOrder);
-//thanh toán đơn hàng
-router.post("/review/checkout/",protect, orderController.checkOut);
-//thanh toán đơn hàng htnafh cong
-router.get("/checkout/success",handlePaymentResponse );
 
 
 router.delete("/:id", orderController.delete);
