@@ -14,7 +14,8 @@ export interface IOrderItem {
 
 export interface IOrderDetail {
   order_items: IOrderItem[];
-  totalOrder: number; // Tổng giá trị đơn hàng
+  totalOrder: number;
+   // Tổng giá trị đơn hàng
    // Ghi chú cho đơn hàng
   // Có thể thêm các trường khác như user_id, orderId, ... nếu cần
   _id?: mongoose.Types.ObjectId;

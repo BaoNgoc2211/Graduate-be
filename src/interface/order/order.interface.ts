@@ -16,7 +16,7 @@ export interface IOrder {
   finalAmount: number;
   paymentMethod: PaymentMethodEnum;
   paymentStatus: PaymentStatusEnum;
-  orderDetail: IOrderDetail[];
+  orderDetail: IOrderDetail;
 }
 export interface IInfo {
   address: string;

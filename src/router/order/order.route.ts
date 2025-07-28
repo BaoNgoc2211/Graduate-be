@@ -25,7 +25,7 @@ router.get("/checkout/success",handlePaymentResponse );
 
 //orderdetail
 //này k cần thiết vì khi đặt hàng thành công sẽ tạo ra chi tiết đơn hàng rồi
-router.post("/orderdetail/", orderDetailController.create);
+// router.post("/orderdetail/", orderDetailController.create);
 //lấy tất cả chi tiết đơn hàng
 router.get("/orderdetail/", orderDetailController.getAll);
 //xem chi tiết đơn hàng

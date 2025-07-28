@@ -20,26 +20,26 @@ class OrderDetailRepository {
 
   async findById(id: string) {
     const order = await Order.findById(id)
-      .populate({
-        path: "user_Id",
-        model: "User",
-        select: "name ",
-      })
-      .populate({
-        path: "orderDetail",
-        populate: [
-          {
-            path: "medicine.code",
-            model: "Medicine",
-            select: "code name thumbnail",
-          },
-          {
-            path: "medicine.price",
-            model: "ImportBatch",
-            select: "sellingPrice medicine_id",
-          },
-        ],
-      });
+      // .populate({
+      //   path: "user_Id",
+      //   model: "User",
+      //   select: "name ",
+      // })
+      // .populate({
+      //   path: "orderDetail",
+      //   populate: [
+      //     {
+      //       path: "medicine.code",
+      //       model: "Medicine",
+      //       select: "code name thumbnail",
+      //     },
+      //     {
+      //       path: "medicine.price",
+      //       model: "ImportBatch",
+      //       select: "sellingPrice medicine_id",
+      //     },
+      //   ],
+      // });
     return order;
   }
 
@@ -361,26 +361,26 @@ async checkOutSuccess(orderId: string) {
     throw new Error("Không tìm thấy đơn hàng");
   }
 
-   const orderDetails = order.orderDetail as any[];
+   const orderDetails = order.orderDetail;
 
-  for (const detail of orderDetails) {
-    for (const item of detail.order_items) {
-      const stock = await Stock.findById(item.stock_id);
-      if (!stock) {
-        throw new Error(`Không tìm thấy tồn kho cho thuốc ${item.name}`);
-      }
-      stock.quantity -= item.quantity;
-      await stock.save();
+
+  for (const item of orderDetails.order_items) {
+    const stock = await Stock.findById(item.stock_id);
+    if (!stock) {
+      throw new Error(`Không tìm thấy tồn kho cho thuốc ${item.name}`);
     }
+    stock.quantity -= item.quantity;
+    await stock.save();
   }
+
 
   const cart = await Cart.findOne({ user_id: order.user_id }).populate("medicine_item.medicine_id");
 
   if (cart) {
-    for (const detail of orderDetails) {
+    for (const item of orderDetails.order_items) {
       cart.medicine_item = cart.medicine_item.filter(
         (item: any) =>
-          !detail.order_items.find(
+          !item.order_items.find(
             (oi: any) => oi.medicine_id.toString() === item.medicine_id._id.toString()
           )
       );

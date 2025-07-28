@@ -46,13 +46,11 @@ const orderSchema = new Schema<IOrder>(
       type: String,
       enum: Object.values(PaymentStatus),
     },
-    orderDetail: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "OrderDetail",
-        required: true,
-      },
-    ],
+    orderDetail:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "OrderDetail",
+      required: true,
+    },
   },
   {
     collection: "Order",
