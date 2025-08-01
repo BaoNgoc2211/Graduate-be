@@ -33,12 +33,12 @@ class StockRepository {
     //     quantity: purchaseOrder.medic,
     return await Stock.create(data);
   }
-  async createStocksFromPurchaseOrder(purchaseOrderId: any) {
+  async createStocksFromPurchaseOrder(purchaseOrderId: IStock) {
     const order = await PurchaseOrder.findById(purchaseOrderId).lean();
     if (!order) throw new Error("Không tìm thấy đơn nhập");
     const currentDate = new Date();
 
-  const stocks = await Promise.all(
+    await Promise.all(
     order.medicines.map(async (med) => {
       const basePrice = med.price;
       let sellingPrice = basePrice * 1.4; // +40% lợi nhuận
@@ -68,22 +68,9 @@ class StockRepository {
       }).save();
     })
   );
-
-    // const stocks = await Promise.all(
-    //   order.medicines.map((med) => {
-    //     return new Stock({
-    //       medicine: med.medicine_id,
-    //       purchaseOrder: purchaseOrderId,
-    //       quantity: med.quantity,
-    //       packaging: med.packaging,
-    //       sellingPrice: med.price,
-    //     }).save();
-    //   })
-    // );
-    // return stocks;
   }
 
-  async updateStocksFromPurchaseOrder(purchaseOrderId: any) {
+  async updateStocksFromPurchaseOrder(purchaseOrderId: string) {
     const order = await PurchaseOrder.findById(purchaseOrderId).lean();
     if (!order) throw new Error("Không tìm thấy đơn nhập");
     for (const med of order.medicines) {

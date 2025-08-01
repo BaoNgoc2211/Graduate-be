@@ -18,7 +18,7 @@ class VoucherServices {
       `[VoucherService] ${result.modifiedCount} vouchers expired and deactivated.`
     );
   }
-  async updateVoucher(id:string, voucher:any){
+  async updateVoucher(id:string, voucher:IVoucher){
     return await voucherRepository.edit(id,voucher);
   }
   async deleteVoucher(id:string){

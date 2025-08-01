@@ -1,6 +1,5 @@
 import mongoose, { Schema } from "mongoose";
 import { IImportBatch } from "../../interface/inventory/import-batch.interface";
-import { ImportBatchStatus } from "../../enum/medicine/import-batch.enum";
 
 const ImportBatchSchema = new Schema<IImportBatch>(
   {

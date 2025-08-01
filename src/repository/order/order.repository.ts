@@ -1,5 +1,4 @@
 import Order from "../../model/order/order.model";
-import { IOrder } from "../../interface/order/order.interface";
 import OrderDetail from "../../model/order/order.detail.model";
 import User from "../../model/auth/user.model";
 import Stock from "../../model/inventory/stock.model";
@@ -7,39 +6,33 @@ import Cart from "../../model/order/cart.model";
 import { OrderStatus } from "../../enum/order-status.enum";
 import Shipping from "../../model/shipping.model";
 import { IOrderItem } from "../../interface/order/order-detail.interface";
-import { stat } from "fs";
 import { PaymentStatus } from "../../enum/order/order.enum";
 import Voucher from "../../model/voucher.model";
+import { ICartItem } from "../../interface/order/cart.interface";
+import { IMedicine } from "../../interface/medicine/medicine.interface";
 
 class OrderDetailRepository {
-  async findAll() {
-    return await Order.find()
-      // .populate("id status finalAmount")
+  async findAll(page: number, limit: number) {
+    const skip = (page - 1) * limit;
+    const totalItems = await Order.countDocuments();
+    const items = await Order.find()
+    .skip(skip)
+    .limit(limit)
+    .sort({createdAt: -1})
+    return {
+      currentPage: page,
+      totalPages: Math.ceil(totalItems / limit),
+      totalItems,
+      limit,
+      data: items,
+    }
+
         
   }
 
   async findById(id: string) {
     const order = await Order.findById(id)
-      // .populate({
-      //   path: "user_Id",
-      //   model: "User",
-      //   select: "name ",
-      // })
-      // .populate({
-      //   path: "orderDetail",
-      //   populate: [
-      //     {
-      //       path: "medicine.code",
-      //       model: "Medicine",
-      //       select: "code name thumbnail",
-      //     },
-      //     {
-      //       path: "medicine.price",
-      //       model: "ImportBatch",
-      //       select: "sellingPrice medicine_id",
-      //     },
-      //   ],
-      // });
+      
     return order;
   }
 
@@ -49,8 +42,8 @@ class OrderDetailRepository {
       throw new Error("Giỏ hàng trống hoặc không tìm thấy");
     }
 
-    const selectedItems = cart.medicine_item.filter((item: any) =>
-      item?.medicine_id?._id && selectItemIds.includes(item.medicine_id._id.toString())
+    const selectedItems = cart.medicine_item.filter((item: ICartItem) =>
+      item?.medicine_id?.id && selectItemIds.includes(item.medicine_id.id.toString())
     );
     if (selectedItems.length === 0) {
       throw new Error("Không có sản phẩm nào được chọn để đặt hàng");
@@ -65,7 +58,7 @@ class OrderDetailRepository {
     let totalAmount = 0;
 
     for (const item of selectedItems) {
-      const medicine = item.medicine_id as any;
+      const medicine = item.medicine_id as IMedicine ;
       const stock = await Stock.findById(medicine.stock_id);
       if (!stock) {
         throw new Error(`Không tìm thấy tồn kho cho thuốc ${medicine.name}`);
@@ -82,7 +75,7 @@ class OrderDetailRepository {
       totalAmount += totalForItem;
 
       orderItems.push({
-        medicine_id: medicine._id,
+        medicine_id: medicine.id ,
         stock_id: medicine.stock_id,
         thumbnail: medicine.thumbnail,
         name: medicine.name,
@@ -148,8 +141,8 @@ async checkOutCOD(userId: string, selectItemIds: string[],shippingId: string,pay
       throw new Error("Giỏ hàng trống hoặc không tìm thấy");
     }
     
-    const selectedItems = cart.medicine_item.filter((item: any) =>
-      item?.medicine_id?._id && selectItemIds.includes(item.medicine_id._id.toString())
+    const selectedItems = cart.medicine_item.filter((item: ICartItem) =>
+      item?.medicine_id?.id && selectItemIds.includes(item.medicine_id.id.toString())
     );
     if (selectedItems.length === 0) {
       throw new Error("Không có sản phẩm nào được chọn để đặt hàng");
@@ -164,7 +157,7 @@ async checkOutCOD(userId: string, selectItemIds: string[],shippingId: string,pay
     let totalAmount = 0;
 
     for (const item of selectedItems) {
-      const medicine = item.medicine_id as any;
+      const medicine = item.medicine_id as IMedicine;
       const stockId = medicine.stock_id;
 
       const stock = await Stock.findById(stockId);
@@ -186,7 +179,7 @@ async checkOutCOD(userId: string, selectItemIds: string[],shippingId: string,pay
       totalAmount += totalForItem;
 
       orderItems.push({
-        medicine_id: medicine._id,
+        medicine_id: medicine.id,
         stock_id: stockId,
         thumbnail: medicine.thumbnail,
         name: medicine.name,
@@ -241,17 +234,14 @@ async checkOutCOD(userId: string, selectItemIds: string[],shippingId: string,pay
     }).save();
 
     cart.medicine_item = cart.medicine_item.filter(
-      (item: any) => !selectItemIds.includes(item?.medicine_id?._id?.toString())
+      (item: ICartItem) => !selectItemIds.includes(item?.medicine_id?.id?.toString())
     );
-    cart.quantity = cart.medicine_item.reduce((sum: number, item: any) => sum + item.quantity, 0);
+    cart.quantity = cart.medicine_item.reduce((sum: number, item: ICartItem) => sum + item.quantity, 0);
     // await cart.save();
     return {
       order
     }
-    // return {
-    //   message: "Đặt hàng thành công",
-    //   order,
-    // };
+
   }
   
   async checkOutMOMO(userId: string, selectItemIds: string[], shippingId: string, paymentMethod: string,voucherCode:string) {
@@ -260,8 +250,8 @@ async checkOutCOD(userId: string, selectItemIds: string[],shippingId: string,pay
       throw new Error("Giỏ hàng trống hoặc không tìm thấy");
     }
 
-    const selectedItems = cart.medicine_item.filter((item: any) =>
-      item?.medicine_id?._id && selectItemIds.includes(item.medicine_id._id.toString())
+    const selectedItems = cart.medicine_item.filter((item: ICartItem) =>
+      item?.medicine_id?.id && selectItemIds.includes(item.medicine_id.id.toString())
     );
     if (selectedItems.length === 0) {
       throw new Error("Không có sản phẩm nào được chọn để đặt hàng");
@@ -276,7 +266,7 @@ async checkOutCOD(userId: string, selectItemIds: string[],shippingId: string,pay
     let totalAmount = 0;
 
     for (const item of selectedItems) {
-      const medicine = item.medicine_id as any;
+      const medicine = item.medicine_id as IMedicine;
       const stock = await Stock.findById(medicine.stock_id);
       if (!stock) {
         throw new Error(`Không tìm thấy tồn kho cho thuốc ${medicine.name}`);
@@ -293,7 +283,7 @@ async checkOutCOD(userId: string, selectItemIds: string[],shippingId: string,pay
       totalAmount += totalForItem;
 
       orderItems.push({
-        medicine_id: medicine._id,
+        medicine_id: medicine.id,
         stock_id: medicine.stock_id,
         thumbnail: medicine.thumbnail,
         name: medicine.name,
@@ -415,8 +405,8 @@ async checkOutSuccess(orderId: string) {
       throw new Error("Không tìm thấy thông tin vận chuyển");
     }
 
-    const selectedItems = cart.medicine_item.filter((item: any) =>
-      item?.medicine_id?._id && selectItemIds.includes(item.medicine_id._id.toString())
+    const selectedItems = cart.medicine_item.filter((item: ICartItem) =>
+      item?.medicine_id?.id && selectItemIds.includes(item.medicine_id.id.toString())
     );
 
     if (selectedItems.length === 0) {
@@ -426,7 +416,7 @@ async checkOutSuccess(orderId: string) {
     const orderItemsReview = [];
     let totalAmount = 0;  
     for (const item of selectedItems) {
-      const medicine = item.medicine_id as any;
+      const medicine = item.medicine_id as IMedicine;
       const stockId = medicine.stock_id;
 
       const stock = await Stock.findById(stockId);
@@ -445,7 +435,7 @@ async checkOutSuccess(orderId: string) {
       totalAmount += totalForItem;
 
       orderItemsReview.push({
-        medicine_id: medicine._id,
+        medicine_id: medicine.id,
         stock_id: stockId,
         thumbnail: medicine.thumbnail,
         name: medicine.name,

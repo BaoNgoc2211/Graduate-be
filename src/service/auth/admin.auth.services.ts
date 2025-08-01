@@ -1,7 +1,7 @@
 import Admin from "../../model/auth/admin.model";
 import { EmailService } from "../auth/email.services";
 import throwError from "../../util/create-error";
-import authRepository from "../../repository/auth.repository";
+
 import { IAdmin } from "../../interface/auth/admin.interface";
 import bcrypt from "../../util/bcrypt";
 
@@ -15,6 +15,8 @@ class AdminAuthServices {
     .skip(skip)
     .limit(limit)
     .sort({createdAt: -1})
+    .select("email")
+    .select("info.name");
     return {
       currentPage: page,
       totalPages: Math.ceil(totalItems / limit),

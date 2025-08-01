@@ -66,7 +66,7 @@ class AuthController {
   forgotPassword = asyncError(async (req: Request, res: Response) => {
     const { email } = req.body;
     const data = await authServices.forgotPassword(email);
-    returnRes(res, 200, `OTP sent to ${email}`);
+    returnRes(res, 200, `OTP sent to ${data}`);
   });
 
   resetPassword = asyncError(async (req: Request, res: Response) => {

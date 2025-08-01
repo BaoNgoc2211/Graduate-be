@@ -38,5 +38,9 @@ class ChatController {
     const data = await chatServices.getUnassignedRooms();
     returnRes(res, 200, "Unassigned rooms fetched", data);
   });
+  getAllRooms = asyncError(async (req: IAdminRequest, res: Response) => {
+    const data = await chatServices.getAllRooms();
+    returnRes(res, 200, "All rooms fetched", data);
+  });
 }
 export default new ChatController();

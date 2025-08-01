@@ -1,6 +1,5 @@
 import express from "express";
 import controller from "../../controller/disease/disease-category.controller";
-import { protect } from "../../middleware/auth.middleware";
 const router = express.Router();
 router.get("/getAll", controller.getAll);
 router.get("/:id", controller.getById);

@@ -1,4 +1,4 @@
-import e from "cors";
+
 import Tesseract from "tesseract.js";
 
 class PrescriptionService {

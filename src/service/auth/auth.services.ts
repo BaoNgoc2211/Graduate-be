@@ -4,7 +4,7 @@ import throwError from "../../util/create-error";
 import authRepository from "../../repository/auth.repository";
 import { IUser } from "../../interface/auth/user.interface";
 import bcrypt from "../../util/bcrypt";
-import { use } from "passport";
+
 
 class AuthServices {
 
@@ -16,7 +16,8 @@ class AuthServices {
     .skip(skip)
     .limit(limit)
     .sort({createdAt:-1})
-    .select("name email");
+    .select("email")
+    .select("info.name");
     return {
       currentPage: page,
       totalPages: Math.ceil(totalItems / limit),
@@ -60,7 +61,6 @@ class AuthServices {
   // };
 
   getProfile = async (userId: string) => {
-    
     return await User.findById(userId).select("info")  ;
   };
 
@@ -82,8 +82,6 @@ class AuthServices {
       data.password,
       checkUser?.password!
     );
-    console.log(checkUser)
-    console.log(checkPassword)
     if (!checkPassword) {
       throwError(400, "Email hoặc mật khẩu không đúng");
     }

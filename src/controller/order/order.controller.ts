@@ -2,7 +2,6 @@ import asyncError from "../../middleware/error.middleware";
 import { returnRes } from "../../util/response";
 import { Request, Response } from "express";
 import orderServices from "../../service/order/order.services";
-import shippingController from "../shipping.controller";
 import { generatePaymentUrl } from "../../service/vnpay.services";
 import { createMomoPayment } from "../../service/momo.services";
 
@@ -42,7 +41,7 @@ class OrderDetailController {
     const fakeRes = {
       json: ({ paymentUrl }: any) => res.json({ success: true, paymentUrl }),
       status: (code: number) => ({
-        json: (data: any) => res.status(code).json(data),
+        json: (data: string) => res.status(code).json(data),
       }),
     } as Response;  
 

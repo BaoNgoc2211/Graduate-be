@@ -3,7 +3,6 @@ import moment from "moment";
 import mongoose from "mongoose";
 import { Request, Response } from "express";
 import Order from "../model/order/order.model";
-import { OrderStatus } from "../enum/order-status.enum";
 import orderServices from "./order/order.services";
 
   // dotenv.config();
@@ -70,12 +69,12 @@ import orderServices from "./order/order.services";
     res.json({ success: true, paymentUrl });
   };
 
-  function sortParams(obj: Record<string, any>): Record<string, string | number> {
+  function sortParams(obj: Record<string, string | number | null | undefined>): Record<string, string | number> {
     return Object.entries(obj)
-      .filter(([_, value]) => value !== "" && value !== undefined && value !== null)
+      .filter(([, value]) => value !== "" && value !== undefined && value !== null)
       .sort(([key1], [key2]) => key1.localeCompare(key2))
       .reduce<Record<string, string | number>>((acc, [key, value]) => {
-        acc[key] = value;
+        acc[key] = value as string | number;
         return acc;
       }, {});
   }

@@ -48,17 +48,17 @@ class MedicineController {
     returnRes(res, 200, "Deleted Medicine", deleted!);
   });
 
-  filterMedicine = asyncError(async (req: Request, res: Response) => {
-    const { name, categoryId, indications } = req.query;
+  // filterMedicine = asyncError(async (req: Request, res: Response) => {
+  //   const { name, categoryId, indications } = req.query;
 
-    const medicines = await medicineServices.searchMedicince({
-      name: name as string,
-      categoryId: categoryId as string,
-      indications: indications as string,
-    });
+  //   const medicines = await medicineServices.searchMedicince({
+  //     name: name as string,
+  //     categoryId: categoryId as string,
+  //     indications: indications as string,
+  //   });
 
-    return res.status(200).json({ success: true, data: medicines });
-  });
+  //   return res.status(200).json({ success: true, data: medicines });
+  // });
 
   searchMed = asyncError(async (req: Request, res: Response) => {
     try {

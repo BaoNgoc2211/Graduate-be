@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { ICart, ICartItem } from "../../interface/order/cart.interface";
+import {  ICartItem } from "../../interface/order/cart.interface";
 import User from "../../model/auth/user.model";
 import Medicine from "../../model/medicine/medicine.model";
 import Cart from "../../model/order/cart.model";
@@ -82,7 +82,7 @@ class CartServices {
   
   //#region update
   async update(userId: string, medicine_id: string, quantity: number) {
-    let cart = await Cart.findOne({ user_id: userId });
+    const cart = await Cart.findOne({ user_id: userId });
     if (!cart) throwError(404, "Giỏ hàng không tồn tại");
 
     const item = cart?.medicine_item.find(
@@ -103,7 +103,7 @@ class CartServices {
   //#endregion
   //#region remove
   async removeItem(userId: string, medicine_id: string) {
-    let cart = await Cart.findOne({ user_id: userId });
+    const cart = await Cart.findOne({ user_id: userId });
 
     if (!cart || !cart.medicine_item) {
       throwError(404, "Giỏ hàng không tồn tại hoặc không có sản phẩm");

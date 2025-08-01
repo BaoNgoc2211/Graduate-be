@@ -1,3 +1,4 @@
+import { IShipping } from "../interface/shipping.interface";
 import shippingRepository from "../repository/shipping.repository";
 
 class ShippingService {
@@ -10,11 +11,11 @@ class ShippingService {
         // Logic to get a shipping method by ID
         return await shippingRepository.getById(id);
     }
-    async createShippingMethod(shippingData: any) {
+    async createShippingMethod(shippingData: IShipping) {
         // Logic to create a new shipping method
         return await shippingRepository.create(shippingData);
     }
-    async updateShippingMethod(id: string, shippingData: any) {
+    async updateShippingMethod(id: string, shippingData: IShipping) {
         // Logic to update a shipping method
         return await shippingRepository.update(id, shippingData);
     }

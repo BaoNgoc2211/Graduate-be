@@ -1,6 +1,4 @@
-import { IDiseaseUsageGroup } from "../../interface/disease/disease-usage.interface";
 import { IMedicineUsageGroup } from "../../interface/medicine/medicine-usage.interface";
-import disUsageRepository from "../../repository/disease/disease-usage.repository ";
 import medUsageRepository from "../../repository/medicine/medicine-usage.repository";
 // import disUsageRepository from "../../repository/disease-usage.repository ";
 // import disUsageRepository from "../../repository/disease-usage.repository";

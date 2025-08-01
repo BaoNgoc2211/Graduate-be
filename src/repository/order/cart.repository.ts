@@ -1,29 +1,16 @@
-import { populate } from "dotenv";
 import { ICart } from "../../interface/order/cart.interface";
 import Cart from "../../model/order/cart.model";
-import User from "../../model/auth/user.model";
 
 class CartRepository {
-  // async getCartFromCache(userId: string) {
-  //   // const redisCart = await redis.get(`cart:${userId}`);
-  //   return redisCart ? JSON.parse(redisCart) : null;
-  // }
-  // async setCartToCache(userId: string, cart: any) {
-  //   if (cart && cart.items.length > 0) {
-  //     await redis.set(`cart:${userId}`, JSON.stringify(cart), "EX", 3600);
-  //   } else {
-  //     await redis.del(`cart:${userId}`);
-  //   }
-  // }
   async getCartFromDB(userId: string) {
     return await Cart.findOne({ user_id: userId }).populate(
       "medicine_item.medicine_id"
     );
   }
-  async saveCartToDB(userId: string, cart: any) {
+  async saveCartToDB(userId: string, cart: ICart) {
     return await Cart.findOneAndUpdate(
       { userId },
-      { $set: { items: cart.items } },
+      { $set: { items: cart.medicine_item } },
       { upsert: true, new: true }
     );
   }
@@ -47,22 +34,5 @@ class CartRepository {
         }
     });
   }
- 
-  // async remove(userId: string, medicineId: string) {
-  //   let cart = await this.getCartFromCache(userId);
-  //   if (!cart) {
-  //     cart = await this.getCartFromDB(userId);
-  //   }
-  //   if (!cart) return null;
-
-  //   cart.items = cart.items.filter(
-  //     (item: any) => String(item.productId) !== String(medicineId)
-  //   );
-
-  //   await this.saveCartToDB(userId, cart);
-  //   // await this.setCartToCache(userId, cart);
-
-  //   return cart;
-  // }
 }
 export default new CartRepository();

@@ -1,6 +1,7 @@
 import * as https from 'https';
 import * as crypto from 'crypto';
 import * as dotenv from 'dotenv';
+import { MomoPaymentResponse } from '../interface/momo.interface';
 
 dotenv.config();
 
@@ -9,7 +10,7 @@ interface MomoPaymentRequest {
     orderInfo: string;
 }
 
-export const createMomoPayment = async ({ amount, orderInfo }: MomoPaymentRequest): Promise<any> => {
+export const createMomoPayment = async ({ amount, orderInfo }: MomoPaymentRequest): Promise<MomoPaymentResponse> => {
     const partnerCode = process.env.MOMO_PARTNER_CODE || "";
     const accessKey = process.env.MOMO_ACCESS_KEY || "";
     const secretKey = process.env.MOMO_SECRET_KEY || "";

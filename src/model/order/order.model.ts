@@ -1,11 +1,7 @@
-import { IOrderDetail } from "./../../interface/order/order-detail.interface";
-import { InfoSchema } from "./info.model";
 import { PaymentMethod, PaymentStatus } from "./../../enum/order/order.enum";
 import mongoose, { Schema } from "mongoose";
-import { monitorEventLoopDelay } from "perf_hooks";
-import { IInfo, IOrder } from "../../interface/order/order.interface";
+import { IOrder } from "../../interface/order/order.interface";
 import { OrderStatus } from "../../enum/order-status.enum";
-import { ref } from "process";
 
 const orderSchema = new Schema<IOrder>(
   {

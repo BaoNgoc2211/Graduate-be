@@ -2,32 +2,31 @@ import mongoose, { Schema } from "mongoose";
 import { DetailedDosageEnum } from "../../enum/medicine/medicine.enum";
 import {
   IMedicine,
-  IReview,
 } from "../../interface/medicine/medicine.interface";
-const reviewSchema = new Schema<IReview>(
-  {
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-    rating: {
-      type: Number,
-      required: true,
-      min: 1,
-      max: 5,
-    },
-    comment: {
-      type: String,
-    },
-    medicine_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Medicine",
-      required: true,
-    },
-  },
-  { collection: "Review", timestamps: true }
-);
+// const reviewSchema = new Schema<IReview>(
+//   {
+//     user: {
+//       type: mongoose.Schema.Types.ObjectId,
+//       ref: "User",
+//       required: true,
+//     },
+//     rating: {
+//       type: Number,
+//       required: true,
+//       min: 1,
+//       max: 5,
+//     },
+//     comment: {
+//       type: String,
+//     },
+//     medicine_id: {
+//       type: mongoose.Schema.Types.ObjectId,
+//       ref: "Medicine",
+//       required: true,
+//     },
+//   },
+//   { collection: "Review", timestamps: true }
+// );
 
 const medicineSchema = new Schema<IMedicine>(
   {

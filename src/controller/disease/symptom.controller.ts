@@ -1,4 +1,3 @@
-import { ISymptom } from "./../../interface/disease/symptom.interface";
 import asyncError from "../../middleware/error.middleware";
 import { Response, Request } from "express";
 import { returnRes } from "../../util/response";

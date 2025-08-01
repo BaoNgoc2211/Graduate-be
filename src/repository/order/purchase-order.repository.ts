@@ -71,7 +71,7 @@ class PurchaseOrderRepository {
         };
         const createdOrder = await PurchaseOrder.create(newOrder);
 
-        await stockRepository.createStocksFromPurchaseOrder(createdOrder._id);
+        await stockRepository.createStocksFromPurchaseOrder(createdOrder.id);
   
 
         return createdOrder;
@@ -159,7 +159,6 @@ class PurchaseOrderRepository {
         deletedStocks: relatedStocks.map((s) => ({
             medicine_id: s.medicine,
             quantity: s.quantity,
-            // packaging: s.packaging,
             sellingPrice: s.sellingPrice
         })),
         totalQuantityDeleted,

@@ -1,4 +1,4 @@
-import { IDiseaseCategory } from "../../interface/disease/disease-category.interface";
+
 import DisCategory from "../../model/disease/disease-category.model";
 import mongoose from "mongoose";
 import Symptom from "../../model/disease/symptom.interface";

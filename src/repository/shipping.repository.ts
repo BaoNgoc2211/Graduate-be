@@ -1,3 +1,4 @@
+import { IShipping } from "../interface/shipping.interface";
 import Shipping from "../model/shipping.model";
 class ShippingRepository {
   async getAll() {
@@ -8,12 +9,12 @@ class ShippingRepository {
     return Shipping.findById(id);
   }
 
-  async create(shippingData: any) {
+  async create(shippingData: IShipping) {
     const shipping = new Shipping(shippingData);
     return shipping.save();
   }
 
-  async update(id: string, shippingData: any) {
+  async update(id: string, shippingData: IShipping) {
     return Shipping.findByIdAndUpdate(id, shippingData, { new: true });
   }
 

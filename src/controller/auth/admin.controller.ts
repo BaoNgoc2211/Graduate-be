@@ -3,7 +3,6 @@ import asyncError from "../../middleware/error.middleware";
 import { returnRes } from "../../util/response";
 import jwtServices from "../../service/auth/jwt.services";
 import adminAuthServices from "../../service/auth/admin.auth.services";
-import { IAdmin } from "../../interface/auth/admin.interface";
 import { IAdminRequest } from "../../types/express";
 
 class AdminAuthController {

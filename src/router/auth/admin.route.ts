@@ -1,8 +1,7 @@
 import adminController from "../../controller/auth/admin.controller";
 import express from "express";
-import { adminProtect,requireAdminRole } from "../../middleware/admin.middleware";
-import authController from "../../controller/auth/auth.controller";
-import orderController from "../../controller/order/order.controller";
+import { adminProtect } from "../../middleware/admin.middleware";
+
 
 
 const router = express.Router();
@@ -11,7 +10,7 @@ router.post("/sign-up", adminController.signUp);
 router.post("/sign-in", adminController.signin);
 // router.post("/", controller.signUp);
 router.post("/verify-otp", adminController.verifyEmail);
-
+router.get("/getalladmin", adminController.findAll);
 
 
 router.post("/logout", adminProtect,adminController.logout);

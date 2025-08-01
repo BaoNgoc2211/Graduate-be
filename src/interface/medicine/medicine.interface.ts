@@ -7,6 +7,7 @@ export interface IReview {
   medicine_id: mongoose.Types.ObjectId;
 }
 export interface IMedicine {
+  id: mongoose.Types.ObjectId;
   code: string;
   name: string;
   thumbnail: string;

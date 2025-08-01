@@ -1,4 +1,4 @@
-import { NameEnum } from "./../../enum/medicine/medicine-category.enum";
+
 import mongoose, { Schema } from "mongoose";
 import { IMedicineCategory } from "../../interface/medicine/medicine-category.interface";
 

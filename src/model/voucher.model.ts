@@ -1,4 +1,4 @@
-import { applyToEnum, disCountTypeEnum } from "./../enum/voucher.enum";
+import { disCountTypeEnum } from "./../enum/voucher.enum";
 
 import mongoose, { Schema } from "mongoose";
 import { IVoucher } from "../interface/voucher.interface";

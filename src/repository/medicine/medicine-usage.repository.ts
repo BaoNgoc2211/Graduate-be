@@ -1,8 +1,7 @@
 import mongoose from "mongoose";
 import { IMedicineUsageGroup } from "../../interface/medicine/medicine-usage.interface";
 import MedicineUsageGroup from "../../model/medicine/medicine-usage.model";
-import Medicine from "../../model/medicine/medicine.model";
-import { toASCII } from "punycode";
+
 
 class MedGroupRepository {
   async getAll(page:number, limit:number) {

@@ -14,10 +14,10 @@ class OrderDetailController {
     returnRes(res, 200, "Get OrderDetail By OrderId", result!);
   });
 
-  create = asyncError(async (req: Request, res: Response) => {
-    const result = await orderDetailServices.createOrderDetail(req.body);
-    returnRes(res, 201, "Created", result);
-  });
+  // create = asyncError(async (req: Request, res: Response) => {
+  //   const result = await orderDetailServices.createOrderDetail(req.body);
+  //   returnRes(res, 201, "Created", result);
+  // });
 
   update = asyncError(async (req: Request, res: Response) => {
     const result = await orderDetailServices.updateOrderDetail(

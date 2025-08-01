@@ -2,8 +2,6 @@ import { riskGroup, SeverityEnum } from "./../../enum/disease/disease.enum";
 import mongoose, { Schema } from "mongoose";
 import {
   IDisease,
-  IDiseaseMedicine,
-  IDiseaseSymptom,
 } from "../../interface/disease/disease.interface";
 
 const DiseaseSchema = new Schema<IDisease>(
@@ -94,13 +92,13 @@ const DiseaseSchema = new Schema<IDisease>(
   },
   { collection: "Disease", timestamps: true }
 );
-const DiseaseSymptomSchema = new Schema<IDiseaseSymptom>({
-  disease_id: { type: mongoose.Schema.Types.ObjectId, ref: "Disease" },
-  symptom_id: { type: mongoose.Schema.Types.ObjectId, ref: "Symptom" },
-});
-const DiseaseMedicineSchema = new Schema<IDiseaseMedicine>({
-  disease_id: { type: mongoose.Schema.Types.ObjectId, ref: "Disease" },
-  medicine_id: { type: mongoose.Schema.Types.ObjectId, ref: "Medicine" },
-});
+// const DiseaseSymptomSchema = new Schema<IDiseaseSymptom>({
+//   disease_id: { type: mongoose.Schema.Types.ObjectId, ref: "Disease" },
+//   symptom_id: { type: mongoose.Schema.Types.ObjectId, ref: "Symptom" },
+// });
+// const DiseaseMedicineSchema = new Schema<IDiseaseMedicine>({
+//   disease_id: { type: mongoose.Schema.Types.ObjectId, ref: "Disease" },
+//   medicine_id: { type: mongoose.Schema.Types.ObjectId, ref: "Medicine" },
+// });
 const Disease = mongoose.model("Disease", DiseaseSchema);
 export default Disease;

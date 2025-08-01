@@ -1,7 +1,7 @@
 import Medicine from "../../model/medicine/medicine.model";
 import { IMedicine } from "../../interface/medicine/medicine.interface";
 import {} from "../../enum/medicine/medicine.enum";
-import mongoose, { FilterQuery } from "mongoose";
+import mongoose from "mongoose";
 import medicineCategoryRepository from "./medicine-category.repository";
 import medUsageRepository from "./medicine-usage.repository";
 
@@ -121,9 +121,9 @@ class medicineRepository {
       name: { $regex: name, $options: "i" }, // tìm không phân biệt hoa thường
     });
   }
-  async findMedicine(filter: FilterQuery<any>) {
-    return await Medicine.find(filter).populate("categoryId");
-  }
+  // async findMedicine(filter: FilterQuery<any>) {
+  //   return await Medicine.find(filter).populate("categoryId");
+  // }
 }
 
 export default new medicineRepository();

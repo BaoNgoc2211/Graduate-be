@@ -15,15 +15,8 @@ export const adminProtect = (req: IAdminRequest, res: Response, next: NextFuncti
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
 
-    // if (decoded.role === "user") {
-    //   return res.status(403).json({ message: "Access denied" });
-    // }
-    // if (!decoded.userId || !decoded.role) {
-    //   return res.status(401).json({ message: "Invalid admin token" });
-    // }
 
     req.admin = decoded.userId,
-    // req.user = decoded.userId,
 
     next();
   } catch (error) {

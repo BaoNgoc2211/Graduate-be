@@ -66,7 +66,7 @@ class ChatSevices{
         console.log(staff)
         return staff;
 
-    }
+    };
     async getUnassignedRooms(){
         return await ChatRoom.find({isHandled: false, status: "open" })
         .populate({
@@ -74,5 +74,9 @@ class ChatSevices{
             select:"info.name"
         });
     };
+    async getAllRooms(){
+        return await ChatRoom.find()
+        .select("staff isHandled status lastMessage createdAt");
+    }
 }
 export default new ChatSevices();

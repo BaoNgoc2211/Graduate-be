@@ -1,15 +1,15 @@
-import Medicine from "../../model/medicine/medicine.model";
+import { IMedicine } from "../../interface/medicine/medicine.interface";
 import medicineRepository from "../../repository/medicine/medicine.repository";
 
 import mongoose from "mongoose";
 
-interface FilterParams {
-  name?: string;
-  categoryId?: string;
-  // minPrice?: number;
-  // maxPrice?: number;
-  indications?: string;
-}
+// interface FilterParams {
+//   name?: string;
+//   categoryId?: string;
+//   // minPrice?: number;
+//   // maxPrice?: number;
+//   indications?: string;
+// }
 class MedicineService {
   async getMedicineUser(page :number, limit : number) {
     return await medicineRepository.findMedicneUser(page,limit)
@@ -28,11 +28,11 @@ class MedicineService {
     return await medicineRepository.findByName(name);
   }
 
-  async createMedicine(medicine: any) {
+  async createMedicine(medicine: IMedicine) {
     return await medicineRepository.createMedicine(medicine);
   }
 
-  async updateMedicine(id: string, updatedData: any) {
+  async updateMedicine(id: string, updatedData: IMedicine) {
     return await medicineRepository.updateMedicine(id, updatedData);
   }
 
@@ -44,32 +44,32 @@ class MedicineService {
   async getId(id: string) {
     return await medicineRepository.getId(id);
   }
-  async searchMedicince(params: FilterParams) {
-    const { name, categoryId, indications } = params;
+  // async searchMedicince(params: FilterParams) {
+  //   const { name, categoryId, indications } = params;
 
-    const filters: any = {};
+  //   const filters: any = {};
 
-    if (name) {
-      filters.name = { $regex: name, $options: "i" };
-    }
+  //   if (name) {
+  //     filters.name = { $regex: name, $options: "i" };
+  //   }
 
-    // if (categoryId) {
-    //   if (mongoose.Types.ObjectId.isValid(categoryId)) {
-    //     filters.categoryId = categoryId;
-    //   } else {
-    //     const error: any = new Error("Invalid categoryId format");
-    //     error.statusCode = 400; // ⚠️ BẮT BUỘC PHẢI CÓ
-    //     throw error;
-    //   }
-    // }
+  //   // if (categoryId) {
+  //   //   if (mongoose.Types.ObjectId.isValid(categoryId)) {
+  //   //     filters.categoryId = categoryId;
+  //   //   } else {
+  //   //     const error: any = new Error("Invalid categoryId format");
+  //   //     error.statusCode = 400; // ⚠️ BẮT BUỘC PHẢI CÓ
+  //   //     throw error;
+  //   //   }
+  //   // }
 
-    if (indications) {
-      filters.indications = { $regex: indications, $options: "i" };
-    }
+  //   if (indications) {
+  //     filters.indications = { $regex: indications, $options: "i" };
+  //   }
 
-    // console.log("Searching with filters:", filters);
-    return await medicineRepository.findMedicine(filters);
-  }
+  //   // console.log("Searching with filters:", filters);
+  //   return await medicineRepository.findMedicine(filters);
+  // }
 
   async searchMed(name: string) {
     return await medicineRepository.searchMedicine(name);

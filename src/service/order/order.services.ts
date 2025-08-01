@@ -93,7 +93,7 @@ class OrderService {
   }
 
   async getAllOrders(page:number, limit:number) {
-    return await orderRepository.findAll();
+    return await orderRepository.findAll(page, limit);
   }
 
   // admin 
