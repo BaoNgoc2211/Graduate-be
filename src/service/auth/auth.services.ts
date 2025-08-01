@@ -4,6 +4,7 @@ import throwError from "../../util/create-error";
 import authRepository from "../../repository/auth.repository";
 import { IUser } from "../../interface/auth/user.interface";
 import bcrypt from "../../util/bcrypt";
+import { Profile as GoogleProfile } from 'passport-google-oauth20';
 
 
 class AuthServices {
@@ -156,18 +157,36 @@ class AuthServices {
   //     message: "OTP đã được gửi lại thành công.",
   //   };
   // };
-  validateOAuthLogin = async (profile: any) => {
-    const existingUser = await authRepository.findByGoogleId(profile.id);
-    if (existingUser) return existingUser;
+  // validateOAuthLogin = async (profile: any) => {
+  //   const existingUser = await authRepository.findByGoogleId(profile.id);
+  //   if (existingUser) return existingUser;
 
-    const newUser = await authRepository.createGoogleUser({
-      googleId: profile.id,
-      // name: profile.displayName,
-      email: profile.emails?.[0]?.value,
-    });
+  //   const newUser = await authRepository.createGoogleUser({
+  //     googleId: profile.id,
+  //     // name: profile.displayName,
+  //     email: profile.emails?.[0]?.value,
+  //   });
 
-    return newUser;
-  };
+  //   return newUser;
+  // };
+  
+//   const validateOAuthLogin = async (profile: GoogleProfile): Promise<IUser> => {
+//   const existingUser = await authRepository.findByGoogleId(profile.id);
+//   if (existingUser) return existingUser;
+
+//   const email = profile.emails?.[0]?.value;
+//   if (!email) {
+//     throw new Error('Google profile does not contain email');
+//   }
+
+//   const newUser = await authRepository.createGoogleUser({
+//     googleId: profile.id,
+//     email,
+//     name: profile.displayName,
+//   });
+
+//   return newUser;
+// };
   // resendOTP = async (email: string) => {
   //   if (await this.checkVerifyUser(email)) {
   //     throwError(400, "Email has already been verify");

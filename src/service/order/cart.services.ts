@@ -21,12 +21,11 @@ class CartServices {
     }
     return user;
   }
-  //#region getAll
+
   async getAll(userId: string) {
     return await cartRepository.getAll(userId);
   }
-  //#endregion
-  //#region addToCart
+
   addToCart = async (
     user_id: string,
     medicine_id: string,
@@ -78,9 +77,7 @@ class CartServices {
     }
     return { user_id: checkUser?.id, medicine_id, quantity };
   };
-  //#endregion
-  
-  //#region update
+
   async update(userId: string, medicine_id: string, quantity: number) {
     const cart = await Cart.findOne({ user_id: userId });
     if (!cart) throwError(404, "Giỏ hàng không tồn tại");
@@ -100,8 +97,7 @@ class CartServices {
     await cart!.save();
     return cart;
   }
-  //#endregion
-  //#region remove
+
   async removeItem(userId: string, medicine_id: string) {
     const cart = await Cart.findOne({ user_id: userId });
 
@@ -118,64 +114,11 @@ class CartServices {
     await cart!.save();
     return cart;
   }
-  //#endregion
-  //#region clearCart
+
   async clearCart(userId: string) {
     await Cart.deleteOne({ user_id: userId });
   }
-  //#endregion
-  //#region  Quy
-  // async addToCart(
-  //   userId: string,
-  //   items: { medicine_id: string; quantity: number }[]
-  // ) {
-  //   let cart = await Cart.findOne({ user_id: userId });
-  //   if (!cart) {
-  //     cart = await Cart.create({
-  //       user_id: userId,
-  //       medicine_item: [],
-  //       totalPrice: 0,
-  //     });
-  //   }
-
-  //   for (const { medicine_id, quantity } of items) {
-  //     const medicine = await Medicine.findById(medicine_id).populate(
-  //       "stock_id"
-  //     );
-  //     if (!medicine) {
-  //       console.warn(`Không tìm thấy thuốc với ID: ${medicine_id}`);
-  //       continue; // Bỏ qua nếu không tìm thấy thuốc
-  //     }
-
-  //     if (!medicine.stock_id || typeof medicine.stock_id !== "object") {
-  //       console.warn(`Thuốc ${medicine.name} chưa có thông tin kho hàng`);
-  //       continue;
-  //     }
-
-  //     const stock = medicine.stock_id as any;
-  //     const price = Number(stock.sellingPrice);
-  //     if (!price || isNaN(price)) {
-  //       console.warn(`Thuốc ${medicine.name} không có giá bán hợp lệ`);
-  //       continue;
-  //     }
-
-  //     const existingItem = cart.medicine_item.find((i) =>
-  //       i.medicine_id.equals(medicine._id)
-  //     );
-
-  //     if (existingItem) {
-  //       existingItem.quantity += quantity;
-  //     } else {
-  //       cart.medicine_item.push({
-  //         medicine_id: medicine._id,
-  //         name: medicine.name,
-  //         thumbnail: medicine.thumbnail || "",
-  //         price,
-  //         quantity,
-  //       });
-  //     }
-  //   }
-  //#endregion
+  
 }
 const cartService = new CartServices();
 export default cartService;
