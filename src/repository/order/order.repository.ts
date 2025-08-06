@@ -497,6 +497,7 @@ async checkOutSuccess(orderId: string) {
           total: item.totalAmount,
           thumbnail: item.thumbnail,
         })),
+        orderDetailId: order.orderDetail,
       };
     });
 
@@ -591,6 +592,7 @@ async checkOutSuccess(orderId: string) {
           total: item.totalAmount,
           thumbnail: item.thumbnail,
         })),
+        orderDetailId: order.orderDetail,
       };
     });
 

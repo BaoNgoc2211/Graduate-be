@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "nodemon --exec ts-node index.ts",
     "seed": "ts-node src/seed/seed.ts",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "test:disease-prediction": "node test-disease-prediction.js",
+    "test:medical-prediction": "node test-medical-prediction.js"
   },
   "keywords": [],
   "author": "",
