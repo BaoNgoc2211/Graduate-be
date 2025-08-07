@@ -12,4 +12,8 @@ router.get("/staff/messages",adminProtect,chatController.getStaffMessage)
 router.get("/unassigned",adminProtect, chatController.getUnassignedRooms);
 router.get("/all",adminProtect, chatController.getAllRooms);
 
+router.post("/assign/:roomId", adminProtect, chatController.assignStaffToRoom);
+router.post("/unassign/:roomId", adminProtect, chatController.unassignStaffFromRoom);
+router.post("/close/:roomId", adminProtect, chatController.closeChatRoom);
+router.get("/user/current-room", protect, chatController.getCurrentUserRoom);
 export default router;
