@@ -3,6 +3,7 @@ import { returnRes } from "../util/response";
 import chatServices from "../service/chat.services";
 import { Request, Response } from "express";
 import { IAdminRequest } from "../types/express";
+import uploadService from "../service/upload.services";
 
 class ChatController {
   startChat = asyncError(async (req: Request, res: Response) => {
@@ -32,7 +33,6 @@ class ChatController {
 
   getStaffMessage = asyncError(async (req: IAdminRequest, res: Response) => {
     const userId = req.admin;
-    console.log(userId);
     // const { roomId } = req.params;
     const data = await chatServices.getStaffMessage(String(userId));
     returnRes(res, 200, "Messages fetched", data);
@@ -71,5 +71,37 @@ class ChatController {
     const room = await chatServices.getCurrentUserRoom(String(userId));
     returnRes(res, 200, "Current room fetched", room);
   });
+
+  uploadPrescriptionMessage = asyncError(
+    async (req: Request, res: Response) => {
+      const userId = req.user;
+      const { roomId } = req.body;
+      if (!req.file) {
+        returnRes(res, 400, "No file uploaded");
+        return;
+      }
+      const medicines = await uploadService.uploadPrescription(req.file.path!);
+      const message = {
+        type: "prescription",
+        text: medicines.map(m => `${m.medicineName} ${m.quantity} ${m.unit}`).join(", "),
+        medicines,
+      };
+      const data = await chatServices.sendMessage(roomId, String(userId), message.text);
+      returnRes(res, 200, "Prescription uploaded and message sent", data);
+    }
+  );
+
+  updatePrescriptionMessage = asyncError(async (req: Request, res: Response) => {
+      const {messageId,newText } = req.body;
+      if (!newText) {
+        returnRes(res, 400, "No text provided");
+        return;
+      }
+      const updatedMedicines = chatServices.updatePrescriptionMessage(messageId,newText);
+      returnRes(res, 201, "Prescription updated successfully!", updatedMedicines);
+    }
+  );
+
+
 }
 export default new ChatController();

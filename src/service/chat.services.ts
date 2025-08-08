@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import ChatRoom from "../model/chat/chat-room.model";
 import Message from "../model/chat/message.model";
 import Admin from "../model/auth/admin.model";
+import uploadService from "./upload.services";
 
 class ChatSevices {
   async startChatRoom(userId: string, message: string) {
@@ -119,6 +120,16 @@ class ChatSevices {
     });
     
     return room;
+  }
+
+  async updatePrescriptionMessage(messageId: string, newText: string) {
+    const message = await Message.findById(messageId);
+    if (!message) throw new Error("Message not found");
+
+    message.content = newText;
+    await message.save();
+
+    return message.content;
   }
 }
 export default new ChatSevices();

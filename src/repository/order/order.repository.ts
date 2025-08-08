@@ -460,9 +460,8 @@ async checkOutSuccess(orderId: string) {
   }
   
   async checkStatus(userId: string) {
-    console.log("User ID:", userId);
-
     const orders = await Order.find({ user_id: userId }).sort({ createdAt: -1 });
+    const userInfo = await User.findById(userId).select("info.name info.phone info.address");
 
     if (!orders || orders.length === 0) {
       throw new Error("Người dùng chưa có đơn hàng nào.");
@@ -485,6 +484,7 @@ async checkOutSuccess(orderId: string) {
       const detail = orderDetailMap.get(order.orderDetail.toString());
 
       return {
+        userId: userInfo,
         orderId: order._id,
         status: order.status,
         totalAmount: order.totalAmount,
@@ -509,6 +509,8 @@ async checkOutSuccess(orderId: string) {
   async checkStatusOrderUser(userId: string, status: OrderStatus) {
     const orders = await Order.find({ user_id: userId,  status }).sort({ createdAt: -1 });
 
+    const userInfo = await User.findById(userId).select("info.name info.phone info.address");
+
     if (!orders || orders.length === 0) {
       throw new Error("Người dùng chưa có đơn hàng nào.");
     }
@@ -530,6 +532,7 @@ async checkOutSuccess(orderId: string) {
       const detail = orderDetailMap.get(order.orderDetail.toString());
 
       return {
+        userId: userInfo,
         orderId: order._id,
         status: order.status,
         totalAmount: order.totalAmount,
