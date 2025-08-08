@@ -9,28 +9,28 @@ class MedicineCategoryController {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
     const categories = await MedicineCategoryService.getAll(page, limit);
-    return returnRes(res,200,"Get all Medicine",categories);
+     returnRes(res,200,"Get all Medicine",categories);
   });
 
   getById = asyncError( async(req: Request, res: Response) => {
     const category = await MedicineCategoryService.getById(req.params.id);
-    return returnRes(res,200,"Get Id Medicine",category!);
+     returnRes(res,200,"Get Id Medicine",category!);
 
   });
 
   create = asyncError( async(req: Request, res: Response) =>{
     const category = await MedicineCategoryService.create(req.body);
-    return returnRes(res,201,"Created MedCate",category)
+     returnRes(res,201,"Created MedCate",category)
   });
   
   update = asyncError(async(req:Request,res:Response)=>{
     const updated =  await MedicineCategoryService.update(req.params.id, req.body);
-    return returnRes(res,200,"Updated MedCate",updated!);
+     returnRes(res,200,"Updated MedCate",updated!);
   });
   
   delete = asyncError(async(req:Request, res:Response)=>{
     const deleted = await MedicineCategoryService.delete(req.params.id);
-    return returnRes(res,200,"Deleted MedCate",deleted!)
+    returnRes(res,200,"Deleted MedCate",deleted!)
   });
 
 }

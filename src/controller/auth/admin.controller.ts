@@ -47,7 +47,7 @@ class AdminAuthController {
     const updated = await adminAuthServices.updateProfile(String(adminId), req.body);
     if (!updated) {
       // Trả lỗi tại đây và return để kết thúc
-      return returnRes(res, 404, "Không tìm thấy admin");
+       returnRes(res, 404, "Không tìm thấy admin");
     }
     returnRes(res, 200, "Cập nhật thông tin thành công", updated);
   });
@@ -58,7 +58,7 @@ class AdminAuthController {
     const admins = await adminAuthServices.findById(String(adminId));
     console.log(admins)
     if (!admins) {
-          return returnRes(res, 404, "User not found");
+           returnRes(res, 404, "User not found");
         }
     returnRes(res, 200, "Find All", admins!);
   });

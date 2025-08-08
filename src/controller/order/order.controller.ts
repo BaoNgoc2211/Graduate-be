@@ -26,7 +26,7 @@ class OrderDetailController {
     const paymentMethod = req.body.paymentMethod; // Assuming paymentMethod is passed in the request body
     const voucherCode = req.body.voucherCode; // Assuming voucherCode is passed in the request body
     if (!Array.isArray(selectItemIds)) {
-      return res.status(400).json({ message: "selectedItemIds" });
+      res.status(400).json({ message: "selectedItemIds" });
     }
     
     if (paymentMethod === "VNPAY") {
@@ -56,9 +56,9 @@ class OrderDetailController {
     });
 
     if (momoResponse?.payUrl) {
-      return res.json({ success: true, paymentUrl: momoResponse.payUrl });
+       res.json({ success: true, paymentUrl: momoResponse.payUrl });
     } else {
-      return res.status(500).json({ message: "Không thể tạo liên kết thanh toán MoMo." });
+       res.status(500).json({ message: "Không thể tạo liên kết thanh toán MoMo." });
     }
   }else {
     const order = await orderServices.checkOutCOD(String(userId!),selectItemIds,shippingId,paymentMethod,voucherCode);
@@ -73,7 +73,7 @@ class OrderDetailController {
     const shippingId = req.body.shippingId; // Assuming shippingId is passed in the request body
     const paymentMethod = req.body.paymentMethod; // Assuming paymentMethod is passed in the request body
     if (!Array.isArray(selectItemIds)) {
-      return res.status(400).json({ message: "selectedItemIds" });
+      res.status(400).json({ message: "selectedItemIds" });
     }
     const result = await orderServices.reviewOrder(String(userId!),selectItemIds,shippingId,paymentMethod);
     

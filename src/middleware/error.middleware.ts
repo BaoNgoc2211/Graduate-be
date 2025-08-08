@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction, RequestHandler } from "express";
 
-const asyncError = (fn: Function) => (req: Request, res: Response, next: NextFunction) => {
+const asyncError = (fn: RequestHandler) => (req: Request, res: Response, next: NextFunction) => {
   Promise.resolve(fn(req, res, next)).catch((err) => {
     const statusCode = err.statusCode || 500;
     res.status(statusCode).json({

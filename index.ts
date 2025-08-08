@@ -22,8 +22,6 @@ import shippingRoutes from "./src/router/shipping.route";
 import purchaseOrderRoutes from "./src/router/order/purchase-order.route";
 import voucherRoutes from "./src/router/voucher.route";
 import cartRoutes from "./src/router/order/cart.route";
-import notFoundRoute from "./src/middleware/not-found-routes.middleware";
-import errorHandler from "./src/middleware/error-handler.middleware";
 import session from "express-session";
 import passport from "passport";
 import "./src/config/passport";
@@ -76,9 +74,6 @@ app.use(session({ secret: "your_secret", resave: false, saveUninitialized: true 
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Error handlers
-app.use(notFoundRoute);
-app.use(errorHandler);
 
 // Start Server
 server.listen(appConfig.PORT, () => {

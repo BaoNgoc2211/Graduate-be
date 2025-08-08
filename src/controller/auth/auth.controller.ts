@@ -53,7 +53,7 @@ class AuthController {
     const userId = req.user;
     const user = await authServices.getProfile(String(userId));
     if (!user) {
-      return returnRes(res, 404, "User not found");
+       returnRes(res, 404, "User not found");
     }
     returnRes(res, 200, "Get profile successful", user);
   });
@@ -79,7 +79,7 @@ class AuthController {
     const userId = req.user!
     const updated = await authServices.updateProfile(String(userId), req.body);
 
-    if (!updated) return returnRes(res, 404, "Không tìm thấy user");
+    if (!updated)  returnRes(res, 404, "Không tìm thấy user");
     returnRes(res, 200, "Cập nhật thành công", updated);
   });
 }

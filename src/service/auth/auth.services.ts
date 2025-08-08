@@ -4,7 +4,6 @@ import throwError from "../../util/create-error";
 import authRepository from "../../repository/auth.repository";
 import { IUser } from "../../interface/auth/user.interface";
 import bcrypt from "../../util/bcrypt";
-import { Profile as GoogleProfile } from 'passport-google-oauth20';
 
 
 class AuthServices {

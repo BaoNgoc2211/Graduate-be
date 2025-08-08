@@ -64,9 +64,9 @@ class MedicineController {
     try {
       const { name } = req.query;
       if (!name || typeof name !== "string") {
-        return res.status(400).json({ message: "Search query is required" });
+         res.status(400).json({ message: "Search query is required" });
       }
-      const results = await medicineServices.searchMed(name);
+      const results = await medicineServices.searchMed(name as string);
       res.json(results);
     } catch (error) {
       res.status(500).json({ message: "Server error", error });

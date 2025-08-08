@@ -7,12 +7,12 @@ class DisCategoryController {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string )||10;
     const categories = await disCategoryService.getAll(page,limit);
-    return returnRes(res, 200, "Get all Disease Category", categories);
+     returnRes(res, 200, "Get all Disease Category", categories);
   });
 
   getById = asyncError(async (req: Request, res: Response) => {
     const category = await disCategoryService.getById(req.params.id);
-    return returnRes(res, 200, "Get By Id Disease Category", category!);
+    returnRes(res, 200, "Get By Id Disease Category", category!);
   });
   create = asyncError(async (req: Request, res: Response) => {
     const { name, icon } = req.body;

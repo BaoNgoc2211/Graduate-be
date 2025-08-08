@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 import ChatRoom from "../model/chat/chat-room.model";
 import Message from "../model/chat/message.model";
 import Admin from "../model/auth/admin.model";
-import uploadService from "./upload.services";
 
 class ChatSevices {
   async startChatRoom(userId: string, message: string) {
