@@ -4,10 +4,15 @@
   "main": "index.ts",
   "scripts": {
     "dev": "nodemon --exec ts-node index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
     "seed": "ts-node src/seed/seed.ts",
     "lint": "eslint src",
     "test:disease-prediction": "node test-disease-prediction.js",
-    "test:medical-prediction": "node test-medical-prediction.js"
+    "test:medical-prediction": "node test-medical-prediction.js",
+    "start:fastapi": "python fastapi-disease-prediction.py",
+    "start:all": "concurrently \"npm run start:fastapi\" \"npm run dev\"",
+    "deploy": "chmod +x deploy.sh && ./deploy.sh"
   },
   "keywords": [],
   "author": "",
@@ -16,7 +21,9 @@
   "dependencies": {
     "@types/express": "^5.0.1",
     "@types/nodemailer": "^6.4.17",
+    "axios": "^1.6.0",
     "bcrypt": "^6.0.0",
+    "concurrently": "^8.2.2",
     "cloudinary": "^2.6.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
