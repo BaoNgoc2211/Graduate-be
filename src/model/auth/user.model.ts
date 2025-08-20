@@ -36,7 +36,6 @@ const userSchema = new mongoose.Schema<IUser>(
     },
     otpLockedUntil: {
       type: Date,
-      default: null,
     },
     info: {
       name: {
@@ -48,21 +47,8 @@ const userSchema = new mongoose.Schema<IUser>(
         trim: true,
       },
       address: {
-        provinceId: {
-          type: String,
-        },
-        provinceName: {
-          type: String,
-        },
-        wardId: {
-          type: String,
-        },
-        wardName: {
-          type: String,
-        },
-        street: {
-          type: String,
-        },
+        type: String,
+        trim: true,
       },
       avatar: {
         type: String,

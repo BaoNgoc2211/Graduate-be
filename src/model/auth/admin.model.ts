@@ -41,29 +41,29 @@ const adminSchema = new mongoose.Schema<IAdmin>(
       name: {
         type: String,
         trim: true,
-        default: null,
+        
       },
       phone: {
         type: String,
         trim: true,
-        default: null,
+        
       },
       address: {
         type: String,
         trim: true,
-        default: null,
+        
       },
       avatar: {
         type: String,
-        default: null,
+        
       },
       gender: {
         type: String,
-        default: null,
+        
       },
       birth: {
         type: Date,
-        default: null,
+        
       },
     },
   },

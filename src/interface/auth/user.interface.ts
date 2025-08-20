@@ -32,6 +32,21 @@ export interface IUser extends Document {
     };
   };
 }
+export interface IUserInfo{
+  name?: string;
+  phone?: string;
+  avatar?: string;
+  gender?: genderType;
+  point?: number;
+  birthday?: Date;
+  address?: {
+    provinceId: string;
+    provinceName: string;
+    wardId: string;
+    wardName: string;
+    street?: string;
+  };
+}
 
 export interface IAuthAction {
   generateAuthToken(): string;

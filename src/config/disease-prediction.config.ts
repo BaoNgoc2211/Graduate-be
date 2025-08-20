@@ -23,3 +23,4 @@ const diseasePredictionConfig: DiseasePredictionConfig = {
 };
 
 export default diseasePredictionConfig;
+

@@ -3,31 +3,6 @@ import { DetailedDosageEnum } from "../../enum/medicine/medicine.enum";
 import {
   IMedicine,
 } from "../../interface/medicine/medicine.interface";
-// const reviewSchema = new Schema<IReview>(
-//   {
-//     user: {
-//       type: mongoose.Schema.Types.ObjectId,
-//       ref: "User",
-//       required: true,
-//     },
-//     rating: {
-//       type: Number,
-//       required: true,
-//       min: 1,
-//       max: 5,
-//     },
-//     comment: {
-//       type: String,
-//     },
-//     medicine_id: {
-//       type: mongoose.Schema.Types.ObjectId,
-//       ref: "Medicine",
-//       required: true,
-//     },
-//   },
-//   { collection: "Review", timestamps: true }
-// );
-
 const medicineSchema = new Schema<IMedicine>(
   {
     code: {
@@ -162,7 +137,6 @@ const medicineSchema = new Schema<IMedicine>(
   }
 );
 
-// const Review = mongoose.model("Review", reviewSchema);
-// export default Review;
+
 const Medicine = mongoose.model("Medicine", medicineSchema);
 export default Medicine;

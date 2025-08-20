@@ -35,6 +35,26 @@ class Config:
 torch.manual_seed(42)
 np.random.seed(42)
 
+from fastapi.middleware.cors import CORSMiddleware
+
+# Thêm vào sau khi tạo app FastAPI
+app = FastAPI(
+    title="ViHealthBERT Disease Prediction API",
+    description="API for predicting diseases from Vietnamese medical text using hybrid approach",
+    version="2.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc"
+)
+
+# Thêm CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Cho phép tất cả origins (chỉ dùng cho development)
+    allow_credentials=True,
+    allow_methods=["*"],  # Cho phép tất cả methods
+    allow_headers=["*"],  # Cho phép tất cả headers
+)
+
 class EnhancedDiseaseClassifier(nn.Module):
     """Enhanced classifier for disease prediction using ViHealthBERT"""
 
@@ -415,3 +435,4 @@ async def list_diseases():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8001)
+

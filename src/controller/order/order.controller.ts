@@ -38,8 +38,15 @@ class OrderDetailController {
       }
     } as Request;
 
+    // type FakeResponse = {
+    //   json: (body: { paymentUrl: string }) => Response;
+    //   status: (code: number) => {
+    //     json: (data: string) => Response;
+    //   };
+    // };
+
     const fakeRes = {
-      json: ({ paymentUrl }: any) => res.json({ success: true, paymentUrl }),
+      json: ({ paymentUrl }) => res.json({ success: true, paymentUrl }),
       status: (code: number) => ({
         json: (data: string) => res.status(code).json(data),
       }),

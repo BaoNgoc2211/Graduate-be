@@ -2,7 +2,7 @@ import User from "../../model/auth/user.model";
 import { EmailService } from "../auth/email.services";
 import throwError from "../../util/create-error";
 import authRepository from "../../repository/auth.repository";
-import { IUser } from "../../interface/auth/user.interface";
+import { IUser, IUserInfo } from "../../interface/auth/user.interface";
 import bcrypt from "../../util/bcrypt";
 
 
@@ -78,14 +78,18 @@ class AuthServices {
   // signin
   signIn = async (data: { email: string; password: string }) => {
     const checkUser = await this.getUserByEmail(data.email);
+    if (!checkUser) {
+      throwError(400, "Email hoặc mật khẩu không đúng");
+      return;
+    }
     const checkPassword = await bcrypt.Compare(
       data.password,
-      checkUser?.password!
+      checkUser.password!
     );
     if (!checkPassword) {
       throwError(400, "Email hoặc mật khẩu không đúng");
     }
-    return checkUser!.id;
+    return checkUser.id;
   };
   verifyEmail = async (email: string, otp: string) => {
     const user = await User.findOne({ email: email });
@@ -220,7 +224,7 @@ class AuthServices {
       );
     }
 
-    const otp = user!.generateOTP();
+    user!.generateOTP();
     await user!.save();
 
     // EmailService.sendForgotPasswordEmail(email, otp);
@@ -269,11 +273,9 @@ class AuthServices {
     }
   };
   // auth.services.ts
-  updateProfile = async (userId: string, data: any) => {
-    const { info } = data;
-    if (!info) return null;
+  updateProfile = async (userId: string, data: IUserInfo) => {
 
-    const { name, phone, avatar, gender, birthday, address } = info;
+    const { name, phone, avatar, gender, birthday, address } = data;
 
     return await User.findByIdAndUpdate(
       userId,
