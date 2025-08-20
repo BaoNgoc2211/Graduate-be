@@ -75,6 +75,13 @@ class medicineRepository {
     }).populate({
       path: "manufacturer_id",
       select: "nameCo country", 
+    }).populate({
+      path: "medCategory_id",
+      select: "name", // Chỉ lấy name và description từ MedicineCategory
+    })
+    .populate({
+      path: "medUsage_id", 
+      select: "name"
     });
 
   }
