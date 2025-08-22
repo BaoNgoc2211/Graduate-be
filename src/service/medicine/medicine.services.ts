@@ -71,8 +71,8 @@ class MedicineService {
   //   return await medicineRepository.findMedicine(filters);
   // }
 
-  async searchMed(name: string) {
-    return await medicineRepository.searchMedicine(name);
+  async searchMed(name: string,page:number, limit:number) {
+    return await medicineRepository.searchMedicine(name,page, limit);
   }
 }
 

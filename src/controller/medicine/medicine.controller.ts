@@ -65,7 +65,9 @@ class MedicineController {
     // if (!name || typeof name !== "string") {
     //   returnRes(res, 400, "Invalid search query");
     // }
-    const results = await medicineServices.searchMed(name as string);
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const results = await medicineServices.searchMed(name as string,page, limit);
     returnRes(res, 200, "Search Results", results);
   });
 }

@@ -123,16 +123,51 @@ class medicineRepository {
     return await Medicine.findById(id);
   }
 
-  async searchMedicine(name: string) {
+  async searchMedicine(name: string, page: number, limit: number) {
     const keyword = (name ?? "").trim();
-    if (!keyword) return []; // không nhập thì trả về mảng rỗng
+    // if (!keyword) {
+    //   return {
+    //     currentPage: page,
+    //     totalPages: 0,
+    //     totalItems: 0,
+    //     limit,
+    //     data: [],
+    //   };
+    // }
 
-    return await Medicine.find({
+    const skip = (page - 1) * limit;
+
+    // Tìm tổng số document khớp keyword
+    const totalItems = await Medicine.countDocuments({
       $or: [
         { name: { $regex: keyword, $options: "i" } },
         { indication: { $regex: keyword, $options: "i" } }
       ]
     });
+
+    // Query có phân trang
+    const items = await Medicine.find({
+      $or: [
+        { name: { $regex: keyword, $options: "i" } },
+        { indication: { $regex: keyword, $options: "i" } }
+      ]
+    })
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 })
+      .select("name thumbnail")
+      .populate({
+        path: "stock_id",
+        select: "sellingPrice quantity",
+      });
+
+    return {
+      currentPage: page,
+      totalPages: Math.ceil(totalItems / limit),
+      totalItems,
+      limit,
+      data: items,
+    };
   }
   // async findMedicine(filter: FilterQuery<any>) {
   //   return await Medicine.find(filter).populate("categoryId");
