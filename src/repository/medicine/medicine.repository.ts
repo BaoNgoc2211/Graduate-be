@@ -124,8 +124,14 @@ class medicineRepository {
   }
 
   async searchMedicine(name: string) {
+    const keyword = (name ?? "").trim();
+    if (!keyword) return []; // không nhập thì trả về mảng rỗng
+
     return await Medicine.find({
-      name: { $regex: name, $options: "i" }, // tìm không phân biệt hoa thường
+      $or: [
+        { name: { $regex: keyword, $options: "i" } },
+        { indication: { $regex: keyword, $options: "i" } }
+      ]
     });
   }
   // async findMedicine(filter: FilterQuery<any>) {

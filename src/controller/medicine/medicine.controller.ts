@@ -61,16 +61,12 @@ class MedicineController {
   // });
 
   searchMed = asyncError(async (req: Request, res: Response) => {
-    try {
-      const { name } = req.query;
-      if (!name || typeof name !== "string") {
-         res.status(400).json({ message: "Search query is required" });
-      }
-      const results = await medicineServices.searchMed(name as string);
-      res.json(results);
-    } catch (error) {
-      res.status(500).json({ message: "Server error", error });
-    }
+    const { name } = req.query;
+    // if (!name || typeof name !== "string") {
+    //   returnRes(res, 400, "Invalid search query");
+    // }
+    const results = await medicineServices.searchMed(name as string);
+    returnRes(res, 200, "Search Results", results);
   });
 }
 export default new MedicineController();
