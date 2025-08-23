@@ -125,11 +125,11 @@ const medicineSchema = new Schema<IMedicine>(
       ref: "Manufacturer",
       required: true,
     },
-    stock_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Stock",
-      // required: true,
-    },
+    // stock_id: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: "Stock",
+    //  required: true,
+    // },
   },
   {
     collection: "Medicine",

@@ -21,6 +21,7 @@ export interface IDisease {
   symptomIds: mongoose.Types.ObjectId[];
   diseaseCategoryIds: mongoose.Types.ObjectId[];
   diseaseUsageGroupIds: mongoose.Types.ObjectId[];
+  medicine_id?: mongoose.Types.ObjectId[];
 }
 export interface IDiseaseSymptom {
   disease_id: mongoose.Types.ObjectId;

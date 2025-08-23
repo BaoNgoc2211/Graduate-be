@@ -23,6 +23,97 @@ class DiseaseRepository {
   async findName(name: string) {
     return await Disease.findOne({ name });
   }
+  
+  // Tìm bệnh theo tên khác (nameDiff)
+  async findByNameDiff(nameDiff: string) {
+    return await Disease.findOne({ nameDiff });
+  }
+  
+  // Tìm bệnh theo tên có chứa từ khóa
+  async findByNameContains(keyword: string) {
+    return await Disease.findOne({
+      $or: [
+        { name: { $regex: keyword, $options: 'i' } },
+        { nameDiff: { $regex: keyword, $options: 'i' } }
+      ]
+    });
+  }
+  
+  // Tìm bệnh theo symptom ID
+  async findBySymptomId(symptomId: mongoose.Types.ObjectId) {
+    return await Disease.find({
+      symptomIds: symptomId
+    }).populate({
+      path: "symptomIds",
+      select: "name"
+    }).populate({
+      path: "diseaseCategoryIds",
+      select: "name"
+    }).populate({
+      path: "diseaseUsageGroupIds",
+      select: "name"
+    });
+  }
+  
+  // Tìm bệnh theo nhiều symptom IDs
+  async findBySymptomIds(symptomIds: mongoose.Types.ObjectId[]) {
+    return await Disease.find({
+      symptomIds: { $in: symptomIds }
+    }).populate({
+      path: "symptomIds",
+      select: "name"
+    }).populate({
+      path: "diseaseCategoryIds",
+      select: "name"
+    }).populate({
+      path: "diseaseUsageGroupIds",
+      select: "name"
+    });
+  }
+  
+  // Tìm kiếm bệnh theo từ khóa
+  async searchDiseases(keyword: string, page = 1, limit = 10) {
+    const skip = (page - 1) * limit;
+    const totalItems = await Disease.countDocuments({
+      $or: [
+        { name: { $regex: keyword, $options: 'i' } },
+        { nameDiff: { $regex: keyword, $options: 'i' } },
+        { common: { $regex: keyword, $options: 'i' } }
+      ]
+    });
+    
+    const items = await Disease.find({
+      $or: [
+        { name: { $regex: keyword, $options: 'i' } },
+        { nameDiff: { $regex: keyword, $options: 'i' } },
+        { common: { $regex: keyword, $options: 'i' } }
+      ]
+    })
+    .skip(skip)
+    .limit(limit)
+    .sort({ createdAt: -1 })
+    .populate({
+      path: "symptomIds",
+      select: "name"
+    })
+    .populate({
+      path: "diseaseCategoryIds",
+      select: "name"
+    })
+    .populate({
+      path: "diseaseUsageGroupIds",
+      select: "name"
+    });
+    
+    return {
+      currentPage: page,
+      totalPages: Math.ceil(totalItems / limit),
+      totalItems,
+      limit,
+      data: items,
+    };
+  }
+  
   async create(disease: IDisease) {
     const newDisease = await Disease.create(disease);
     for (const categoryId of disease.diseaseCategoryIds) {
@@ -45,7 +136,23 @@ class DiseaseRepository {
     const items = await Disease.find()
     .skip(skip)
     .limit(limit)
-    .sort({ createdAt: -1 });
+    .sort({ createdAt: -1 })
+    .populate({
+      path: "symptomIds",
+      select: "name"
+    })
+    .populate({
+      path: "diseaseCategoryIds",
+      select: "name"
+    })
+    .populate({
+      path: "diseaseUsageGroupIds",
+      select: "name"
+    })
+    .populate({
+      path:"symptomIds",
+      select:"name"
+    });
     return {
       currentPage: page,
       totalPages: Math.ceil(totalItems / limit),

@@ -89,6 +89,12 @@ const DiseaseSchema = new Schema<IDisease>(
         required: true,
       },
     ],
+    medicine_id:[
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Medicine",
+      }
+    ]
   },
   { collection: "Disease", timestamps: true }
 );
