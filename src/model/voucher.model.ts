@@ -1,5 +1,4 @@
 import { disCountTypeEnum } from "./../enum/voucher.enum";
-
 import mongoose, { Schema } from "mongoose";
 import { IVoucher } from "../interface/voucher.interface";
 
@@ -24,7 +23,7 @@ const VoucherSchema = new Schema<IVoucher>(
     minOrderValue: { type: Number },
     maxDiscountValue: { type: Number },
     usageLimit: { type: Number },
-    usedCount: { type: Number },
+    usedCount: { type: Number, default: 0 },
     // applyTo: { type: String, enum: Object.values(applyToEnum), required: true },
     // applyToIds: [{ type: mongoose.Schema.Types.Mixed }], 
   },

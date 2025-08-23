@@ -85,14 +85,14 @@ class OrderDetailRepository {
         note: "",
       });
     }
-     let discountVoucher = 0;
+    let discountVoucher = 0;
     if(voucherCode){
       const voucher = await Voucher.findOne({_id: voucherCode});
       const now = new Date();
 
       if (!voucher || !voucher.isActive ||
         now < new Date(voucher.startDate) || now > new Date(voucher.endDate) ||
-        voucher.usedCount >= voucher.usageLimit ||
+        // voucher.usedCount >= voucher.usageLimit ||
         totalAmount < voucher.minOrderValue) 
       {
         throw new Error("Voucher không hợp lệ hoặc đã hết hạn");
@@ -106,6 +106,10 @@ class OrderDetailRepository {
       } else if (voucher.discountType === "FIXED") {
         discountVoucher =  voucher.maxDiscountValue;
         console.log("Discount Voucher:", discountVoucher);
+      }
+      voucher.usageLimit -= 1;
+      if(voucher.usageLimit <= 0) {
+        voucher.isActive = false;
       }
       voucher.usedCount += 1;
       await voucher.save();
@@ -197,7 +201,7 @@ async checkOutCOD(userId: string, selectItemIds: string[],shippingId: string,pay
 
       if (!voucher || !voucher.isActive ||
         now < new Date(voucher.startDate) || now > new Date(voucher.endDate) ||
-        voucher.usedCount >= voucher.usageLimit ||
+        // voucher.usedCount >= voucher.usageLimit ||
         totalAmount < voucher.minOrderValue) 
       {
         throw new Error("Voucher không hợp lệ hoặc đã hết hạn");
@@ -211,6 +215,10 @@ async checkOutCOD(userId: string, selectItemIds: string[],shippingId: string,pay
       } else if (voucher.discountType === "FIXED") {
         discountVoucher =  voucher.maxDiscountValue;
         console.log("Discount Voucher:", discountVoucher);
+      }
+      voucher.usageLimit -= 1;
+      if(voucher.usageLimit <= 0) {
+        voucher.isActive = false;
       }
       voucher.usedCount += 1;
       await voucher.save();
@@ -301,7 +309,7 @@ async checkOutCOD(userId: string, selectItemIds: string[],shippingId: string,pay
 
       if (!voucher || !voucher.isActive ||
         now < new Date(voucher.startDate) || now > new Date(voucher.endDate) ||
-        voucher.usedCount >= voucher.usageLimit ||
+        // voucher.usedCount >= voucher.usageLimit ||
         totalAmount < voucher.minOrderValue) 
       {
         throw new Error("Voucher không hợp lệ hoặc đã hết hạn");
@@ -315,6 +323,10 @@ async checkOutCOD(userId: string, selectItemIds: string[],shippingId: string,pay
       } else if (voucher.discountType === "FIXED") {
         discountVoucher =  voucher.maxDiscountValue;
         console.log("Discount Voucher:", discountVoucher);
+      }
+      voucher.usageLimit -= 1;
+      if(voucher.usageLimit <= 0) {
+        voucher.isActive = false;
       }
       voucher.usedCount += 1;
       await voucher.save();
