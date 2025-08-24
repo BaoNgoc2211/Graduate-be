@@ -63,7 +63,6 @@ class ChatSevices {
       select: "info.name",
     });
     if (!staff) throw new Error("Room not found");
-    console.log(staff);
     return staff;
   }
   async getUnassignedRooms() {

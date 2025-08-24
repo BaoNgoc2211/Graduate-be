@@ -16,10 +16,10 @@ export const adminProtect = (req: IAdminRequest, res: Response, next: NextFuncti
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
 
 
-    req.admin = decoded.userId,
+    req.admin = decoded.userId;
 
     next();
-  } catch (error) {
+  } catch {
     res.status(401).json({ message: "Invalid token" });
     return;
   }

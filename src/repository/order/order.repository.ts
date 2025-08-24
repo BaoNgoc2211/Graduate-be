@@ -6,7 +6,7 @@ import Cart from "../../model/order/cart.model";
 import { OrderStatus } from "../../enum/order-status.enum";
 import Shipping from "../../model/shipping.model";
 import { IOrderItem } from "../../interface/order/order-detail.interface";
-import { PaymentStatus } from "../../enum/order/order.enum";
+import { PaymentMethod, PaymentStatus } from "../../enum/order/order.enum";
 import Voucher from "../../model/voucher.model";
 import { ICartItem } from "../../interface/order/cart.interface";
 import { IMedicine } from "../../interface/medicine/medicine.interface";
@@ -99,13 +99,11 @@ class OrderDetailRepository {
       }
       if (voucher.discountType === "PERCENTAGE") {
         discountVoucher = (totalAmount * voucher.discountValue) / 100;
-        console.log("Discount Voucher:", discountVoucher);
         if (voucher.maxDiscountValue && discountVoucher > voucher.maxDiscountValue) {
           discountVoucher = voucher.maxDiscountValue;
         }
       } else if (voucher.discountType === "FIXED") {
         discountVoucher =  voucher.maxDiscountValue;
-        console.log("Discount Voucher:", discountVoucher);
       }
       voucher.usageLimit -= 1;
       if(voucher.usageLimit <= 0) {
@@ -208,13 +206,11 @@ async checkOutCOD(userId: string, selectItemIds: string[],shippingId: string,pay
       }
       if (voucher.discountType === "PERCENTAGE") {
         discountVoucher = (totalAmount * voucher.discountValue) / 100;
-        console.log("Discount Voucher:", discountVoucher);
         if (voucher.maxDiscountValue && discountVoucher > voucher.maxDiscountValue) {
           discountVoucher = voucher.maxDiscountValue;
         }
       } else if (voucher.discountType === "FIXED") {
         discountVoucher =  voucher.maxDiscountValue;
-        console.log("Discount Voucher:", discountVoucher);
       }
       voucher.usageLimit -= 1;
       if(voucher.usageLimit <= 0) {
@@ -234,6 +230,7 @@ async checkOutCOD(userId: string, selectItemIds: string[],shippingId: string,pay
       user_id: userId,
       status: "đang chờ xác nhận",
       shipping_id: shippingId,
+      voucher_id: voucherCode,
       totalAmount: totalAmount,
       finalAmount: finalAmount, // Tổng số tiền bao gồm vận chuyển và giảm giá
       orderDetail: orderDetail._id,
@@ -316,13 +313,11 @@ async checkOutCOD(userId: string, selectItemIds: string[],shippingId: string,pay
       }
       if (voucher.discountType === "PERCENTAGE") {
         discountVoucher = (totalAmount * voucher.discountValue) / 100;
-        console.log("Discount Voucher:", discountVoucher);
         if (voucher.maxDiscountValue && discountVoucher > voucher.maxDiscountValue) {
           discountVoucher = voucher.maxDiscountValue;
         }
       } else if (voucher.discountType === "FIXED") {
         discountVoucher =  voucher.maxDiscountValue;
-        console.log("Discount Voucher:", discountVoucher);
       }
       voucher.usageLimit -= 1;
       if(voucher.usageLimit <= 0) {
@@ -472,7 +467,7 @@ async checkOutSuccess(orderId: string) {
   }
   
   async checkStatus(userId: string) {
-    const orders = await Order.find({ user_id: userId }).sort({ createdAt: -1 });
+    const orders = await Order.find({ user_id: userId }).sort({ createdAt: -1 }).populate("shipping_id", "type price");
     const userInfo = await User.findById(userId).select("info.name info.phone info.address");
 
     if (!orders || orders.length === 0) {
@@ -480,10 +475,11 @@ async checkOutSuccess(orderId: string) {
     }
 
     // Lấy danh sách các ID của orderDetail từ các đơn hàng
-    const orderDetailIds = orders.map(order => order.orderDetail); // <-- sửa theo đúng tên field trong Order
-
+    const orderDetailIds = orders.map(order => order.orderDetail);
+   
     // Tìm tất cả OrderDetail tương ứng
     const orderDetails = await OrderDetail.find({ _id: { $in: orderDetailIds } });
+    
 
     // Tạo Map để tra nhanh
     const orderDetailMap = new Map();
@@ -501,6 +497,8 @@ async checkOutSuccess(orderId: string) {
         status: order.status,
         totalAmount: order.totalAmount,
         finalAmount: order.finalAmount,
+        paymentMethod: order.paymentMethod,
+        shippingMethod: order.shipping_id,
         items: detail?.order_items.map((item:IOrderItem) => ({
           order_item: item.medicine_id,
           medicineName: item.name,
@@ -513,13 +511,12 @@ async checkOutSuccess(orderId: string) {
       };
     });
 
-  console.log("Formatted Result:", result);
-  return result;
-}
+    return result;
+  }
 
 
   async checkStatusOrderUser(userId: string, status: OrderStatus) {
-    const orders = await Order.find({ user_id: userId,  status }).sort({ createdAt: -1 });
+    const orders = await Order.find({ user_id: userId,  status }).sort({ createdAt: -1 }).populate("shipping_id", "type price");;
 
     const userInfo = await User.findById(userId).select("info.name info.phone info.address");
 
@@ -533,6 +530,7 @@ async checkOutSuccess(orderId: string) {
     // Tìm tất cả OrderDetail tương ứng
     const orderDetails = await OrderDetail.find({ _id: { $in: orderDetailIds } });
 
+
     // Tạo Map để tra nhanh
     const orderDetailMap = new Map();
     orderDetails.forEach(detail => {
@@ -543,10 +541,14 @@ async checkOutSuccess(orderId: string) {
     const result = orders.map(order => {
       const detail = orderDetailMap.get(order.orderDetail.toString());
 
+    
+
       return {
         userId: userInfo,
         orderId: order._id,
         status: order.status,
+        paymentMethod: order.paymentMethod,
+        shippingMethod: order.shipping_id,
         totalAmount: order.totalAmount,
         finalAmount: order.finalAmount,
         items: detail?.order_items.map((item:IOrderItem) => ({
@@ -572,7 +574,7 @@ async checkOutSuccess(orderId: string) {
   }
 
   async checkStatusOrder(status: OrderStatus) {
-    const orders = await Order.find({status}).sort({ createdAt: -1 });
+    const orders = await Order.find({status}).sort({ createdAt: -1 }).populate("shipping_id", "type price");;
 
     if (!orders || orders.length === 0) {
       throw new Error("Người dùng chưa có đơn hàng nào.");
@@ -597,6 +599,8 @@ async checkOutSuccess(orderId: string) {
       return {
         orderId: order._id,
         status: order.status,
+        paymentMethod: order.paymentMethod,
+        shippingMethod: order.shipping_id,
         totalAmount: order.totalAmount,
         finalAmount: order.finalAmount,
         items: detail?.order_items.map((item:IOrderItem) => ({

@@ -4,6 +4,7 @@ import throwError from "../../util/create-error";
 
 import { IAdmin } from "../../interface/auth/admin.interface";
 import bcrypt from "../../util/bcrypt";
+import { IInfo } from "../../interface/order/order.interface";
 
 class AdminAuthServices {
 
@@ -112,7 +113,7 @@ class AdminAuthServices {
   findById = async(id:string)=> {
     return await Admin.findById(id);
   };
-  updateProfile = async (adminId: string, data: any) => {
+  updateProfile = async (adminId: string, data: IInfo) => {
     const { name, phone, address, avatar, gender, birth } = data;
     const updatedAdmin = await Admin.findByIdAndUpdate(adminId,
       { $set: {

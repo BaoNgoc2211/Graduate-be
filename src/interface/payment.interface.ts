@@ -1,7 +1,7 @@
-export interface IPaymentCommand {
-  execute(): Promise<{
-    success: boolean;
-    error?: string;
-    data?: any;
-  }>;
-}
+// export interface IPaymentCommand {
+//   execute(): Promise<{
+//     success: boolean;
+//     error?: string;
+//     data?: any;
+//   }>;
+// }

@@ -54,9 +54,7 @@ class AdminAuthController {
 
   findAdmin = asyncError(async (req: IAdminRequest, res: Response) => {
     const adminId = req.admin;
-    console.log(adminId)
     const admins = await adminAuthServices.findById(String(adminId));
-    console.log(admins)
     if (!admins) {
            returnRes(res, 404, "User not found");
         }

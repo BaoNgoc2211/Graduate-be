@@ -21,10 +21,10 @@ class OrderDetailController {
   
   checkOut = asyncError(async (req: Request, res: Response) => {
     const userId = req.user;
-    const selectItemIds = req.body.selectItemIds; // Assuming selectItemIds is passed in the request body
-    const shippingId = req.body.shippingId; // Assuming shippingId is passed in the request body
-    const paymentMethod = req.body.paymentMethod; // Assuming paymentMethod is passed in the request body
-    const voucherCode = req.body.voucherCode; // Assuming voucherCode is passed in the request body
+    const selectItemIds = req.body.selectItemIds; 
+    const shippingId = req.body.shippingId; 
+    const paymentMethod = req.body.paymentMethod; 
+    const voucherCode = req.body.voucherCode; 
     if (!Array.isArray(selectItemIds)) {
       res.status(400).json({ message: "selectedItemIds" });
     }
@@ -69,16 +69,15 @@ class OrderDetailController {
     }
   }else {
     const order = await orderServices.checkOutCOD(String(userId!),selectItemIds,shippingId,paymentMethod,voucherCode);
-    console.log("Order in controller checkOut:", order);
     returnRes(res, 200, "Đặt hàng thành công", order);
   }});
 
 
   reviewOrder = asyncError(async (req: Request, res: Response) => {
     const userId = req.user;
-    const selectItemIds = req.body.selectItemIds; // Assuming selectItemIds is passed in the request body
-    const shippingId = req.body.shippingId; // Assuming shippingId is passed in the request body
-    const paymentMethod = req.body.paymentMethod; // Assuming paymentMethod is passed in the request body
+    const selectItemIds = req.body.selectItemIds; 
+    const shippingId = req.body.shippingId; 
+    const paymentMethod = req.body.paymentMethod; 
     if (!Array.isArray(selectItemIds)) {
       res.status(400).json({ message: "selectedItemIds" });
     }

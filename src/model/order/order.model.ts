@@ -10,9 +10,6 @@ const orderSchema = new Schema<IOrder>(
       ref: "User",
       require: true,
     },
-    // IInfo: {
-    //   InfoSchema,
-    // },
     voucher_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Voucher",

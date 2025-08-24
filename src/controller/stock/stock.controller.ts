@@ -11,7 +11,6 @@ class StockController {
     returnRes(res, 200, "Get All", result);
   });
   getLowStock = asyncError(async (req: Request, res: Response) => {
-    console.log("💡 GET /low-stock hit");
     const result = await stockServices.getLowStock();
     returnRes(res, 200, "Get Low Stock", result!);
   });

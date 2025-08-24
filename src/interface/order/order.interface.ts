@@ -22,4 +22,7 @@ export interface IInfo {
   address: string;
   phone: string;
   name: string;
+  avatar?: string;
+  gender?: string;
+  birth?: Date;
 }

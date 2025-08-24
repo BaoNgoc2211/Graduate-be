@@ -4,7 +4,6 @@ import chatServices from "../service/chat.services";
 
 const chatSocket = (io: Server) => {
   io.on("connection", (socket: Socket) => {
-    console.log("User connected:", socket.id);
 
     // Join room
     socket.on("joinRoom", ({ roomId }) => {
