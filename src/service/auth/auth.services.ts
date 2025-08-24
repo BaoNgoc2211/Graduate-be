@@ -275,20 +275,20 @@ class AuthServices {
   // auth.services.ts
   updateProfile = async (userId: string, data: IUserInfo) => {
 
-    const { name, phone, avatar, gender, birthday, address } = data;
+    // const { name, phone, avatar, gender, birthday, address } = data;
 
     return await User.findByIdAndUpdate(
       userId,
       {
-        $set: {
-          ...(name && { "info.name": name }),
-          ...(phone && { "info.phone": phone }),
-          ...(avatar && { "info.avatar": avatar }),
-          ...(gender && { "info.gender": gender }),
-          ...(birthday && { "info.birthday": new Date(birthday) }),
-          ...(address && { "info.address": address }),
-        },
+      $set: {
+        "info.name": data.name,
+        "info.phone": data.phone,
+        "info.avatar": data.avatar,
+        "info.gender": data.gender,
+        "info.birthday": data.birthday ? new Date(data.birthday) : undefined,
+        "info.address": data.address,
       },
+    },
       { new: true }
     );
   };

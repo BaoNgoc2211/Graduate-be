@@ -1,0 +1,24 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const chat_controller_1 = __importDefault(require("../controller/chat.controller"));
+const auth_middleware_1 = require("../middleware/auth.middleware");
+const admin_middleware_1 = require("../middleware/admin.middleware");
+const upload_middleware_1 = __importDefault(require("../middleware/upload.middleware"));
+const router = (0, express_1.Router)();
+router.post("/start", auth_middleware_1.protect, chat_controller_1.default.startChat);
+router.post("/send", auth_middleware_1.protect, admin_middleware_1.adminProtect, chat_controller_1.default.sendMessage);
+router.get("/messages/:roomId", auth_middleware_1.protect, admin_middleware_1.adminProtect, chat_controller_1.default.getMessages);
+router.get("/staff/messages", admin_middleware_1.adminProtect, chat_controller_1.default.getStaffMessage);
+router.get("/unassigned", admin_middleware_1.adminProtect, chat_controller_1.default.getUnassignedRooms);
+router.get("/all", admin_middleware_1.adminProtect, chat_controller_1.default.getAllRooms);
+router.post("/send-prescription", upload_middleware_1.default.upload.single("image"), auth_middleware_1.protect, chat_controller_1.default.uploadPrescriptionMessage);
+router.put("/update-prescription", auth_middleware_1.protect, chat_controller_1.default.updatePrescriptionMessage);
+router.post("/assign/:roomId", admin_middleware_1.adminProtect, chat_controller_1.default.assignStaffToRoom);
+router.post("/unassign/:roomId", admin_middleware_1.adminProtect, chat_controller_1.default.unassignStaffFromRoom);
+router.post("/close/:roomId", admin_middleware_1.adminProtect, chat_controller_1.default.closeChatRoom);
+router.get("/user/current-room", auth_middleware_1.protect, chat_controller_1.default.getCurrentUserRoom);
+exports.default = router;

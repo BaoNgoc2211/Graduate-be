@@ -120,8 +120,8 @@ class DiseasePredictionController {
     try {
       const health = await diseasePredictionService.checkHealth();
       returnRes(res, 200, 'Dịch vụ dự đoán bệnh hoạt động bình thường', health);
-    } catch (error: any) {
-          returnRes(res, 503, 'Dịch vụ dự đoán bệnh không khả dụng', { error: error.message });
+    } catch  {
+          returnRes(res, 503, 'Dịch vụ dự đoán bệnh không khả dụng');
     }
   });
 

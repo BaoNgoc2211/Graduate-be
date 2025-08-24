@@ -88,20 +88,20 @@ import orderServices from "./order/order.services";
 
     if (vnp_ResponseCode !== "00") {
       console.log("❌ Thanh toán thất bại:", vnp_ResponseCode);
-      res.redirect("http://localhost:8888/api/order/review/checkout/");
-      return;
+      return res.redirect("http://localhost:3000/profile"); 
     }
+
     try {
       console.log("✅ Thanh toán thành công:", vnp_TxnRef);
-      await orderServices.checkOutSuccess(vnp_TxnRef); // Cập nhật đơn hàng thành "Đã thanh toán"
-      return res.redirect("http://localhost:8888")
-  } catch (err) {
-    console.error("❌ Lỗi xử lý đơn hàng:", err);
-    return res.redirect("https://your-frontend.com/checkout-error");
-  }
+      await orderServices.checkOutSuccess(vnp_TxnRef); 
+      return res.redirect("http://localhost:3000/"); // về home
+    } catch (err) {
+      console.error("❌ Lỗi xử lý đơn hàng:", err);
+      return res.redirect("http://localhost:3000/medicine");
+    }
     
   } catch (error) {
     console.error("Lỗi xử lý thanh toán:", error);
-    res.status(500).json({ success: false, message: "Lỗi server khi xử lý thanh toán" });
+    res.redirect("http://localhost:8888/checkout-error");
   }
 };

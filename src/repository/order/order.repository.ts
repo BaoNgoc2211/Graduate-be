@@ -5,11 +5,12 @@ import Stock from "../../model/inventory/stock.model";
 import Cart from "../../model/order/cart.model";
 import { OrderStatus } from "../../enum/order-status.enum";
 import Shipping from "../../model/shipping.model";
-import { IOrderItem } from "../../interface/order/order-detail.interface";
-import { PaymentMethod, PaymentStatus } from "../../enum/order/order.enum";
+import { IOrderDetail, IOrderItem } from "../../interface/order/order-detail.interface";
+import { PaymentStatus } from "../../enum/order/order.enum";
 import Voucher from "../../model/voucher.model";
 import { ICartItem } from "../../interface/order/cart.interface";
 import { IMedicine } from "../../interface/medicine/medicine.interface";
+import { Types } from "mongoose";
 
 class OrderDetailRepository {
   async findAll(page: number, limit: number) {
@@ -123,6 +124,7 @@ class OrderDetailRepository {
       user_id: userId,
       status: "đang chờ xác nhận",
       shipping_id: shippingId,
+      voucher_id: voucherCode,
       totalAmount,
       finalAmount: finalAmount,
       orderDetail: orderDetail._id,
@@ -242,7 +244,7 @@ async checkOutCOD(userId: string, selectItemIds: string[],shippingId: string,pay
       (item: ICartItem) => !selectItemIds.includes(item?.medicine_id?.id?.toString())
     );
     cart.quantity = cart.medicine_item.reduce((sum: number, item: ICartItem) => sum + item.quantity, 0);
-    // await cart.save();
+    await cart.save();
     return {
       order
     }
@@ -337,6 +339,7 @@ async checkOutCOD(userId: string, selectItemIds: string[],shippingId: string,pay
       user_id: userId,
       status: "đang chờ xác nhận",
       shipping_id: shippingId,
+      voucher_id: voucherCode,
       totalAmount,
       finalAmount: finalAmount,
       orderDetail: orderDetail._id,
@@ -353,40 +356,59 @@ async checkOutCOD(userId: string, selectItemIds: string[],shippingId: string,pay
 }
 
 async checkOutSuccess(orderId: string) {
-  const order = await Order.findById(orderId).populate("orderDetail");
+  const order = await Order.findById(orderId)
+    .populate({
+      path: "orderDetail",
+      populate: {
+        path: "order_items.medicine_id"
+      }
+    });
+
   if (!order) {
     throw new Error("Không tìm thấy đơn hàng");
   }
 
-   const orderDetails = order.orderDetail;
+  const orderDetails: IOrderDetail = order.orderDetail;
+  if (!orderDetails?.order_items?.length) {
+    throw new Error("Đơn hàng không có sản phẩm nào");
+  }
 
-
+  // Cập nhật tồn kho
   for (const item of orderDetails.order_items) {
     const stock = await Stock.findById(item.stock_id);
     if (!stock) {
       throw new Error(`Không tìm thấy tồn kho cho thuốc ${item.name}`);
     }
+    if (stock.quantity < item.quantity) {
+      throw new Error(`Tồn kho của thuốc ${item.name} không đủ`);
+    }
     stock.quantity -= item.quantity;
     await stock.save();
   }
 
-
-  const cart = await Cart.findOne({ user_id: order.user_id }).populate("medicine_item.medicine_id");
+  // Xóa sản phẩm đã mua khỏi giỏ hàng
+  const cart = await Cart.findOne({ user_id: order.user_id })
+    .populate("medicine_item.medicine_id");
 
   if (cart) {
-    for (const item of orderDetails.order_items) {
-      cart.medicine_item = cart.medicine_item.filter(
-        (item: any) =>
-          !item.order_items.find(
-            (oi: any) => oi.medicine_id.toString() === item.medicine_id._id.toString()
-          )
-      );
-    }
+    cart.medicine_item = cart.medicine_item.filter((ci: ICartItem) => {
+      return !orderDetails.order_items.some((oi) => {
+        const med = oi.medicine_id;
+        const oiMedId =
+          med instanceof Types.ObjectId ? med.toString() : (med as IMedicine).id.toString();
 
-    cart.quantity = cart.medicine_item.reduce((sum: number, item: any) => sum + item.quantity, 0);
+        return oiMedId === (ci.medicine_id as IMedicine).id.toString();
+      });
+    });
+
+    cart.quantity = cart.medicine_item.reduce(
+      (sum: number, item: ICartItem) => sum + item.quantity,
+      0
+    );
     await cart.save();
   }
 
+  // Cập nhật trạng thái thanh toán
   order.paymentStatus = PaymentStatus.PAID;
   await order.save();
 
@@ -394,7 +416,51 @@ async checkOutSuccess(orderId: string) {
     message: "Thanh toán thành công và cập nhật đơn hàng",
     order,
   };
+
 }
+
+// async checkOutSuccess(orderId: string) {
+//   const order = await Order.findById(orderId).populate("orderDetail");
+//   if (!order) {
+//     throw new Error("Không tìm thấy đơn hàng");
+//   }
+
+//    const orderDetails = order.orderDetail;
+
+
+//   for (const item of orderDetails.order_items) {
+//     const stock = await Stock.findById(item.stock_id);
+//     if (!stock) {
+//       throw new Error(`Không tìm thấy tồn kho cho thuốc ${item.name}`);
+//     }
+//     stock.quantity -= item.quantity;
+//     await stock.save();
+//   }
+
+
+//   const cart = await Cart.findOne({ user_id: order.user_id }).populate("medicine_item.medicine_id");
+
+//   if (cart) {
+//   cart.medicine_item = cart.medicine_item.filter(
+//     (ci: ICartItem) =>
+//       !orderDetails.order_items.some(
+//         (oi: any) => oi.medicine_id.toString() === ci.medicine_id._id.toString()
+//       )
+//   );
+    
+
+//     cart.quantity = cart.medicine_item.reduce((sum: number, item: any) => sum + item.quantity, 0);
+//     await cart.save();
+//   }
+
+//   order.paymentStatus = PaymentStatus.PAID;
+//   await order.save();
+
+//   return {
+//     message: "Thanh toán thành công và cập nhật đơn hàng",
+//     order,
+//   };
+// }
   
 
   async reviewOrder(userId: string,selectItemIds: string[],shippingId: string,paymentMethod: string) {

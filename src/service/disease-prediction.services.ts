@@ -1,8 +1,8 @@
 import axios from 'axios';
 import diseasePredictionConfig from '../config/disease-prediction.config';
 import diseaseRepository from '../repository/disease/disease.repository';
-import symptomRepository from '../repository/disease/symptom.repository';
 import { IDisease } from '../interface/disease/disease.interface';
+
 
 interface DiseasePrediction {
   disease: string;
@@ -57,24 +57,42 @@ class DiseasePredictionService {
   /**
    * Retry logic cho HTTP requests
    */
-  private async retryRequest<T>(requestFn: () => Promise<T>): Promise<T> {
-    let lastError: any;
+  // private async retryRequest<T>(requestFn: () => Promise<T>): Promise<T> {
+  //   let lastError: any;
     
-    for (let attempt = 1; attempt <= this.retryAttempts; attempt++) {
-      try {
-        return await requestFn();
-      } catch (error: any) {
-        lastError = error;
+  //   for (let attempt = 1; attempt <= this.retryAttempts; attempt++) {
+  //     try {
+  //       return await requestFn();
+  //     } catch  {
+  //       lastError = error;
         
-        if (attempt < this.retryAttempts) {
-          console.log(`Attempt ${attempt} failed, retrying in ${this.retryDelay}ms...`);
-          await new Promise(resolve => setTimeout(resolve, this.retryDelay));
-        }
+  //       if (attempt < this.retryAttempts) {
+  //         console.log(`Attempt ${attempt} failed, retrying in ${this.retryDelay}ms...`);
+  //         await new Promise(resolve => setTimeout(resolve, this.retryDelay));
+  //       }
+  //     }
+  //   }
+    
+  //   throw lastError;
+  // }
+  private async retryRequest<T>(requestFn: () => Promise<T>): Promise<T> {
+  let lastError: unknown;
+
+  for (let attempt = 1; attempt <= this.retryAttempts; attempt++) {
+    try {
+      return await requestFn();
+    } catch (err: unknown) {
+      lastError = err;
+
+      if (attempt < this.retryAttempts) {
+        console.log(`Attempt ${attempt} failed, retrying in ${this.retryDelay}ms...`);
+        await new Promise(resolve => setTimeout(resolve, this.retryDelay));
       }
     }
-    
-    throw lastError;
   }
+
+  throw lastError;
+}
 
   /**
    * Kiểm tra trạng thái của FastAPI service
@@ -177,30 +195,54 @@ class DiseasePredictionService {
   /**
    * Dự đoán bệnh từ triệu chứng (giữ nguyên method cũ)
    */
+  // async predictDisease(request: PredictRequest): Promise<PredictResponse> {
+  //   return this.retryRequest(async () => {
+  //     try {
+  //       const response = await axios.post(`${this.baseURL}/predict`, request, {
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //         timeout: this.timeout,
+  //       });
+  //       return response.data;
+  //     } catch (error: any) {
+  //       if (error.response) {
+  //         // FastAPI trả về lỗi
+  //         throw new Error(`Lỗi dự đoán: ${error.response.data.detail || error.response.data}`);
+  //       } else if (error.code === 'ECONNREFUSED') {
+  //         throw new Error(`FastAPI service không khả dụng tại ${this.baseURL}. Vui lòng kiểm tra xem service đã được khởi động chưa.`);
+  //       } else if (error.code === 'ETIMEDOUT') {
+  //         throw new Error('Yêu cầu dự đoán bị timeout. Vui lòng thử lại.');
+  //       } else {
+  //         throw new Error(`Lỗi kết nối: ${error.message}`);
+  //       }
+  //     }
+  //   });
+  // }
   async predictDisease(request: PredictRequest): Promise<PredictResponse> {
-    return this.retryRequest(async () => {
-      try {
-        const response = await axios.post(`${this.baseURL}/predict`, request, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          timeout: this.timeout,
-        });
-        return response.data;
-      } catch (error: any) {
-        if (error.response) {
-          // FastAPI trả về lỗi
-          throw new Error(`Lỗi dự đoán: ${error.response.data.detail || error.response.data}`);
-        } else if (error.code === 'ECONNREFUSED') {
+  return this.retryRequest(async () => {
+    try {
+      const response = await axios.post(`${this.baseURL}/predict`, request, {
+        headers: { 'Content-Type': 'application/json' },
+        timeout: this.timeout,
+      });
+      return response.data;
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        if (err.response) {
+          throw new Error(`Lỗi dự đoán: ${err.response.data?.detail || err.response.data}`);
+        } else if (err.code === 'ECONNREFUSED') {
           throw new Error(`FastAPI service không khả dụng tại ${this.baseURL}. Vui lòng kiểm tra xem service đã được khởi động chưa.`);
-        } else if (error.code === 'ETIMEDOUT') {
+        } else if (err.code === 'ETIMEDOUT') {
           throw new Error('Yêu cầu dự đoán bị timeout. Vui lòng thử lại.');
         } else {
-          throw new Error(`Lỗi kết nối: ${error.message}`);
+          throw new Error(`Lỗi kết nối: ${err.message}`);
         }
       }
-    });
-  }
+      throw new Error('Lỗi không xác định khi gọi FastAPI.');
+    }
+  });
+}
 
   /**
    * Lấy danh sách tất cả các bệnh được hỗ trợ từ database
@@ -228,22 +270,40 @@ class DiseasePredictionService {
   /**
    * Lấy danh sách tất cả các bệnh được hỗ trợ từ FastAPI
    */
+  // async getSupportedDiseases(): Promise<{ total_diseases: number; diseases: string[] }> {
+  //   return this.retryRequest(async () => {
+  //     try {
+  //       const response = await axios.get(`${this.baseURL}/diseases`, {
+  //         timeout: this.timeout,
+  //       });
+  //       return response.data;
+  //     } catch (error: any) {
+  //       if (error.response) {
+  //         throw new Error(`Lỗi lấy danh sách bệnh: ${error.response.data.detail || error.response.data}`);
+  //       } else {
+  //         throw new Error(`Lỗi kết nối: ${error.message}`);
+  //       }
+  //     }
+  //   });
+  // }
   async getSupportedDiseases(): Promise<{ total_diseases: number; diseases: string[] }> {
-    return this.retryRequest(async () => {
-      try {
-        const response = await axios.get(`${this.baseURL}/diseases`, {
-          timeout: this.timeout,
-        });
-        return response.data;
-      } catch (error: any) {
-        if (error.response) {
-          throw new Error(`Lỗi lấy danh sách bệnh: ${error.response.data.detail || error.response.data}`);
-        } else {
-          throw new Error(`Lỗi kết nối: ${error.message}`);
+  return this.retryRequest(async () => {
+    try {
+      const response = await axios.get(`${this.baseURL}/diseases`, {
+        timeout: this.timeout,
+      });
+      return response.data;
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        if (err.response) {
+          throw new Error(`Lỗi lấy danh sách bệnh: ${err.response.data?.detail || err.response.data}`);
         }
+        throw new Error(`Lỗi kết nối: ${err.message}`);
       }
-    });
-  }
+      throw new Error('Lỗi không xác định khi gọi FastAPI.');
+    }
+  });
+}
 
   /**
    * Tìm bệnh theo triệu chứng từ database
@@ -285,14 +345,24 @@ class DiseasePredictionService {
   /**
    * Kiểm tra xem FastAPI service có sẵn sàng không
    */
+  // async isServiceReady(): Promise<boolean> {
+  //   try {
+  //     const health = await this.checkHealth();
+  //     return health.status === 'healthy' && health.model_loaded;
+  //   } catch {
+  //     console.log(error);
+  //     return false;
+  //   }
+  // }
   async isServiceReady(): Promise<boolean> {
-    try {
-      const health = await this.checkHealth();
-      return health.status === 'healthy' && health.model_loaded;
-    } catch (error) {
-      return false;
-    }
+  try {
+    const health = await this.checkHealth();
+    return health.status === 'healthy' && health.model_loaded;
+  } catch (err: unknown) {
+    console.log(err);
+    return false;
   }
+}
 }
 
 export default new DiseasePredictionService();
